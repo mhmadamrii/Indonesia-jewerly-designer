@@ -20,6 +20,8 @@ import { Route as mainPublishingRouteImport } from "./routes/(main)/publishing";
 import { Route as mainDashboardRouteImport } from "./routes/(main)/dashboard";
 import { Route as authSignupRouteImport } from "./routes/(auth)/signup";
 import { Route as authLoginRouteImport } from "./routes/(auth)/login";
+import { Route as authAuthRouteImport } from "./routes/(auth)/auth";
+import { Route as adminAdminRouteImport } from "./routes/(admin)/admin";
 import { ServerRoute as ApiAuthSplatServerRouteImport } from "./routes/api/auth/$";
 
 const rootServerRouteImport = createServerRootRoute();
@@ -67,6 +69,16 @@ const authLoginRoute = authLoginRouteImport.update({
   path: "/login",
   getParentRoute: () => authRouteRoute,
 } as any);
+const authAuthRoute = authAuthRouteImport.update({
+  id: "/auth",
+  path: "/auth",
+  getParentRoute: () => authRouteRoute,
+} as any);
+const adminAdminRoute = adminAdminRouteImport.update({
+  id: "/(admin)/admin",
+  path: "/admin",
+  getParentRoute: () => rootRouteImport,
+} as any);
 const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
   id: "/api/auth/$",
   path: "/api/auth/$",
@@ -76,6 +88,8 @@ const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
 export interface FileRoutesByFullPath {
   "/": typeof mainRouteRouteWithChildren;
   "/dashboards": typeof DashboardsRouteRouteWithChildren;
+  "/admin": typeof adminAdminRoute;
+  "/auth": typeof authAuthRoute;
   "/login": typeof authLoginRoute;
   "/signup": typeof authSignupRoute;
   "/dashboard": typeof mainDashboardRoute;
@@ -84,6 +98,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   "/": typeof mainRouteRouteWithChildren;
+  "/admin": typeof adminAdminRoute;
+  "/auth": typeof authAuthRoute;
   "/login": typeof authLoginRoute;
   "/signup": typeof authSignupRoute;
   "/dashboard": typeof mainDashboardRoute;
@@ -96,6 +112,8 @@ export interface FileRoutesById {
   "/(auth)": typeof authRouteRouteWithChildren;
   "/(main)": typeof mainRouteRouteWithChildren;
   "/dashboards": typeof DashboardsRouteRouteWithChildren;
+  "/(admin)/admin": typeof adminAdminRoute;
+  "/(auth)/auth": typeof authAuthRoute;
   "/(auth)/login": typeof authLoginRoute;
   "/(auth)/signup": typeof authSignupRoute;
   "/(main)/dashboard": typeof mainDashboardRoute;
@@ -107,19 +125,31 @@ export interface FileRouteTypes {
   fullPaths:
     | "/"
     | "/dashboards"
+    | "/admin"
+    | "/auth"
     | "/login"
     | "/signup"
     | "/dashboard"
     | "/publishing"
     | "/dashboards/";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/login" | "/signup" | "/dashboard" | "/publishing" | "/dashboards";
+  to:
+    | "/"
+    | "/admin"
+    | "/auth"
+    | "/login"
+    | "/signup"
+    | "/dashboard"
+    | "/publishing"
+    | "/dashboards";
   id:
     | "__root__"
     | "/"
     | "/(auth)"
     | "/(main)"
     | "/dashboards"
+    | "/(admin)/admin"
+    | "/(auth)/auth"
     | "/(auth)/login"
     | "/(auth)/signup"
     | "/(main)/dashboard"
@@ -132,6 +162,7 @@ export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren;
   mainRouteRoute: typeof mainRouteRouteWithChildren;
   DashboardsRouteRoute: typeof DashboardsRouteRouteWithChildren;
+  adminAdminRoute: typeof adminAdminRoute;
 }
 export interface FileServerRoutesByFullPath {
   "/api/auth/$": typeof ApiAuthSplatServerRoute;
@@ -220,6 +251,20 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof authLoginRouteImport;
       parentRoute: typeof authRouteRoute;
     };
+    "/(auth)/auth": {
+      id: "/(auth)/auth";
+      path: "/auth";
+      fullPath: "/auth";
+      preLoaderRoute: typeof authAuthRouteImport;
+      parentRoute: typeof authRouteRoute;
+    };
+    "/(admin)/admin": {
+      id: "/(admin)/admin";
+      path: "/admin";
+      fullPath: "/admin";
+      preLoaderRoute: typeof adminAdminRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
   }
 }
 declare module "@tanstack/react-start/server" {
@@ -235,11 +280,13 @@ declare module "@tanstack/react-start/server" {
 }
 
 interface authRouteRouteChildren {
+  authAuthRoute: typeof authAuthRoute;
   authLoginRoute: typeof authLoginRoute;
   authSignupRoute: typeof authSignupRoute;
 }
 
 const authRouteRouteChildren: authRouteRouteChildren = {
+  authAuthRoute: authAuthRoute,
   authLoginRoute: authLoginRoute,
   authSignupRoute: authSignupRoute,
 };
@@ -279,6 +326,7 @@ const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   mainRouteRoute: mainRouteRouteWithChildren,
   DashboardsRouteRoute: DashboardsRouteRouteWithChildren,
+  adminAdminRoute: adminAdminRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -21,8 +21,8 @@ export const category = pgTable("category", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   description: text("description"),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull(),
+  createdAt: timestamp("created_at"),
+  updatedAt: timestamp("updated_at"),
 });
 
 export const jewerlyAssets = pgTable("jewerly_assets", {

@@ -48,7 +48,9 @@ function RouteComponent() {
   const getFormStepper = () => {
     switch (currentStep) {
       case 1:
-        return <JewerlyForm onStepClick={handleStepClick} />;
+        return (
+          <JewerlyForm categories={jewerly_categories} onStepClick={handleStepClick} />
+        );
       case 2:
         return <JewerlyUploadForm onStepClick={handleStepClick} />;
       case 3:

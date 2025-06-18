@@ -38,10 +38,12 @@ const formSchema = z.object({
 
 interface IProps {
   onStepClick: (stepNumber: number) => void;
+  categories: any;
 }
 
-export function JewerlyForm({ onStepClick }: IProps) {
+export function JewerlyForm({ onStepClick, categories }: IProps) {
   const { addJewerlyForm, jewerlyForm } = useFormStorage();
+  console.log("categories", categories);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -122,11 +124,11 @@ export function JewerlyForm({ onStepClick }: IProps) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {/* {categories?.data?.map((item) => (
+                  {categories?.map((item: { id: string; name: string }) => (
                     <SelectItem key={item.id} value={item.id.toString()}>
                       {item.name}
                     </SelectItem>
-                  ))} */}
+                  ))}
                 </SelectContent>
               </Select>
               <FormDescription>Select Your Asset Category</FormDescription>
