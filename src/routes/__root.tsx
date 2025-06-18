@@ -1,5 +1,6 @@
 /// <reference types="vite/client" />
 import type { QueryClient } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
   createRootRouteWithContext,
   HeadContent,
@@ -7,10 +8,9 @@ import {
   ScriptOnce,
   Scripts,
 } from "@tanstack/react-router";
-
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-
+import { IKContext } from "imagekitio-react";
+import { imageKitAuthenticator } from "~/lib/actions/imagekit.action";
 import { getUser } from "~/lib/auth/functions/getUser";
 import appCss from "~/styles.css?url";
 
@@ -48,9 +48,17 @@ export const Route = createRootRouteWithContext<{
 });
 
 function RootComponent() {
+  const publicKey = import.meta.env.VITE_IMAGE_KIT_PUBLIC_KEY;
+  const urlEndpoint = "https://ik.imagekit.io/mhmadamrii";
   return (
     <RootDocument>
-      <Outlet />
+      <IKContext
+        publicKey={publicKey}
+        urlEndpoint={urlEndpoint}
+        authenticator={imageKitAuthenticator}
+      >
+        <Outlet />
+      </IKContext>
     </RootDocument>
   );
 }
