@@ -34,11 +34,11 @@ function RouteComponent() {
 
   return (
     <section className="flex h-full w-full flex-col px-5">
-      <section className="flex h-full w-full gap-4">
-        <div className="flex w-[70%] flex-col gap-4">
+      <section className="flex h-full w-full flex-col gap-4 sm:flex-row">
+        <div className="flex w-full flex-col gap-4 sm:w-[70%]">
           <img src="/banner.svg" className="w-full" alt="Banner" />
           <div className="flex flex-col gap-4">
-            <div className="flex w-full items-center justify-between">
+            <div className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row sm:gap-0">
               <h1 className="text-xl font-semibold">Trending Collections</h1>
               <div className="flex gap-3">
                 <Await promise={dashboard} fallback={<div>Loading...</div>}>
@@ -119,7 +119,7 @@ function RouteComponent() {
             </div>
           </div>
         </div>
-        <div className="flex w-[30%] flex-col gap-4">
+        <div className="flex w-full flex-col gap-4 sm:w-[30%]">
           <div className="min-h-[350px]">
             <div className="grid h-full grid-cols-2 gap-2">
               <Card className="h-full">

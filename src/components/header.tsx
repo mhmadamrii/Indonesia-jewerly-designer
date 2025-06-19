@@ -102,7 +102,7 @@ export function Header() {
           </CommandDialog>
         </div>
         <div className="flex items-center gap-4">
-          <div className="flex rounded-full border">
+          <div className="hidden rounded-full border sm:flex">
             {roles.map((role) => (
               <Button
                 key={role}

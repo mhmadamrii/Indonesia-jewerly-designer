@@ -20,7 +20,7 @@ function MainLayout() {
   return (
     <main className="flex min-h-screen">
       <Sidebar />
-      <section className={cn("flex w-[70%] flex-grow flex-col gap-7")}>
+      <section className={cn("flex w-[70%] flex-grow flex-col gap-7 sm:w-full")}>
         <Header />
         <Outlet />
       </section>

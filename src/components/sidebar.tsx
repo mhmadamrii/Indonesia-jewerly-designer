@@ -8,7 +8,7 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        "sticky top-0 flex h-screen w-[250px] flex-col gap-4 border-r p-4",
+        "sticky top-0 hidden h-screen w-[250px] flex-col gap-4 border-r p-4 sm:flex",
         // If you want it visible on all screen sizes, remove `hidden` and `sm:flex`
       )}
     >
