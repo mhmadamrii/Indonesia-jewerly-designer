@@ -45,7 +45,7 @@ export function Header() {
 
   const [open, setOpen] = useState(false);
   const { data: session, isPending } = authClient.useSession();
-  console.log(session);
+  console.log(session?.user.image);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -127,7 +127,9 @@ export function Header() {
           <DropdownMenu>
             <DropdownMenuTrigger className="cursor-pointer" asChild>
               <Avatar className="h-8 w-8">
-                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarImage
+                  src={session?.user.image ?? "https://github.com/shadcn.png"}
+                />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
