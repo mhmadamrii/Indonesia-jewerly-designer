@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { getAllUsers } from "~/lib/actions/user.action";
+import { getAllUsers } from "~/actions/user.action";
 
 export const Route = createFileRoute("/dashboards/")({
   loader: async () => {

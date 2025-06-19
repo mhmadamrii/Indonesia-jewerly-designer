@@ -7,7 +7,7 @@ export const Route = createFileRoute("/(main)")({
   component: MainLayout,
   beforeLoad: async ({ context }) => {
     if (!context.user) {
-      throw redirect({ to: "/login" });
+      throw redirect({ to: "/auth" });
     }
 
     // `context.queryClient` is also available in our loaders

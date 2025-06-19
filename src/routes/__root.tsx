@@ -10,7 +10,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { IKContext } from "imagekitio-react";
-import { imageKitAuthenticator } from "~/lib/actions/imagekit.action";
+import { imageKitAuthenticator } from "~/actions/imagekit.action";
 import { getUser } from "~/lib/auth/functions/getUser";
 import appCss from "~/styles.css?url";
 

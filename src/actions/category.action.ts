@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import * as z from "zod";
-import { db } from "../db";
-import { category } from "../db/schema";
+import { db } from "~/lib/db";
+import { category } from "~/lib/db/schema";
 
 const CategorySchema = z.object({
   name: z.string(),

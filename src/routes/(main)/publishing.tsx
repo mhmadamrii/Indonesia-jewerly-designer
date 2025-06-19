@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { getAllCategories } from "~/actions/category.action";
 import { JewerlyForm } from "~/components/forms/jewerly-form";
 import { JewerlyLinkForm } from "~/components/forms/jewerly-link-form";
 import { JewerlyPublishForm } from "~/components/forms/jewerly-publish-form";
 import { JewerlyUploadForm } from "~/components/forms/jewerly-upload-form";
 import { Card } from "~/components/ui/card";
 import { AnimatedStepper } from "~/components/ui/stepper";
-import { getAllCategories } from "~/lib/actions/jewerly.action";
 
 export const Route = createFileRoute("/(main)/publishing")({
   component: RouteComponent,
