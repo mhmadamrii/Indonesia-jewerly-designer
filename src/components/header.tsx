@@ -27,15 +27,14 @@ import {
 } from "~/components/ui/command";
 
 import {
+  BanknoteArrowUp,
   Bell,
-  Calculator,
-  Calendar,
   CreditCard,
+  Images,
   Settings,
-  Smile,
   User,
+  Wallet,
 } from "lucide-react";
-import ThemeToggle from "./ThemeToggle";
 
 type Role = "user" | "artist";
 
@@ -46,7 +45,6 @@ export function Header() {
 
   const [open, setOpen] = useState(false);
   const { data: session, isPending } = authClient.useSession();
-  console.log(session?.user.image);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -70,16 +68,16 @@ export function Header() {
               <CommandEmpty>No results found.</CommandEmpty>
               <CommandGroup heading="Suggestions">
                 <CommandItem>
-                  <Calendar />
-                  <span>Calendar</span>
+                  <Images />
+                  <span>My Assets</span>
                 </CommandItem>
                 <CommandItem>
-                  <Smile />
-                  <span>Search Emoji</span>
+                  <BanknoteArrowUp />
+                  <span>Profit</span>
                 </CommandItem>
                 <CommandItem>
-                  <Calculator />
-                  <span>Calculator</span>
+                  <Wallet />
+                  <span>My Wallet</span>
                 </CommandItem>
               </CommandGroup>
               <CommandSeparator />
@@ -103,8 +101,7 @@ export function Header() {
             </CommandList>
           </CommandDialog>
         </div>
-        <ThemeToggle />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <div className="flex rounded-full border">
             {roles.map((role) => (
               <Button
@@ -129,9 +126,7 @@ export function Header() {
             <DropdownMenuTrigger className="cursor-pointer" asChild>
               <Avatar className="h-10 w-10">
                 <AvatarImage
-                  // src={session?.user.image ?? "https://github.com/shadcn.png"}
-                  src="https://lh3.googleusercontent.com/a/ACg8ocLlouf-XtUn7hKUzjYWVqLrsa5EYs1reM60UIu2e2H3P3HTYhQ=s96-c"
-                  // src={"https://github.com/mhmadamrii.png"}
+                  src={session?.user.image ?? "https://github.com/shadcn.png"}
                 />
                 <AvatarFallback>{session?.user.name.charAt(0)}</AvatarFallback>
               </Avatar>

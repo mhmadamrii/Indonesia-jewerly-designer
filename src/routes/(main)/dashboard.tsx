@@ -1,7 +1,11 @@
 import { Await, createFileRoute, Link } from "@tanstack/react-router";
 import { IKImage } from "imagekitio-react";
+import { useState } from "react";
 import { getDashboard } from "~/actions/dashboard.action";
-import { Card, CardContent } from "~/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardTitle } from "~/components/ui/card";
+import { cn } from "~/lib/utils";
 
 export const Route = createFileRoute("/(main)/dashboard")({
   loader: async () => {
@@ -13,21 +17,39 @@ export const Route = createFileRoute("/(main)/dashboard")({
 
 function RouteComponent() {
   const { dashboard } = Route.useLoaderData();
+
+  const [selectedCategory, setSelectedCategory] = useState("");
+
   return (
     <section className="flex h-full w-full flex-col px-5">
       <section className="flex h-full w-full gap-4">
         <div className="flex w-[70%] flex-col gap-4">
           <img src="/banner.svg" className="w-full" alt="Banner" />
-          <div>
-            <div className="flex w-full justify-between">
-              <h1 className="text-xl font-semibold">Assets</h1>
+          <div className="flex flex-col gap-4">
+            <div className="flex w-full items-center justify-between">
+              <h1 className="text-xl font-semibold">Trending Collections</h1>
               <div className="flex gap-3">
                 <Await promise={dashboard} fallback={<div>Loading...</div>}>
                   {({ data }) => (
-                    <div>
+                    <div className="flex flex-wrap gap-2">
                       {data?.categories?.map((item) => (
-                        <div key={item.id}>
-                          <h1>{item.name}</h1>
+                        <div
+                          onClick={() => setSelectedCategory(item.id)}
+                          className={cn(
+                            "cursor-pointer rounded-full bg-transparent px-3 py-2",
+                            {
+                              "bg-[#EEEAFF]": selectedCategory === item.id,
+                            },
+                          )}
+                          key={item.id}
+                        >
+                          <h1
+                            className={cn("font-[500] text-[#5429FF]", {
+                              "text-muted-foreground": selectedCategory !== item.id,
+                            })}
+                          >
+                            {item.name}
+                          </h1>
                         </div>
                       ))}
                     </div>
@@ -90,19 +112,40 @@ function RouteComponent() {
             </div>
           </div>
 
-          <div>
-            <h1>Users</h1>
+          <div className="sticky top-2">
             <Await promise={dashboard} fallback={<div>Loading...</div>}>
               {({ data }) => (
-                <Card className="flex flex-wrap gap-2">
-                  <CardContent>
-                    {data?.users?.map((item, idx) => {
+                <Card className="flex flex-wrap gap-4">
+                  <CardTitle className="flex w-full items-center justify-between px-4">
+                    <h1 className="text-xl font-semibold">Top Artist</h1>
+                    <h1 className="text-muted-foreground text-sm">See All</h1>
+                  </CardTitle>
+                  <CardContent className="px-3">
+                    {data?.users?.map((item) => {
                       return (
-                        <div className="w-full max-w-[300px]" key={item.id}>
-                          <div className="flex gap-2">
-                            <h1>{idx + 1}</h1>
-                            <h1>{item.name}</h1>
-                            <p>{item.email}</p>
+                        <div className="mb-4 w-full max-w-[300px]" key={item.id}>
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              <Avatar className="h-10 w-10">
+                                <AvatarImage
+                                  src={item.image ?? "https://github.com/shadcn.png"}
+                                />
+                                <AvatarFallback>{item.name.charAt(0)}</AvatarFallback>
+                              </Avatar>
+                              <div className="flex flex-col">
+                                <span>{item.name}</span>
+                                <span className="text-muted-foreground">@user</span>
+                              </div>
+                            </div>
+                            <div className="">
+                              <Button
+                                className={cn(
+                                  "cursor-pointer rounded-full bg-[#EEEAFF] text-[#5429FF] hover:bg-[EEEAFF]/80",
+                                )}
+                              >
+                                Follow
+                              </Button>
+                            </div>
                           </div>
                         </div>
                       );
