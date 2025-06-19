@@ -57,43 +57,46 @@ function RouteComponent() {
                 </Await>
               </div>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex gap-2">
               <Await promise={dashboard} fallback={<div>Loading...</div>}>
                 {({ data }) => (
-                  <div className="flex flex-wrap gap-2">
-                    {data?.jewerlies?.map((item) => {
-                      return (
-                        <Card className="w-full max-w-[250px]" key={item.id}>
-                          <CardContent>
-                            <IKImage
-                              src={item.imageUrl ?? ""}
-                              className="h-full w-full rounded-lg sm:h-[200px] sm:w-[300px]"
-                              alt="Asset Image"
-                            />
+                  <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
+                    {data?.jewerlies?.map((item) => (
+                      <Card className="w-full" key={item.jewerly_assets.id}>
+                        <CardContent className="flex flex-col gap-5">
+                          <IKImage
+                            src={item.jewerly_assets.imageUrl ?? ""}
+                            className="h-full w-full rounded-lg sm:h-[200px] sm:w-[300px]"
+                            alt="Asset Image"
+                          />
+                          <div className="flex w-full items-center justify-between">
                             <Link
                               to="/assets/$assetId"
                               params={{
-                                assetId: item.id,
+                                assetId: item.jewerly_assets.id,
                               }}
                             >
-                              <h1 className="text-xl font-semibold">{item.name}</h1>
+                              <h1 className="text-2xl font-semibold">
+                                {item.jewerly_assets.name}
+                              </h1>
                             </Link>
-                            <p>{item.description}</p>
-                            <div className="flex items-center gap-2">
-                              <span className="uppercase">{item.price}</span>
-                              <span className="font-bold">{item.description}</span>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      );
-                    })}
+                            <span className="text-muted-foreground">21.5K Views</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span>Price</span>
+                            <span className="uppercase">
+                              $ {item.jewerly_assets.price}
+                            </span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
                   </div>
                 )}
               </Await>
             </div>
           </div>
         </div>
-
         <div className="flex w-[30%] flex-col gap-4">
           <div className="min-h-[350px]">
             <div className="grid h-full grid-cols-2 gap-2">
