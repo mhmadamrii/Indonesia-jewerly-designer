@@ -3,7 +3,6 @@ import { getJewerlyById } from "~/actions/jewerly.action";
 
 export const Route = createFileRoute("/(main)/assets/$assetId")({
   loader: async ({ params }) => {
-    await new Promise((res) => setTimeout(res, 3000));
     const jewerlyById = getJewerlyById({
       data: {
         id: params.assetId,
