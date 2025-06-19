@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { createCategory } from "~/actions/category.action";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
-import { createCategory } from "~/lib/actions/category.action";
 
 export const Route = createFileRoute("/(admin)/admin")({
   component: RouteComponent,
