@@ -12,7 +12,6 @@ export const Route = createFileRoute("/(main)/publishing")({
   component: RouteComponent,
   loader: async () => {
     const categories = await getAllCategories();
-    console.log("categories", categories);
     return { jewerly_categories: categories.data };
   },
 });
@@ -38,7 +37,6 @@ const steps = [
 
 function RouteComponent() {
   const { jewerly_categories } = Route.useLoaderData();
-  console.log("categories", jewerly_categories);
   const [currentStep, setCurrentStep] = useState(1);
 
   const handleStepClick = (stepNumber: number) => {

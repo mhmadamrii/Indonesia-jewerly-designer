@@ -1,6 +1,9 @@
+import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { IKImage } from "imagekitio-react";
 import { LoaderIcon } from "lucide-react";
+import { toast } from "sonner";
+import { createJewerlyAsset } from "~/actions/jewerly.action";
 import { useFormStorage } from "~/lib/store";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -10,10 +13,30 @@ import { Textarea } from "../ui/textarea";
 export function JewerlyPublishForm() {
   const navigate = useNavigate();
   const { jewerlyForm, resetJewerlyForm } = useFormStorage();
-  const isPending = true;
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: createJewerlyAsset,
+    onSuccess: () => {
+      toast.success("Data saved successfully");
+      resetJewerlyForm();
+      navigate({
+        to: "/dashboard",
+      });
+    },
+  });
 
   const handlePublish = async () => {
     try {
+      const res = await mutateAsync({
+        data: {
+          name: jewerlyForm.title,
+          description: jewerlyForm.desc,
+          price: jewerlyForm.price,
+          imageUrl: jewerlyForm.image_url as string,
+          categoryId: jewerlyForm.category,
+        },
+      });
+      console.log("res", res);
     } catch (error) {
       console.log(error);
     }

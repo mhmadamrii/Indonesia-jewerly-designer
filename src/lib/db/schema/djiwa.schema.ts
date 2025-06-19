@@ -21,8 +21,8 @@ export const category = pgTable("category", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   description: text("description"),
-  createdAt: timestamp("created_at"),
-  updatedAt: timestamp("updated_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const jewerlyAssets = pgTable("jewerly_assets", {
@@ -33,8 +33,8 @@ export const jewerlyAssets = pgTable("jewerly_assets", {
   imageUrl: text("image_url"),
   userId: text("user_id").notNull(),
   categoryId: uuid("category_id").notNull(),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const review = pgTable("review", {
@@ -44,8 +44,8 @@ export const review = pgTable("review", {
   image: text("image"),
   userId: text("user_id").notNull(),
   jewerlyAssetId: text("jewerly_asset_id").notNull(),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const notification = pgTable("notification", {
@@ -58,7 +58,8 @@ export const notification = pgTable("notification", {
     .default(false)
     .notNull(),
   type: notificationTypeEnum("type"),
-  createdAt: timestamp("created_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const userRelations = relations(user, ({ many }) => ({

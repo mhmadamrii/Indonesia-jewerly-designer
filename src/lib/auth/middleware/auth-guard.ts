@@ -21,6 +21,8 @@ export const authMiddleware = createMiddleware({ type: "function" }).server(
       },
     });
 
+    console.log("my session", session);
+
     if (!session) {
       setResponseStatus(401);
       throw new Error("Unauthorized");

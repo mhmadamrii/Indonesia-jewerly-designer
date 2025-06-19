@@ -10,6 +10,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { IKContext } from "imagekitio-react";
+import { Toaster } from "sonner";
 import { imageKitAuthenticator } from "~/actions/imagekit.action";
 import { getUser } from "~/lib/auth/functions/getUser";
 import appCss from "~/styles.css?url";
@@ -22,7 +23,7 @@ export const Route = createRootRouteWithContext<{
     const user = await context.queryClient.fetchQuery({
       queryKey: ["user"],
       queryFn: ({ signal }) => getUser({ signal }),
-    }); // we're using react-query for caching, see router.tsx
+    });
     return { user };
   },
   head: () => ({
@@ -48,8 +49,9 @@ export const Route = createRootRouteWithContext<{
 });
 
 function RootComponent() {
-  const publicKey = import.meta.env.VITE_IMAGE_KIT_PUBLIC_KEY;
+  const publicKey = "public_L+2o58FFDcS0R36N5glkVvxZt/M=";
   const urlEndpoint = "https://ik.imagekit.io/mhmadamrii";
+  console.log("public key", publicKey);
   return (
     <RootDocument>
       <IKContext
@@ -79,7 +81,7 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
         </ScriptOnce>
 
         {children}
-
+        <Toaster richColors />
         <ReactQueryDevtools buttonPosition="bottom-left" />
         <TanStackRouterDevtools position="bottom-right" />
 

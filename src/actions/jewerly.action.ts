@@ -1,6 +1,17 @@
+import * as z from "zod";
+
 import { createServerFn } from "@tanstack/react-start";
+import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { category } from "~/lib/db/schema";
+import { category, jewerlyAssets } from "~/lib/db/schema";
+
+const JewerlyAssetSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  price: z.number(),
+  imageUrl: z.string(),
+  categoryId: z.string(),
+});
 
 export const getAllCategories = createServerFn({ method: "GET" }).handler(async () => {
   const res = await db.select().from(category);
@@ -9,3 +20,27 @@ export const getAllCategories = createServerFn({ method: "GET" }).handler(async 
     data: res,
   };
 });
+
+export const createJewerlyAsset = createServerFn({ method: "POST" })
+  .validator(JewerlyAssetSchema)
+  .middleware([authMiddleware])
+  .handler(async ({ data, context }) => {
+    const { name, description, categoryId, imageUrl, price } = data;
+    const res = await db
+      .insert(jewerlyAssets)
+      .values({
+        userId: context.user.id,
+        name,
+        price,
+        description,
+        categoryId,
+        imageUrl,
+      })
+      .returning({ id: jewerlyAssets.id });
+    console.log("res", res);
+
+    return {
+      success: true,
+      data: res[0],
+    };
+  });

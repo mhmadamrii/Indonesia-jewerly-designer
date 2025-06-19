@@ -13,7 +13,6 @@ export const Route = createFileRoute("/(main)/dashboard")({
 
 function RouteComponent() {
   const { dashboard } = Route.useLoaderData();
-  console.log("dashboard", dashboard);
   return (
     <section className="flex h-full w-full flex-col px-5">
       <section className="flex h-full w-full gap-4">
