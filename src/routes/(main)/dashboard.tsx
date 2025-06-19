@@ -1,11 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Await, createFileRoute, Link } from "@tanstack/react-router";
 import { IKImage } from "imagekitio-react";
 import { getDashboard } from "~/actions/dashboard.action";
 import { Card, CardContent } from "~/components/ui/card";
 
 export const Route = createFileRoute("/(main)/dashboard")({
   loader: async () => {
-    const dashboard = await getDashboard();
+    const dashboard = getDashboard();
     return { dashboard };
   },
   component: RouteComponent,
@@ -22,34 +22,52 @@ function RouteComponent() {
             <div className="flex w-full justify-between">
               <h1 className="text-xl font-semibold">Assets</h1>
               <div className="flex gap-3">
-                {dashboard?.data?.categories?.map((item) => (
-                  <div key={item.id}>
-                    <h1>{item.name}</h1>
-                  </div>
-                ))}
+                <Await promise={dashboard} fallback={<div>Loading...</div>}>
+                  {({ data }) => (
+                    <div>
+                      {data?.categories?.map((item) => (
+                        <div key={item.id}>
+                          <h1>{item.name}</h1>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </Await>
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              {dashboard?.data?.jewerlies?.map((item) => {
-                return (
-                  <Card className="w-full max-w-[250px]" key={item.id}>
-                    <CardContent>
-                      <IKImage
-                        src={item.imageUrl ?? ""}
-                        className="h-full w-full rounded-lg sm:h-[200px] sm:w-[300px]"
-                        alt="Asset Image"
-                      />
-                      <h1 className="text-xl font-semibold">{item.name}</h1>
-                      <p>{item.description}</p>
-                      <div className="flex items-center gap-2">
-                        <span className="uppercase">{}</span>
-                        <span className="font-bold">{item.price}</span>
-                      </div>
-                      {/* <span className='italic'>By: {item?.User?.name}</span> */}
-                    </CardContent>
-                  </Card>
-                );
-              })}
+              <Await promise={dashboard} fallback={<div>Loading...</div>}>
+                {({ data }) => (
+                  <div className="flex flex-wrap gap-2">
+                    {data?.jewerlies?.map((item) => {
+                      return (
+                        <Card className="w-full max-w-[250px]" key={item.id}>
+                          <CardContent>
+                            <IKImage
+                              src={item.imageUrl ?? ""}
+                              className="h-full w-full rounded-lg sm:h-[200px] sm:w-[300px]"
+                              alt="Asset Image"
+                            />
+                            <Link
+                              to="/assets/$assetId"
+                              params={{
+                                assetId: item.id,
+                              }}
+                            >
+                              <h1 className="text-xl font-semibold">{item.name}</h1>
+                            </Link>
+                            <p>{item.description}</p>
+                            <div className="flex items-center gap-2">
+                              <span className="uppercase">{item.price}</span>
+                              <span className="font-bold">{item.description}</span>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                )}
+              </Await>
             </div>
           </div>
         </div>
@@ -75,21 +93,25 @@ function RouteComponent() {
 
           <div>
             <h1>Users</h1>
-            <Card className="flex flex-wrap gap-2">
-              <CardContent>
-                {dashboard?.data?.users?.map((item, idx) => {
-                  return (
-                    <div className="w-full max-w-[300px]" key={item.id}>
-                      <div className="flex gap-2">
-                        <h1>{idx + 1}</h1>
-                        <h1>{item.name}</h1>
-                        <p>{item.email}</p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </CardContent>
-            </Card>
+            <Await promise={dashboard} fallback={<div>Loading...</div>}>
+              {({ data }) => (
+                <Card className="flex flex-wrap gap-2">
+                  <CardContent>
+                    {data?.users?.map((item, idx) => {
+                      return (
+                        <div className="w-full max-w-[300px]" key={item.id}>
+                          <div className="flex gap-2">
+                            <h1>{idx + 1}</h1>
+                            <h1>{item.name}</h1>
+                            <p>{item.email}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </CardContent>
+                </Card>
+              )}
+            </Await>
           </div>
         </div>
       </section>

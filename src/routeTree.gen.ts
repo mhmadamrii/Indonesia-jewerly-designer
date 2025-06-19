@@ -22,6 +22,7 @@ import { Route as authSignupRouteImport } from "./routes/(auth)/signup";
 import { Route as authLoginRouteImport } from "./routes/(auth)/login";
 import { Route as authAuthRouteImport } from "./routes/(auth)/auth";
 import { Route as adminAdminRouteImport } from "./routes/(admin)/admin";
+import { Route as mainAssetsAssetIdRouteImport } from "./routes/(main)/assets.$assetId";
 import { ServerRoute as ApiAuthSplatServerRouteImport } from "./routes/api/auth/$";
 
 const rootServerRouteImport = createServerRootRoute();
@@ -79,6 +80,11 @@ const adminAdminRoute = adminAdminRouteImport.update({
   path: "/admin",
   getParentRoute: () => rootRouteImport,
 } as any);
+const mainAssetsAssetIdRoute = mainAssetsAssetIdRouteImport.update({
+  id: "/assets/$assetId",
+  path: "/assets/$assetId",
+  getParentRoute: () => mainRouteRoute,
+} as any);
 const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
   id: "/api/auth/$",
   path: "/api/auth/$",
@@ -95,6 +101,7 @@ export interface FileRoutesByFullPath {
   "/dashboard": typeof mainDashboardRoute;
   "/publishing": typeof mainPublishingRoute;
   "/dashboards/": typeof DashboardsIndexRoute;
+  "/assets/$assetId": typeof mainAssetsAssetIdRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof mainRouteRouteWithChildren;
@@ -105,6 +112,7 @@ export interface FileRoutesByTo {
   "/dashboard": typeof mainDashboardRoute;
   "/publishing": typeof mainPublishingRoute;
   "/dashboards": typeof DashboardsIndexRoute;
+  "/assets/$assetId": typeof mainAssetsAssetIdRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
@@ -119,6 +127,7 @@ export interface FileRoutesById {
   "/(main)/dashboard": typeof mainDashboardRoute;
   "/(main)/publishing": typeof mainPublishingRoute;
   "/dashboards/": typeof DashboardsIndexRoute;
+  "/(main)/assets/$assetId": typeof mainAssetsAssetIdRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
@@ -131,7 +140,8 @@ export interface FileRouteTypes {
     | "/signup"
     | "/dashboard"
     | "/publishing"
-    | "/dashboards/";
+    | "/dashboards/"
+    | "/assets/$assetId";
   fileRoutesByTo: FileRoutesByTo;
   to:
     | "/"
@@ -141,7 +151,8 @@ export interface FileRouteTypes {
     | "/signup"
     | "/dashboard"
     | "/publishing"
-    | "/dashboards";
+    | "/dashboards"
+    | "/assets/$assetId";
   id:
     | "__root__"
     | "/"
@@ -154,7 +165,8 @@ export interface FileRouteTypes {
     | "/(auth)/signup"
     | "/(main)/dashboard"
     | "/(main)/publishing"
-    | "/dashboards/";
+    | "/dashboards/"
+    | "/(main)/assets/$assetId";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
@@ -265,6 +277,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof adminAdminRouteImport;
       parentRoute: typeof rootRouteImport;
     };
+    "/(main)/assets/$assetId": {
+      id: "/(main)/assets/$assetId";
+      path: "/assets/$assetId";
+      fullPath: "/assets/$assetId";
+      preLoaderRoute: typeof mainAssetsAssetIdRouteImport;
+      parentRoute: typeof mainRouteRoute;
+    };
   }
 }
 declare module "@tanstack/react-start/server" {
@@ -298,11 +317,13 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 interface mainRouteRouteChildren {
   mainDashboardRoute: typeof mainDashboardRoute;
   mainPublishingRoute: typeof mainPublishingRoute;
+  mainAssetsAssetIdRoute: typeof mainAssetsAssetIdRoute;
 }
 
 const mainRouteRouteChildren: mainRouteRouteChildren = {
   mainDashboardRoute: mainDashboardRoute,
   mainPublishingRoute: mainPublishingRoute,
+  mainAssetsAssetIdRoute: mainAssetsAssetIdRoute,
 };
 
 const mainRouteRouteWithChildren = mainRouteRoute._addFileChildren(

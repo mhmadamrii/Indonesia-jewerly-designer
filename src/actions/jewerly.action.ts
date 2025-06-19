@@ -1,6 +1,7 @@
 import * as z from "zod";
 
 import { createServerFn } from "@tanstack/react-start";
+import { eq } from "drizzle-orm";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
 import { category, jewerlyAssets } from "~/lib/db/schema";
@@ -21,6 +22,24 @@ export const getAllCategories = createServerFn({ method: "GET" }).handler(async 
   };
 });
 
+export const getJewerlyById = createServerFn({ method: "GET" })
+  .validator(
+    z.object({
+      id: z.string(),
+    }),
+  )
+  .handler(async ({ data }) => {
+    const res = await db
+      .select()
+      .from(jewerlyAssets)
+      .where(eq(jewerlyAssets.id, data.id));
+
+    return {
+      success: true,
+      data: res,
+    };
+  });
+
 export const createJewerlyAsset = createServerFn({ method: "POST" })
   .validator(JewerlyAssetSchema)
   .middleware([authMiddleware])
@@ -37,7 +56,6 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
         imageUrl,
       })
       .returning({ id: jewerlyAssets.id });
-    console.log("res", res);
 
     return {
       success: true,
