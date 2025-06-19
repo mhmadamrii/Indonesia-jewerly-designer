@@ -1,5 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { useEffect } from "react";
 import ThemeToggle from "~/components/ThemeToggle";
 import { Button } from "~/components/ui/button";
 import { authClient } from "~/lib/auth/auth-client";
@@ -7,14 +8,23 @@ import { authClient } from "~/lib/auth/auth-client";
 export const Route = createFileRoute("/")({
   component: Home,
   loader: ({ context }) => {
+    console.log(context);
+    // redirect({ to: "/dashboard" });
     return { user: context.user };
   },
 });
 
 function Home() {
+  const navigate = useNavigate();
   const { user } = Route.useLoaderData();
   const queryClient = useQueryClient();
   const router = useRouter();
+
+  useEffect(() => {
+    navigate({
+      to: "/dashboard",
+    });
+  }, []);
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-10 p-2">

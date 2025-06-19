@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { authClient } from "~/lib/auth/auth-client";
@@ -45,6 +46,7 @@ function RouteComponent() {
           {isLoading ? <LoaderCircle className="animate-spin" /> : "Sign in with Google"}
         </Button>
         <Button
+          onClick={() => toast.error("Not implemented")}
           variant="outline"
           className="w-full cursor-pointer rounded-3xl border-[#4E8FFF]"
         >

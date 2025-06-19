@@ -62,3 +62,22 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
       data: res[0],
     };
   });
+
+export const deleteJewerlyAsset = createServerFn({ method: "POST" })
+  .validator(
+    z.object({
+      id: z.string(),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data, context }) => {
+    const res = await db
+      .delete(jewerlyAssets)
+      .where(eq(jewerlyAssets.id, data.id))
+      .returning({ id: jewerlyAssets.id });
+
+    return {
+      success: true,
+      data: res,
+    };
+  });

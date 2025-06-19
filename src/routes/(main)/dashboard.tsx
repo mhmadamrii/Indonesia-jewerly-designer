@@ -1,10 +1,13 @@
 import { Await, createFileRoute, Link } from "@tanstack/react-router";
 import { IKImage } from "imagekitio-react";
+import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { getDashboard } from "~/actions/dashboard.action";
+import { deleteJewerlyAsset } from "~/actions/jewerly.action";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardTitle } from "~/components/ui/card";
+import { authClient } from "~/lib/auth/auth-client";
 import { cn } from "~/lib/utils";
 
 export const Route = createFileRoute("/(main)/dashboard")({
@@ -17,8 +20,17 @@ export const Route = createFileRoute("/(main)/dashboard")({
 
 function RouteComponent() {
   const { dashboard } = Route.useLoaderData();
+  const { data: session } = authClient.useSession();
 
   const [selectedCategory, setSelectedCategory] = useState("");
+
+  const handleDeleteJewerlyAsset = async (id: string) => {
+    await deleteJewerlyAsset({
+      data: {
+        id,
+      },
+    });
+  };
 
   return (
     <section className="flex h-full w-full flex-col px-5">
@@ -62,7 +74,17 @@ function RouteComponent() {
                 {({ data }) => (
                   <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
                     {data?.jewerlies?.map((item) => (
-                      <Card className="w-full" key={item.jewerly_assets.id}>
+                      <Card className="relative w-full" key={item.jewerly_assets.id}>
+                        <Button
+                          onClick={() => handleDeleteJewerlyAsset(item.jewerly_assets.id)}
+                          className={cn("absolute top-1 right-2 hidden cursor-pointer", {
+                            flex: item.jewerly_assets.userId === session?.user.id,
+                          })}
+                          variant="destructive"
+                          size="icon"
+                        >
+                          <Trash2 />
+                        </Button>
                         <CardContent className="flex flex-col gap-5">
                           <IKImage
                             src={item.jewerly_assets.imageUrl ?? ""}
