@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { IKUpload } from "imagekitio-react";
+import { IKImage, IKUpload } from "imagekitio-react";
 import { LoaderIcon, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
@@ -124,9 +124,18 @@ export function JewerlyUploadForm({ onStepClick }: IProps) {
           ))}
         </FileUploadList>
       </FileUpload>
+      <div>
+        {jewerlyForm.image_url && (
+          <IKImage
+            src={jewerlyForm.image_url ?? ""}
+            className="h-full w-full rounded-lg sm:h-[200px] sm:w-[300px]"
+            alt="Asset Image"
+          />
+        )}
+      </div>
       <div className="flex w-full items-center justify-end">
         <Button
-          disabled={files.length < 1 || isUploading}
+          disabled={!jewerlyForm.image_url || isUploading}
           onClick={() => {
             if (jewerlyForm.image_url) {
               onStepClick(3);

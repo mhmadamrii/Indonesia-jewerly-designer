@@ -75,7 +75,7 @@ export function RegisterForm({ onClickRegisterForm }: IProps) {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="mx-auto w-[400px] space-y-8 py-10"
+          className="mx-auto flex w-full flex-col gap-3"
         >
           <FormField
             control={form.control}
@@ -84,9 +84,13 @@ export function RegisterForm({ onClickRegisterForm }: IProps) {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="John Doe" type="text" {...field} />
+                  <Input
+                    className="w-full rounded-xl"
+                    placeholder="John Doe"
+                    type="text"
+                    {...field}
+                  />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
@@ -99,9 +103,13 @@ export function RegisterForm({ onClickRegisterForm }: IProps) {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="john@gmail.com" type="email" {...field} />
+                  <Input
+                    className="w-full rounded-xl"
+                    placeholder="john@gmail.com"
+                    type="email"
+                    {...field}
+                  />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
@@ -114,9 +122,12 @@ export function RegisterForm({ onClickRegisterForm }: IProps) {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <PasswordInput placeholder="password" {...field} />
+                  <PasswordInput
+                    className="w-full rounded-xl"
+                    placeholder="password"
+                    {...field}
+                  />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}

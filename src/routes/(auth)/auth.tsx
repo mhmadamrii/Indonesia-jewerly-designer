@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
-import { Card, CardContent } from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
+import { Card } from "~/components/ui/card";
+import { authClient } from "~/lib/auth/auth-client";
 import { LoginForm } from "./-components/login-form";
 import { RegisterForm } from "./-components/register-form";
 
@@ -10,21 +13,52 @@ export const Route = createFileRoute("/(auth)/auth")({
 
 function RouteComponent() {
   const [isLoginForm, setIsLoginForm] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const redirectUrl = "/dashboard";
+
+  const handleLoginWithGmail = () => {
+    setIsLoading(true);
+    authClient.signIn.social(
+      {
+        provider: "google",
+        callbackURL: redirectUrl,
+      },
+      {
+        onRequest: () => {},
+        onError: (ctx) => {},
+      },
+    );
+  };
   return (
-    <section className="flex h-screen flex-col items-center justify-center">
-      <Card>
-        <section className="flex w-full flex-col items-center justify-center">
-          <img src="/djiwaID.svg" alt="djiwaID" className="h-[100px] w-[120px]" />
-          <h1 className="text-lg font-bold">Login</h1>
-        </section>
-        <CardContent>
-          {isLoginForm ? (
-            <LoginForm onClickLoginForm={setIsLoginForm} />
-          ) : (
-            <RegisterForm onClickRegisterForm={setIsLoginForm} />
-          )}
-        </CardContent>
-      </Card>
-    </section>
+    <Card className="mx-0 sm:mx-auto">
+      <section className="flex w-full flex-col items-center justify-center">
+        <img src="/djiwaID.svg" alt="djiwaID" className="h-[80px] w-[120px]" />
+        <h1 className="text-lg font-bold">Login</h1>
+      </section>
+      <section className="flex w-full flex-col gap-2 px-5 text-center">
+        <Button
+          variant="outline"
+          className="w-full cursor-pointer rounded-3xl border-[#FF3B30]"
+          onClick={handleLoginWithGmail}
+        >
+          {isLoading ? <LoaderCircle className="animate-spin" /> : "Sign in with Google"}
+        </Button>
+        <Button
+          variant="outline"
+          className="w-full cursor-pointer rounded-3xl border-[#4E8FFF]"
+        >
+          Sign in with Facebook
+        </Button>
+        <span className="text-muted-foreground">or, use email address</span>
+      </section>
+      <section className="px-5 py-0">
+        {isLoginForm ? (
+          <LoginForm onClickLoginForm={setIsLoginForm} />
+        ) : (
+          <RegisterForm onClickRegisterForm={setIsLoginForm} />
+        )}
+      </section>
+    </Card>
   );
 }

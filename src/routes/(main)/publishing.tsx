@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { Await, createFileRoute } from "@tanstack/react-router";
+import { JSX, useState } from "react";
 import { getAllCategories } from "~/actions/category.action";
 import { JewerlyForm } from "~/components/forms/jewerly-form";
 import { JewerlyLinkForm } from "~/components/forms/jewerly-link-form";
@@ -11,8 +11,8 @@ import { AnimatedStepper } from "~/components/ui/stepper";
 export const Route = createFileRoute("/(main)/publishing")({
   component: RouteComponent,
   loader: async () => {
-    const categories = await getAllCategories();
-    return { jewerly_categories: categories.data };
+    const categories = getAllCategories();
+    return { categories };
   },
 });
 
@@ -36,18 +36,22 @@ const steps = [
 ];
 
 function RouteComponent() {
-  const { jewerly_categories } = Route.useLoaderData();
+  const { categories } = Route.useLoaderData();
   const [currentStep, setCurrentStep] = useState(1);
 
   const handleStepClick = (stepNumber: number) => {
     setCurrentStep(stepNumber);
   };
 
-  const getFormStepper = () => {
+  const getFormStepper = (): JSX.Element => {
     switch (currentStep) {
       case 1:
         return (
-          <JewerlyForm categories={jewerly_categories} onStepClick={handleStepClick} />
+          <Await promise={categories} fallback={<div>Loading...</div>}>
+            {({ data }) => (
+              <JewerlyForm categories={data} onStepClick={handleStepClick} />
+            )}
+          </Await>
         );
       case 2:
         return <JewerlyUploadForm onStepClick={handleStepClick} />;
@@ -56,7 +60,7 @@ function RouteComponent() {
       case 4:
         return <JewerlyPublishForm />;
       default:
-        break;
+        return <span>No step</span>;
     }
   };
 

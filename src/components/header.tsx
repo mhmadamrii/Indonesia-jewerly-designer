@@ -38,6 +38,7 @@ import {
 import ThemeToggle from "./ThemeToggle";
 
 type Role = "user" | "artist";
+
 export function Header() {
   const navigate = useNavigate();
   const roles: Role[] = ["user", "artist"];
@@ -126,21 +127,24 @@ export function Header() {
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger className="cursor-pointer" asChild>
-              <Avatar className="h-8 w-8">
+              <Avatar className="h-10 w-10">
                 <AvatarImage
-                  src={session?.user.image ?? "https://github.com/shadcn.png"}
+                  // src={session?.user.image ?? "https://github.com/shadcn.png"}
+                  src="https://lh3.googleusercontent.com/a/ACg8ocLlouf-XtUn7hKUzjYWVqLrsa5EYs1reM60UIu2e2H3P3HTYhQ=s96-c"
+                  // src={"https://github.com/mhmadamrii.png"}
                 />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarFallback>{session?.user.name.charAt(0)}</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="bg-card">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
+              <DropdownMenuItem>{session?.user.name}</DropdownMenuItem>
               <DropdownMenuItem>{session?.user.email}</DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Button
                   variant="destructive"
-                  className="w-full"
+                  className="w-full cursor-pointer"
                   onClick={() => {
                     authClient.signOut({
                       fetchOptions: {

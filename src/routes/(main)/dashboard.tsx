@@ -17,7 +17,7 @@ function RouteComponent() {
     <section className="flex h-full w-full flex-col px-5">
       <section className="flex h-full w-full gap-4">
         <div className="flex w-[70%] flex-col gap-4">
-          <img src="/banner.svg" className="w-full border" alt="Banner" />
+          <img src="/banner.svg" className="w-full" alt="Banner" />
           <div>
             <div className="flex w-full justify-between">
               <h1 className="text-xl font-semibold">Assets</h1>
@@ -73,20 +73,19 @@ function RouteComponent() {
         </div>
 
         <div className="flex w-[30%] flex-col gap-4">
-          <div>
-            <h1>Analytics</h1>
-            <div className="grid grid-cols-2 gap-2">
-              <Card>
-                <CardContent>Revenue</CardContent>
+          <div className="min-h-[350px]">
+            <div className="grid h-full grid-cols-2 gap-2">
+              <Card className="h-full">
+                <CardContent className="h-full">Revenue</CardContent>
               </Card>
-              <Card>
-                <CardContent>Spending</CardContent>
+              <Card className="h-full">
+                <CardContent className="h-full">Spending</CardContent>
               </Card>
-              <Card>
-                <CardContent>ROI</CardContent>
+              <Card className="h-full">
+                <CardContent className="h-full">ROI</CardContent>
               </Card>
-              <Card>
-                <CardContent>Estimated</CardContent>
+              <Card className="h-full">
+                <CardContent className="h-full">Estimated</CardContent>
               </Card>
             </div>
           </div>

@@ -6,7 +6,9 @@ export function Sidebar() {
   const location = useLocation();
   return (
     <aside
-      className={cn("sticky top-0 z-30 hidden w-1/5 flex-col gap-2.5 border p-4 sm:flex")}
+      className={cn(
+        "sticky top-0 z-30 hidden w-1/4 max-w-[180px] flex-col gap-2.5 border p-4 sm:flex",
+      )}
     >
       <Link className="w-full" to="/">
         <img src="/djiwaID.svg" alt="djiwaID" className="h-[100px] w-[120px]" />
