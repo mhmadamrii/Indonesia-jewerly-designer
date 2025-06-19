@@ -4,7 +4,7 @@ import * as z from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
@@ -27,7 +27,11 @@ const formSchema = z.object({
   name: z.string(),
 });
 
-export function RegisterForm() {
+interface IProps {
+  onClickRegisterForm: Dispatch<SetStateAction<boolean>>;
+}
+
+export function RegisterForm({ onClickRegisterForm }: IProps) {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -117,14 +121,22 @@ export function RegisterForm() {
               </FormItem>
             )}
           />
-
-          <Button
-            className="w-full cursor-pointer bg-[#FF3B30] hover:bg-[#FF3B30]/80"
-            type="submit"
-            disabled={isLoading}
-          >
-            {isLoading ? "Loading" : "Submit"}
-          </Button>
+          <div className="flex w-full flex-col items-center justify-center gap-2">
+            <Button
+              className="w-full cursor-pointer rounded-3xl bg-[#FF3B30] hover:bg-[#FF3B30]/80"
+              type="submit"
+            >
+              Submit
+            </Button>
+            <Button
+              onClick={() => onClickRegisterForm(true)}
+              variant="outline"
+              className="w-full cursor-pointer rounded-3xl"
+              type="button"
+            >
+              Sign Up
+            </Button>
+          </div>
         </form>
       </Form>
     </section>

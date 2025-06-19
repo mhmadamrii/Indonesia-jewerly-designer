@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { LoginForm } from "./-components/login-form";
 import { RegisterForm } from "./-components/register-form";
@@ -19,10 +18,11 @@ function RouteComponent() {
           <h1 className="text-lg font-bold">Login</h1>
         </section>
         <CardContent>
-          {isLoginForm ? <LoginForm /> : <RegisterForm />}
-          <Button onClick={() => setIsLoginForm((prev) => !prev)}>
-            {isLoginForm ? "Register" : "Login"}
-          </Button>
+          {isLoginForm ? (
+            <LoginForm onClickLoginForm={setIsLoginForm} />
+          ) : (
+            <RegisterForm onClickRegisterForm={setIsLoginForm} />
+          )}
         </CardContent>
       </Card>
     </section>

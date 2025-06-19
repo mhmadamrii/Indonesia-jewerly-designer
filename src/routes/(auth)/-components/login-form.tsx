@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
+import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -24,7 +25,11 @@ const formSchema = z.object({
   password: z.string(),
 });
 
-export function LoginForm() {
+interface IProps {
+  onClickLoginForm: Dispatch<SetStateAction<boolean>>;
+}
+
+export function LoginForm({ onClickLoginForm }: IProps) {
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -97,12 +102,22 @@ export function LoginForm() {
             )}
           />
 
-          <Button
-            className="w-full cursor-pointer bg-[#FF3B30] hover:bg-[#FF3B30]/80"
-            type="submit"
-          >
-            Submit
-          </Button>
+          <div className="flex w-full flex-col items-center justify-center gap-2">
+            <Button
+              className="w-full cursor-pointer rounded-3xl bg-[#FF3B30] hover:bg-[#FF3B30]/80"
+              type="submit"
+            >
+              Submit
+            </Button>
+            <Button
+              onClick={() => onClickLoginForm(false)}
+              variant="outline"
+              className="w-full cursor-pointer rounded-3xl"
+              type="button"
+            >
+              Sign Up
+            </Button>
+          </div>
         </form>
       </Form>
     </section>
