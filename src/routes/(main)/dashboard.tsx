@@ -4,6 +4,7 @@ import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { getDashboard } from "~/actions/dashboard.action";
 import { deleteJewerlyAsset } from "~/actions/jewerly.action";
+import { ModelViewer } from "~/components/3D/model-viewer";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardTitle } from "~/components/ui/card";
@@ -86,11 +87,18 @@ function RouteComponent() {
                           <Trash2 />
                         </Button>
                         <CardContent className="flex flex-col gap-5">
-                          <IKImage
-                            src={item.jewerly_assets.imageUrl ?? ""}
-                            className="h-full w-full rounded-lg sm:h-[200px] sm:w-[300px]"
-                            alt="Asset Image"
-                          />
+                          {item.jewerly_assets.imageUrl &&
+                            item.jewerly_assets.typeAsset == "image" && (
+                              <IKImage
+                                src={item.jewerly_assets.imageUrl ?? ""}
+                                className="h-full w-full rounded-lg sm:h-[200px] sm:w-[300px]"
+                                alt="Asset Image"
+                              />
+                            )}
+                          {item.jewerly_assets.imageUrl &&
+                            item.jewerly_assets.typeAsset == "non-image" && (
+                              <ModelViewer src={item.jewerly_assets.imageUrl ?? ""} />
+                            )}
                           <div className="flex w-full items-center justify-between">
                             <Link
                               to="/assets/$assetId"

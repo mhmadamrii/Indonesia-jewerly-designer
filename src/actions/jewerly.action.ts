@@ -12,6 +12,7 @@ const JewerlyAssetSchema = z.object({
   price: z.number(),
   imageUrl: z.string(),
   categoryId: z.string(),
+  typeAsset: z.string(),
 });
 
 export const getAllCategories = createServerFn({ method: "GET" }).handler(async () => {
@@ -44,12 +45,13 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
   .validator(JewerlyAssetSchema)
   .middleware([authMiddleware])
   .handler(async ({ data, context }) => {
-    const { name, description, categoryId, imageUrl, price } = data;
+    const { name, description, categoryId, imageUrl, price, typeAsset } = data;
     const res = await db
       .insert(jewerlyAssets)
       .values({
         userId: context.user.id,
         name,
+        typeAsset,
         price,
         description,
         categoryId,

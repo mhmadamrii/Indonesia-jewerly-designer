@@ -17,6 +17,7 @@ import {
   FileUploadList,
   FileUploadTrigger,
 } from "~/components/ui/file-upload";
+import { ModelViewer } from "../3D/model-viewer";
 
 interface IProps {
   onStepClick: (stepNumber: number) => void;
@@ -28,17 +29,20 @@ export function JewerlyUploadForm({ onStepClick }: IProps) {
 
   const { data: session } = authClient.useSession();
   const { addJewerlyForm, jewerlyForm } = useFormStorage();
+  console.log("jewerlyForm", jewerlyForm);
 
   const handleStartUpload = () => {
     setIsUploading(true);
   };
 
   const handleSuccessUpload = (res: any) => {
+    console.log("response image", res);
     if (res.url) {
       toast.success("Image uploaded successfully");
       setIsUploading(false);
       addJewerlyForm({
         ...jewerlyForm,
+        type_asset: res.fileType,
         image_url: res.url,
       });
     }
@@ -125,12 +129,15 @@ export function JewerlyUploadForm({ onStepClick }: IProps) {
         </FileUploadList>
       </FileUpload>
       <div>
-        {jewerlyForm.image_url && (
+        {jewerlyForm.image_url && jewerlyForm.type_asset == "image" && (
           <IKImage
             src={jewerlyForm.image_url ?? ""}
             className="h-full w-full rounded-lg sm:h-[200px] sm:w-[300px]"
             alt="Asset Image"
           />
+        )}
+        {jewerlyForm.image_url && jewerlyForm.type_asset == "non-image" && (
+          <ModelViewer src={jewerlyForm.image_url ?? ""} />
         )}
       </div>
       <div className="flex w-full items-center justify-end">

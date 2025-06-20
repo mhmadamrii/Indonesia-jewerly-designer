@@ -17,6 +17,7 @@ import { Route as authRouteRouteImport } from "./routes/(auth)/route";
 import { Route as IndexRouteImport } from "./routes/index";
 import { Route as DashboardsIndexRouteImport } from "./routes/dashboards/index";
 import { Route as mainPublishingRouteImport } from "./routes/(main)/publishing";
+import { Route as mainMyModelsRouteImport } from "./routes/(main)/my-models";
 import { Route as mainDashboardRouteImport } from "./routes/(main)/dashboard";
 import { Route as authSignupRouteImport } from "./routes/(auth)/signup";
 import { Route as authLoginRouteImport } from "./routes/(auth)/login";
@@ -53,6 +54,11 @@ const DashboardsIndexRoute = DashboardsIndexRouteImport.update({
 const mainPublishingRoute = mainPublishingRouteImport.update({
   id: "/publishing",
   path: "/publishing",
+  getParentRoute: () => mainRouteRoute,
+} as any);
+const mainMyModelsRoute = mainMyModelsRouteImport.update({
+  id: "/my-models",
+  path: "/my-models",
   getParentRoute: () => mainRouteRoute,
 } as any);
 const mainDashboardRoute = mainDashboardRouteImport.update({
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   "/login": typeof authLoginRoute;
   "/signup": typeof authSignupRoute;
   "/dashboard": typeof mainDashboardRoute;
+  "/my-models": typeof mainMyModelsRoute;
   "/publishing": typeof mainPublishingRoute;
   "/dashboards/": typeof DashboardsIndexRoute;
   "/assets/$assetId": typeof mainAssetsAssetIdRoute;
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   "/login": typeof authLoginRoute;
   "/signup": typeof authSignupRoute;
   "/dashboard": typeof mainDashboardRoute;
+  "/my-models": typeof mainMyModelsRoute;
   "/publishing": typeof mainPublishingRoute;
   "/dashboards": typeof DashboardsIndexRoute;
   "/assets/$assetId": typeof mainAssetsAssetIdRoute;
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   "/(auth)/login": typeof authLoginRoute;
   "/(auth)/signup": typeof authSignupRoute;
   "/(main)/dashboard": typeof mainDashboardRoute;
+  "/(main)/my-models": typeof mainMyModelsRoute;
   "/(main)/publishing": typeof mainPublishingRoute;
   "/dashboards/": typeof DashboardsIndexRoute;
   "/(main)/assets/$assetId": typeof mainAssetsAssetIdRoute;
@@ -139,6 +148,7 @@ export interface FileRouteTypes {
     | "/login"
     | "/signup"
     | "/dashboard"
+    | "/my-models"
     | "/publishing"
     | "/dashboards/"
     | "/assets/$assetId";
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | "/login"
     | "/signup"
     | "/dashboard"
+    | "/my-models"
     | "/publishing"
     | "/dashboards"
     | "/assets/$assetId";
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | "/(auth)/login"
     | "/(auth)/signup"
     | "/(main)/dashboard"
+    | "/(main)/my-models"
     | "/(main)/publishing"
     | "/dashboards/"
     | "/(main)/assets/$assetId";
@@ -242,6 +254,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof mainPublishingRouteImport;
       parentRoute: typeof mainRouteRoute;
     };
+    "/(main)/my-models": {
+      id: "/(main)/my-models";
+      path: "/my-models";
+      fullPath: "/my-models";
+      preLoaderRoute: typeof mainMyModelsRouteImport;
+      parentRoute: typeof mainRouteRoute;
+    };
     "/(main)/dashboard": {
       id: "/(main)/dashboard";
       path: "/dashboard";
@@ -316,12 +335,14 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface mainRouteRouteChildren {
   mainDashboardRoute: typeof mainDashboardRoute;
+  mainMyModelsRoute: typeof mainMyModelsRoute;
   mainPublishingRoute: typeof mainPublishingRoute;
   mainAssetsAssetIdRoute: typeof mainAssetsAssetIdRoute;
 }
 
 const mainRouteRouteChildren: mainRouteRouteChildren = {
   mainDashboardRoute: mainDashboardRoute,
+  mainMyModelsRoute: mainMyModelsRoute,
   mainPublishingRoute: mainPublishingRoute,
   mainAssetsAssetIdRoute: mainAssetsAssetIdRoute,
 };

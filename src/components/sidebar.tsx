@@ -1,6 +1,7 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { NAV_LINKS } from "~/constants";
 import { cn } from "~/lib/utils";
+import ThemeToggle from "./ThemeToggle";
 
 export function Sidebar() {
   const location = useLocation();
@@ -9,7 +10,6 @@ export function Sidebar() {
     <aside
       className={cn(
         "sticky top-0 hidden h-screen w-[250px] flex-col gap-4 border-r p-4 sm:flex",
-        // If you want it visible on all screen sizes, remove `hidden` and `sm:flex`
       )}
     >
       <Link className="w-full" to="/">
@@ -32,8 +32,7 @@ export function Sidebar() {
           </span>
         </Link>
       ))}
-
-      <h1 className="mt-auto text-xl font-semibold">Profile</h1>
+      <ThemeToggle />
     </aside>
   );
 }

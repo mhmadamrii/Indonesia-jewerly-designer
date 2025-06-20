@@ -16,6 +16,7 @@
     "auth:generate": "pnpm dlx @better-auth/cli@latest generate --config ./src/lib/auth/index.ts --y --output ./src/lib/db/schema/auth.schema.ts && prettier --write ./src/lib/db/schema/auth.schema.ts"
   },
   "dependencies": {
+    "@google/model-viewer": "^4.1.0",
     "@hookform/resolvers": "^5.1.1",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-checkbox": "^1.1.4",

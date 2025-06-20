@@ -1,0 +1,1 @@
+ALTER TABLE "jewerly_assets" ADD COLUMN "type_asset" text NOT NULL;
