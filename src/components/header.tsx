@@ -61,7 +61,10 @@ export function Header() {
     <div className="px-2 py-1">
       <div className="flex flex-row items-center justify-between px-2 py-1">
         <div>
-          <SearchInput onFocus={() => setOpen(true)} className="rounded-full" />
+          <SearchInput
+            onFocus={() => setOpen(true)}
+            className="bg-background rounded-full"
+          />
           <CommandDialog open={open} onOpenChange={setOpen}>
             <CommandInput placeholder="Type a command or search..." />
             <CommandList>
@@ -109,9 +112,9 @@ export function Header() {
                 onClick={() => setCurrentRole(role)}
                 variant="ghost"
                 className={cn(
-                  "rounded-full text-gray-300",
+                  "cursor-pointer rounded-full text-gray-300",
                   currentRole === role &&
-                    "bg-white text-[#FF3B30] hover:text-[#FF3B30]/80",
+                    "bg-background text-[#FF3B30] hover:text-[#FF3B30]/80",
                 )}
               >
                 {role.charAt(0).toUpperCase() + role.slice(1)}
@@ -145,7 +148,7 @@ export function Header() {
                       fetchOptions: {
                         onSuccess: () => {
                           navigate({
-                            to: "/",
+                            to: "/auth",
                           });
                         },
                       },

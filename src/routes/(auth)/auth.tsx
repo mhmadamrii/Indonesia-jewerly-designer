@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { LoaderCircle } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
@@ -43,7 +43,7 @@ function RouteComponent() {
           className="w-full cursor-pointer rounded-3xl border-[#FF3B30]"
           onClick={handleLoginWithGmail}
         >
-          {isLoading ? <LoaderCircle className="animate-spin" /> : "Sign in with Google"}
+          {isLoading ? <Loader className="animate-spin" /> : "Sign in with Google"}
         </Button>
         <Button
           onClick={() => toast.error("Not implemented")}

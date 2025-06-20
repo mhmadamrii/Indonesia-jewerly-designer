@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import { authClient } from "~/lib/auth/auth-client";
 import { useFormStorage } from "~/lib/store";
+import { ModelViewer } from "../3D/model-viewer";
 
 import {
   FileUpload,
@@ -17,7 +18,6 @@ import {
   FileUploadList,
   FileUploadTrigger,
 } from "~/components/ui/file-upload";
-import { ModelViewer } from "../3D/model-viewer";
 
 interface IProps {
   onStepClick: (stepNumber: number) => void;
@@ -29,21 +29,19 @@ export function JewerlyUploadForm({ onStepClick }: IProps) {
 
   const { data: session } = authClient.useSession();
   const { addJewerlyForm, jewerlyForm } = useFormStorage();
-  console.log("jewerlyForm", jewerlyForm);
 
   const handleStartUpload = () => {
     setIsUploading(true);
   };
 
   const handleSuccessUpload = (res: any) => {
-    console.log("response image", res);
     if (res.url) {
       toast.success("Image uploaded successfully");
       setIsUploading(false);
       addJewerlyForm({
         ...jewerlyForm,
-        type_asset: res.fileType,
         image_url: res.url,
+        type_asset: res.fileType,
       });
     }
   };
@@ -88,7 +86,7 @@ export function JewerlyUploadForm({ onStepClick }: IProps) {
         accept="image/*"
         maxFiles={2}
         className="w-full px-10"
-        multiple
+        disabled={jewerlyForm.image_url !== ""}
       >
         <FileUploadDropzone>
           <div className="flex flex-col items-center gap-1">
@@ -128,7 +126,7 @@ export function JewerlyUploadForm({ onStepClick }: IProps) {
           ))}
         </FileUploadList>
       </FileUpload>
-      <div>
+      <div className="min-h-[200px] w-full">
         {jewerlyForm.image_url && jewerlyForm.type_asset == "image" && (
           <IKImage
             src={jewerlyForm.image_url ?? ""}
@@ -136,7 +134,7 @@ export function JewerlyUploadForm({ onStepClick }: IProps) {
             alt="Asset Image"
           />
         )}
-        {jewerlyForm.image_url && jewerlyForm.type_asset == "non-image" && (
+        {jewerlyForm.image_url && jewerlyForm.type_asset !== "image" && (
           <ModelViewer src={jewerlyForm.image_url ?? ""} />
         )}
       </div>

@@ -14,6 +14,7 @@ import { Textarea } from "../ui/textarea";
 export function JewerlyPublishForm() {
   const navigate = useNavigate();
   const { jewerlyForm, resetJewerlyForm } = useFormStorage();
+  console.log("jewerlyForm", jewerlyForm);
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: createJewerlyAsset,
@@ -39,7 +40,7 @@ export function JewerlyPublishForm() {
           price: jewerlyForm.price,
           imageUrl: jewerlyForm.image_url as string,
           categoryId: jewerlyForm.category,
-          typeAsset: jewerlyForm.type_asset,
+          typeAsset: jewerlyForm.type_asset ?? "non-image",
         },
       });
       console.log("res", res);
@@ -75,7 +76,7 @@ export function JewerlyPublishForm() {
             alt="Asset Image"
           />
         )}
-        {jewerlyForm.image_url && jewerlyForm.type_asset == "non-image" && (
+        {jewerlyForm.image_url && jewerlyForm.type_asset !== "image" && (
           <ModelViewer src={jewerlyForm.image_url ?? ""} />
         )}
       </div>

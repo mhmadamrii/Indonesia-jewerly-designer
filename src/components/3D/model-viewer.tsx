@@ -1,6 +1,7 @@
 import "@google/model-viewer";
 
 export function ModelViewer({ src }: { src: string }) {
+  console.log("src", src);
   return (
     // @ts-ignore
     <model-viewer

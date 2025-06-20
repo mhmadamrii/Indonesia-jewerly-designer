@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -11,6 +11,7 @@ import { Input } from "~/components/ui/input";
 import { PasswordInput } from "~/components/ui/password-input";
 import { authClient } from "~/lib/auth/auth-client";
 
+import { Loader } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -30,6 +31,7 @@ interface IProps {
 }
 
 export function LoginForm({ onClickLoginForm }: IProps) {
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -41,6 +43,7 @@ export function LoginForm({ onClickLoginForm }: IProps) {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
     try {
       await authClient.signIn.email(
         {
@@ -62,6 +65,8 @@ export function LoginForm({ onClickLoginForm }: IProps) {
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to submit the form. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -111,10 +116,11 @@ export function LoginForm({ onClickLoginForm }: IProps) {
 
           <div className="flex w-full flex-col items-center justify-center gap-2">
             <Button
+              disabled={isLoading}
               className="w-full cursor-pointer rounded-3xl bg-[#FF3B30] hover:bg-[#FF3B30]/80"
               type="submit"
             >
-              Submit
+              {isLoading ? <Loader className="animate-spin" /> : "Submit"}
             </Button>
             <Button
               onClick={() => onClickLoginForm(false)}
