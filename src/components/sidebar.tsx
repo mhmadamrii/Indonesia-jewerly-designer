@@ -1,10 +1,13 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { NAV_LINKS } from "~/constants";
 import { cn } from "~/lib/utils";
-import ThemeToggle from "./ThemeToggle";
+import { useTheme } from "./theme-provider";
+import { ThemeToggle } from "./theme-toggle";
 
 export function Sidebar() {
   const location = useLocation();
+  const { theme } = useTheme();
+  console.log(theme);
 
   return (
     <aside
@@ -14,7 +17,9 @@ export function Sidebar() {
     >
       <Link className="w-full" to="/">
         <img
-          src="/djiwaID.svg"
+          src={
+            theme === "dark" || theme === "system" ? "/djiwaID-dark.svg" : "/djiwaID.svg"
+          }
           alt="djiwaID"
           className="h-[100px] w-[120px] object-contain"
         />

@@ -70,3 +70,9 @@ Read the [hosting docs](https://tanstack.com/start/latest/docs/framework/react/h
 ## License
 
 Code in this template is public domain via [Unlicense](./LICENSE). Feel free to remove or replace for your own project.
+
+## Something need to be added?
+
+- list of assets along with likes and comments
+- list of all artists
+- switch button or filter whether 3D art or just image

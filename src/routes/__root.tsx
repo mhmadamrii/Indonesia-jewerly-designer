@@ -12,6 +12,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { IKContext } from "imagekitio-react";
 import { Toaster } from "sonner";
 import { imageKitAuthenticator } from "~/actions/imagekit.action";
+import { ThemeProvider } from "~/components/theme-provider";
 import { getUser } from "~/lib/auth/functions/getUser";
 import appCss from "~/styles.css?url";
 
@@ -54,13 +55,15 @@ function RootComponent() {
   console.log("public key", publicKey);
   return (
     <RootDocument>
-      <IKContext
-        publicKey={publicKey}
-        urlEndpoint={urlEndpoint}
-        authenticator={imageKitAuthenticator}
-      >
-        <Outlet />
-      </IKContext>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <IKContext
+          publicKey={publicKey}
+          urlEndpoint={urlEndpoint}
+          authenticator={imageKitAuthenticator}
+        >
+          <Outlet />
+        </IKContext>
+      </ThemeProvider>
     </RootDocument>
   );
 }

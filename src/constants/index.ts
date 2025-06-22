@@ -16,7 +16,12 @@ export const NAV_LINKS = [
   },
   {
     to: "/my-sales",
-    label: "My Sales",
+    label: "My Sale",
+    logo: "/my-sale.svg",
+  },
+  {
+    to: "/profile",
+    label: "Profile",
     logo: "/my-sale.svg",
   },
 ];

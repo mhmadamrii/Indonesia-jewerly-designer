@@ -37,7 +37,15 @@ function RouteComponent() {
     <section className="flex h-full w-full flex-col px-5">
       <section className="flex h-full w-full flex-col gap-4 sm:flex-row">
         <div className="flex w-full flex-col gap-4 sm:w-[70%]">
-          <img src="/banner.svg" className="w-full" alt="Banner" />
+          <div className="relative w-full">
+            <img src="/banner.svg" className="w-full" alt="Banner" />
+            <Link
+              to="/publishing"
+              className="absolute top-[58%] left-[28%] cursor-pointer bg-transparent text-transparent hover:bg-transparent hover:text-transparent"
+            >
+              Create
+            </Link>
+          </div>
           <div className="flex flex-col gap-4">
             <div className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row sm:gap-0">
               <h1 className="text-xl font-semibold">Trending Collections</h1>

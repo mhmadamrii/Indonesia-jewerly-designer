@@ -1,7 +1,7 @@
 import { MoonIcon, SunIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
 
-export default function ThemeToggle() {
+export function ThemeToggle() {
   function toggleTheme() {
     if (
       document.documentElement.classList.contains("dark") ||
