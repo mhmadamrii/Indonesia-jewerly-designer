@@ -9,7 +9,7 @@ export function ModelViewer({ src }: { src: string }) {
       alt="A 3D model"
       auto-rotate
       camera-controls
-      style={{ width: "100%", height: "200px" }}
+      style={{ width: "100%", height: "100%" }}
       ar
     />
   );

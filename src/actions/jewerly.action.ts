@@ -37,7 +37,7 @@ export const getJewerlyById = createServerFn({ method: "GET" })
 
     return {
       success: true,
-      data: res,
+      data: res[0],
     };
   });
 

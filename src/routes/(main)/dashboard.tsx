@@ -96,7 +96,7 @@ function RouteComponent() {
                         >
                           <Trash2 />
                         </Button>
-                        <CardContent className="flex flex-col gap-5">
+                        <CardContent className="flex h-[300px] flex-col gap-5">
                           {item.jewerly_assets.imageUrl &&
                             item.jewerly_assets.typeAsset == "image" && (
                               <IKImage
