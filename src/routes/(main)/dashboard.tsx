@@ -1,4 +1,4 @@
-import { Await, createFileRoute, Link } from "@tanstack/react-router";
+import { Await, ClientOnly, createFileRoute, Link } from "@tanstack/react-router";
 import { IKImage } from "imagekitio-react";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -105,7 +105,9 @@ function RouteComponent() {
                             )}
                           {item.jewerly_assets.imageUrl &&
                             item.jewerly_assets.typeAsset == "non-image" && (
-                              <ModelViewer src={item.jewerly_assets.imageUrl ?? ""} />
+                              <ClientOnly fallback={<div>Loading...</div>}>
+                                <ModelViewer src={item.jewerly_assets.imageUrl ?? ""} />
+                              </ClientOnly>
                             )}
                           <div className="flex w-full items-center justify-between">
                             <Link
