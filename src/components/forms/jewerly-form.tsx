@@ -57,7 +57,7 @@ export function JewerlyForm({ onStepClick, categories }: IProps) {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      addJewerlyForm(values);
+      addJewerlyForm({ ...values, type_asset: "image", image_url: "" });
       onStepClick(2);
       toast.success("Data saved successfully");
     } catch (error) {

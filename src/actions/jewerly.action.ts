@@ -41,6 +41,19 @@ export const getJewerlyById = createServerFn({ method: "GET" })
     };
   });
 
+export const getMyJewerlyAssets = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    const res = await db
+      .select()
+      .from(jewerlyAssets)
+      .where(eq(jewerlyAssets.userId, context.user.id));
+    return {
+      success: true,
+      data: res,
+    };
+  });
+
 export const createJewerlyAsset = createServerFn({ method: "POST" })
   .validator(JewerlyAssetSchema)
   .middleware([authMiddleware])

@@ -1,4 +1,4 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { ClientOnly, Link, useLocation } from "@tanstack/react-router";
 import { NAV_LINKS } from "~/constants";
 import { cn } from "~/lib/utils";
 import { useTheme } from "./theme-provider";
@@ -15,15 +15,19 @@ export function Sidebar() {
         "sticky top-0 hidden h-screen w-[250px] flex-col gap-4 border-r p-4 sm:flex",
       )}
     >
-      <Link className="w-full" to="/">
-        <img
-          src={
-            theme === "dark" || theme === "system" ? "/djiwaID-dark.svg" : "/djiwaID.svg"
-          }
-          alt="djiwaID"
-          className="h-[100px] w-[120px] object-contain"
-        />
-      </Link>
+      <ClientOnly fallback={<div>Loading...</div>}>
+        <Link className="w-full" to="/">
+          <img
+            src={
+              theme === "dark" || theme === "system"
+                ? "/djiwaID-dark.svg"
+                : "/djiwaID.svg"
+            }
+            alt="djiwaID"
+            className="h-[100px] w-[120px] object-contain"
+          />
+        </Link>
+      </ClientOnly>
 
       {NAV_LINKS.map(({ to, label, logo }) => (
         <Link

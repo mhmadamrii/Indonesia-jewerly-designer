@@ -26,11 +26,13 @@ function RouteComponent() {
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const handleDeleteJewerlyAsset = async (id: string) => {
-    await deleteJewerlyAsset({
+    console.log("id", id);
+    const res = await deleteJewerlyAsset({
       data: {
         id,
       },
     });
+    console.log("res", res);
   };
 
   return (

@@ -29,6 +29,7 @@ export function JewerlyUploadForm({ onStepClick }: IProps) {
 
   const { data: session } = authClient.useSession();
   const { addJewerlyForm, jewerlyForm } = useFormStorage();
+  console.log("jfkld;sa", jewerlyForm);
 
   const handleStartUpload = () => {
     setIsUploading(true);
@@ -140,7 +141,7 @@ export function JewerlyUploadForm({ onStepClick }: IProps) {
       </div>
       <div className="flex w-full items-center justify-end">
         <Button
-          disabled={!jewerlyForm.image_url || isUploading}
+          disabled={jewerlyForm.image_url == "" || isUploading}
           onClick={() => {
             if (jewerlyForm.image_url) {
               onStepClick(3);
