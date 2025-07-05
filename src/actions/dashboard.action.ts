@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import { db } from "~/lib/db";
 import { category, jewerlyAssets, user } from "~/lib/db/schema";
 import { DashboardData } from "~/lib/db/types";
-import { client } from "~/lib/redis/config";
+import { client, connectRedis } from "~/lib/redis/config";
 
 type DashboardReturnType = {
   success: boolean;
@@ -12,6 +12,7 @@ type DashboardReturnType = {
 
 export const getDashboard = createServerFn({ method: "GET" }).handler(
   async (): Promise<DashboardReturnType> => {
+    await connectRedis();
     const cached = await client.get("dashboard_data");
     console.log("cc", cached);
 
