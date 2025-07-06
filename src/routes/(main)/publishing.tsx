@@ -5,7 +5,7 @@ import { JewerlyForm } from "~/components/forms/jewerly-form";
 import { JewerlyLinkForm } from "~/components/forms/jewerly-link-form";
 import { JewerlyPublishForm } from "~/components/forms/jewerly-publish-form";
 import { JewerlyUploadForm } from "~/components/forms/jewerly-upload-form";
-import { Card } from "~/components/ui/card";
+import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { AnimatedStepper } from "~/components/ui/stepper";
 
 export const Route = createFileRoute("/(main)/publishing")({
@@ -65,18 +65,31 @@ function RouteComponent() {
   };
 
   return (
-    <section className="flex w-1/2 flex-col gap-5 px-10">
+    <section className="flex w-full flex-col gap-5 px-10 py-8">
       <h1 className="text-xl font-semibold">Publishing</h1>
-      <Card className="flex min-h-[600px] w-full flex-col">
-        <div className="w-full">
-          <AnimatedStepper
-            steps={steps}
-            currentStep={currentStep}
-            onStepClick={handleStepClick}
-          />
-        </div>
-        {getFormStepper()}
-      </Card>
+      <div className="flex w-full flex-col gap-4 sm:flex-row">
+        <Card className="flex min-h-[600px] w-full flex-col sm:w-[70%]">
+          <div className="w-full">
+            <AnimatedStepper
+              steps={steps}
+              currentStep={currentStep}
+              onStepClick={handleStepClick}
+            />
+          </div>
+          {getFormStepper()}
+        </Card>
+        <Card className="sticky top-3 h-[400px] w-full flex-col sm:w-[30%]">
+          <CardHeader>Requirements</CardHeader>
+          <CardContent>
+            <ul className="list-disc pl-5">
+              <li>Static image must be a .png</li>
+              <li>3D asset must be an .glb</li>
+              <li>Max size for .png is 10MB</li>
+              <li>Max size for .glb is 40MB</li>
+            </ul>
+          </CardContent>
+        </Card>
+      </div>
     </section>
   );
 }

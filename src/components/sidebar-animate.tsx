@@ -49,6 +49,7 @@ import {
   User2Icon,
   Wallet,
 } from "lucide-react";
+import { authClient } from "~/lib/auth/auth-client";
 import { Separator } from "./ui/separator";
 
 const DATA = {
@@ -107,6 +108,7 @@ const DATA = {
 export const SidebarAnimate = () => {
   const isMobile = useIsMobile();
   const { theme } = useTheme();
+  const { data: session, isPending } = authClient.useSession();
 
   return (
     <SidebarProvider>
@@ -208,12 +210,16 @@ export const SidebarAnimate = () => {
                     className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                   >
                     <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarImage src={DATA.user.avatar} alt={DATA.user.name} />
+                      <AvatarImage src={session?.user.image ?? ""} alt={DATA.user.name} />
                       <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">{DATA.user.name}</span>
-                      <span className="truncate text-xs">{DATA.user.email}</span>
+                      <span className="truncate font-semibold">
+                        {session?.user.name ?? DATA.user.name}
+                      </span>
+                      <span className="truncate text-xs">
+                        {session?.user.email ?? DATA.user.email}
+                      </span>
                     </div>
                     <ChevronsUpDown className="ml-auto size-4" />
                   </SidebarMenuButton>
@@ -227,12 +233,19 @@ export const SidebarAnimate = () => {
                   <DropdownMenuLabel className="p-0 font-normal">
                     <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                       <Avatar className="h-8 w-8 rounded-lg">
-                        <AvatarImage src={DATA.user.avatar} alt={DATA.user.name} />
-                        <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                        <AvatarImage
+                          src={session?.user?.image ?? DATA.user.avatar}
+                          alt={DATA.user.name}
+                        />
+                        <AvatarFallback className="rounded-lg">
+                          {session?.user.name.charAt(0)}
+                        </AvatarFallback>
                       </Avatar>
                       <div className="grid flex-1 text-left text-sm leading-tight">
-                        <span className="truncate font-semibold">{DATA.user.name}</span>
-                        <span className="truncate text-xs">{DATA.user.email}</span>
+                        <span className="truncate font-semibold">
+                          {session?.user.name}
+                        </span>
+                        <span className="truncate text-xs">{session?.user.email}</span>
                       </div>
                     </div>
                   </DropdownMenuLabel>
@@ -259,7 +272,17 @@ export const SidebarAnimate = () => {
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      authClient.signOut({
+                        fetchOptions: {
+                          onSuccess: () => {
+                            window.location.reload();
+                          },
+                        },
+                      });
+                    }}
+                  >
                     <LogOut />
                     Log out
                   </DropdownMenuItem>

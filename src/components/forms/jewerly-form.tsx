@@ -198,7 +198,7 @@ export function JewerlyForm({ onStepClick, categories }: IProps) {
 
         <div className="flex w-full items-center justify-end">
           <Button
-            className="w-full cursor-pointer bg-[#FF3B30] hover:bg-[#FF3B30]/80 sm:w-1/4"
+            className="w-full cursor-pointer bg-[#FF3B30] hover:bg-[#FF3B30]/80 sm:w-1/4 dark:text-white"
             type="submit"
           >
             Next Step

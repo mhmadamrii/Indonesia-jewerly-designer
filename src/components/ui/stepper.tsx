@@ -81,7 +81,7 @@ const AnimatedStepper: React.FC<StepperProps> = ({ steps, currentStep, onStepCli
                 <motion.div
                   onClick={() => onStepClick(step.number)}
                   className={cn(
-                    "flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-sm font-bold",
+                    "flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-sm font-bold dark:text-white",
                     step.number === currentStep
                       ? "text-primary-foreground bg-[#FF3B30]"
                       : step.number < currentStep
@@ -111,7 +111,9 @@ const AnimatedStepper: React.FC<StepperProps> = ({ steps, currentStep, onStepCli
                 <motion.div
                   className={cn(
                     "mt-2 w-20 text-center text-xs",
-                    step.number === currentStep ? "font-bold text-black" : "text-black",
+                    step.number === currentStep
+                      ? "font-bold text-black dark:text-white"
+                      : "text-black dark:text-white",
                   )}
                   initial={{ opacity: 0.5 }}
                   animate={{
