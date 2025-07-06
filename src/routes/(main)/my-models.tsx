@@ -1,15 +1,7 @@
-import { Await, createFileRoute } from "@tanstack/react-router";
+import { ClientOnly, createFileRoute } from "@tanstack/react-router";
 import { getMyJewerlyAssets } from "~/actions/jewerly.action";
+import { TableDemo } from "~/components/table-demo";
 import { Card, CardContent } from "~/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/ui/table";
 
 export const Route = createFileRoute("/(main)/my-models")({
   loader: async () => {
@@ -32,7 +24,7 @@ function RouteComponent() {
       </div>
       <Card>
         <CardContent>
-          <Table>
+          {/* <Table>
             <TableCaption>A list of your recent invoices.</TableCaption>
             <TableHeader>
               <TableRow>
@@ -63,7 +55,10 @@ function RouteComponent() {
                 }
               </Await>
             </TableBody>
-          </Table>
+          </Table> */}
+          <ClientOnly>
+            <TableDemo />
+          </ClientOnly>
         </CardContent>
       </Card>
     </section>
