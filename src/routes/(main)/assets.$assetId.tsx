@@ -21,14 +21,6 @@ function RouteComponent() {
     queryFn: () => getJewerlyById({ data: { id: assetId } }),
   });
 
-  if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-gray-50">
-        <div className="text-2xl font-light text-gray-600">Loading...</div>
-      </div>
-    );
-  }
-
   return (
     <div className="">
       <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">

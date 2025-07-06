@@ -2,7 +2,9 @@ import { ClientOnly, Link, Outlet } from "@tanstack/react-router";
 import { useTheme } from "~/components/theme-provider";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useIsMobile } from "~/hooks/use-mobile";
+import { authClient } from "~/lib/auth/auth-client";
 import { ThemeToggle } from "./theme-toggle";
+import { Separator } from "./ui/separator";
 
 import {
   DropdownMenu,
@@ -49,8 +51,6 @@ import {
   User2Icon,
   Wallet,
 } from "lucide-react";
-import { authClient } from "~/lib/auth/auth-client";
-import { Separator } from "./ui/separator";
 
 const DATA = {
   user: {

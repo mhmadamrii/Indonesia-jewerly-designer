@@ -12,16 +12,15 @@ export function Trendings({ jewerlies }: TrendingsProps) {
   return (
     <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
       {jewerlies?.map((item) => (
-        <Card className="relative w-full" key={item.jewerly_assets.id}>
+        <Card className="relative w-full rounded-sm" key={item.jewerly_assets.id}>
           <CardContent className="flex h-[300px] flex-col gap-5">
-            {item.jewerly_assets.imageUrl &&
-              item.jewerly_assets.typeAsset == "image" && (
-                <IKImage
-                  src={item.jewerly_assets.imageUrl ?? ""}
-                  className="h-full w-full rounded-lg sm:h-[200px] sm:w-[300px]"
-                  alt="Asset Image"
-                />
-              )}
+            {item.jewerly_assets.imageUrl && item.jewerly_assets.typeAsset == "image" && (
+              <IKImage
+                src={item.jewerly_assets.imageUrl ?? ""}
+                className="h-full w-full rounded-lg sm:h-[200px] sm:w-[300px]"
+                alt="Asset Image"
+              />
+            )}
             {item.jewerly_assets.imageUrl &&
               item.jewerly_assets.typeAsset == "non-image" && (
                 <ClientOnly fallback={<div>Loading...</div>}>
@@ -35,17 +34,13 @@ export function Trendings({ jewerlies }: TrendingsProps) {
                   assetId: item.jewerly_assets.id,
                 }}
               >
-                <h1 className="text-2xl font-semibold">
-                  {item.jewerly_assets.name}
-                </h1>
+                <h1 className="text-2xl font-semibold">{item.jewerly_assets.name}</h1>
               </Link>
               <span className="text-muted-foreground">21.5K Views</span>
             </div>
             <div className="flex items-center justify-between">
               <span>Price</span>
-              <span className="uppercase">
-                $ {item.jewerly_assets.price}
-              </span>
+              <span className="uppercase">$ {item.jewerly_assets.price}</span>
             </div>
           </CardContent>
         </Card>
