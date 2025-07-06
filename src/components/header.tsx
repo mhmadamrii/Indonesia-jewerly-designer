@@ -63,7 +63,8 @@ export function Header() {
         <div>
           <SearchInput
             onFocus={() => setOpen(true)}
-            className="bg-background rounded-full"
+            className="bg-background min-w-[320px] rounded-full"
+            placeholder="Search Item, Collections, and Accounts"
           />
           <CommandDialog open={open} onOpenChange={setOpen}>
             <CommandInput placeholder="Type a command or search..." />

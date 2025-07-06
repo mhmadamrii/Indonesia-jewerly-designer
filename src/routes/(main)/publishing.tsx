@@ -65,7 +65,7 @@ function RouteComponent() {
   };
 
   return (
-    <section className="flex flex-col gap-5 px-10">
+    <section className="flex w-1/2 flex-col gap-5 px-10">
       <h1 className="text-xl font-semibold">Publishing</h1>
       <Card className="flex min-h-[600px] w-full flex-col">
         <div className="w-full">

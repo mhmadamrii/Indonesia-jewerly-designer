@@ -1,7 +1,5 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { Header } from "~/components/header";
-import { Sidebar } from "~/components/sidebar";
-import { cn } from "~/lib/utils";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { SidebarAnimate } from "~/components/sidebar-animate";
 
 export const Route = createFileRoute("/(main)")({
   component: MainLayout,
@@ -19,11 +17,11 @@ export const Route = createFileRoute("/(main)")({
 function MainLayout() {
   return (
     <main className="flex min-h-screen">
-      <Sidebar />
-      <section className={cn("flex w-[70%] flex-grow flex-col gap-7 sm:w-full")}>
+      <SidebarAnimate />
+      {/* <section className={cn("flex w-[70%] flex-grow flex-col gap-7 sm:w-full")}>
         <Header />
         <Outlet />
-      </section>
+      </section> */}
     </main>
   );
 }
