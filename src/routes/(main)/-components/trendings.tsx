@@ -34,7 +34,8 @@ export function Trendings({ jewerlies }: TrendingsProps) {
                   assetId: item.jewerly_assets.id,
                 }}
               >
-                <h1 className="text-2xl font-semibold">{item.jewerly_assets.name}</h1>
+                <h1 className="text-xl font-semibold">{item.jewerly_assets.name}</h1>
+                <span>{item.jewerly_assets.description}</span>
               </Link>
               <span className="text-muted-foreground">21.5K Views</span>
             </div>

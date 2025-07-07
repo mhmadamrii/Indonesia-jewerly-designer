@@ -1,4 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
+import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { authClient } from "~/lib/auth/auth-client";
@@ -106,22 +107,43 @@ export function Header() {
           </CommandDialog>
         </div>
         <div className="flex items-center gap-4">
-          <div className="hidden rounded-full border sm:flex">
-            {roles.map((role) => (
-              <Button
-                key={role}
-                onClick={() => setCurrentRole(role)}
-                variant="ghost"
-                className={cn(
-                  "cursor-pointer rounded-full text-gray-300",
-                  currentRole === role &&
-                    "bg-background text-[#FF3B30] hover:text-[#FF3B30]/80",
-                )}
-              >
-                {role.charAt(0).toUpperCase() + role.slice(1)}
-              </Button>
-            ))}
-          </div>
+          <motion.div
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            className="hidden gap-2 rounded-full border p-1 sm:flex"
+          >
+            {roles.map((role, index) => {
+              const isSelected = currentRole === role;
+              return (
+                <div key={role} className="relative">
+                  {isSelected && (
+                    <motion.div
+                      layoutId="activeRoleHighlight"
+                      className="absolute inset-0 rounded-full bg-[#EEEAFF]"
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    />
+                  )}
+                  <motion.div
+                    onClick={() => setCurrentRole(role)}
+                    className="relative z-10"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <button
+                      className={cn(
+                        "cursor-pointer rounded-full px-4 py-2 text-gray-300 transition-colors",
+                        isSelected && "text-[#FF3B30] hover:text-[#FF3B30]/80",
+                      )}
+                    >
+                      {role.charAt(0).toUpperCase() + role.slice(1)}
+                    </button>
+                  </motion.div>
+                </div>
+              );
+            })}
+          </motion.div>
 
           <Button size="icon" variant="ghost" className="rounded-full border">
             <Bell />

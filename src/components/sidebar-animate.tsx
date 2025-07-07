@@ -3,6 +3,7 @@ import { useTheme } from "~/components/theme-provider";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { authClient } from "~/lib/auth/auth-client";
+import { Header } from "./header";
 import { ThemeToggle } from "./theme-toggle";
 import { Separator } from "./ui/separator";
 
@@ -297,6 +298,7 @@ export const SidebarAnimate = () => {
 
       <SidebarInset>
         <section className="pt-3">
+          <Header />
           <Outlet />
         </section>
       </SidebarInset>
