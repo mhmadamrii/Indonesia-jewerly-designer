@@ -25,7 +25,7 @@ import { Route as authLoginRouteImport } from "./routes/(auth)/login";
 import { Route as authAuthRouteImport } from "./routes/(auth)/auth";
 import { Route as adminAdminRouteImport } from "./routes/(admin)/admin";
 import { Route as mainProfileIndexRouteImport } from "./routes/(main)/profile.index";
-import { Route as mainProfileProfileIdRouteImport } from "./routes/(main)/profile.$profileId";
+import { Route as mainProfileUsernameRouteImport } from "./routes/(main)/profile.$username";
 import { Route as mainAssetsAssetIdRouteImport } from "./routes/(main)/assets.$assetId";
 import { ServerRoute as ApiAuthSplatServerRouteImport } from "./routes/api/auth/$";
 
@@ -99,9 +99,9 @@ const mainProfileIndexRoute = mainProfileIndexRouteImport.update({
   path: "/profile/",
   getParentRoute: () => mainRouteRoute,
 } as any);
-const mainProfileProfileIdRoute = mainProfileProfileIdRouteImport.update({
-  id: "/profile/$profileId",
-  path: "/profile/$profileId",
+const mainProfileUsernameRoute = mainProfileUsernameRouteImport.update({
+  id: "/profile/$username",
+  path: "/profile/$username",
   getParentRoute: () => mainRouteRoute,
 } as any);
 const mainAssetsAssetIdRoute = mainAssetsAssetIdRouteImport.update({
@@ -128,7 +128,7 @@ export interface FileRoutesByFullPath {
   "/publishing": typeof mainPublishingRoute;
   "/dashboards/": typeof DashboardsIndexRoute;
   "/assets/$assetId": typeof mainAssetsAssetIdRoute;
-  "/profile/$profileId": typeof mainProfileProfileIdRoute;
+  "/profile/$username": typeof mainProfileUsernameRoute;
   "/profile": typeof mainProfileIndexRoute;
 }
 export interface FileRoutesByTo {
@@ -143,7 +143,7 @@ export interface FileRoutesByTo {
   "/publishing": typeof mainPublishingRoute;
   "/dashboards": typeof DashboardsIndexRoute;
   "/assets/$assetId": typeof mainAssetsAssetIdRoute;
-  "/profile/$profileId": typeof mainProfileProfileIdRoute;
+  "/profile/$username": typeof mainProfileUsernameRoute;
   "/profile": typeof mainProfileIndexRoute;
 }
 export interface FileRoutesById {
@@ -162,7 +162,7 @@ export interface FileRoutesById {
   "/(main)/publishing": typeof mainPublishingRoute;
   "/dashboards/": typeof DashboardsIndexRoute;
   "/(main)/assets/$assetId": typeof mainAssetsAssetIdRoute;
-  "/(main)/profile/$profileId": typeof mainProfileProfileIdRoute;
+  "/(main)/profile/$username": typeof mainProfileUsernameRoute;
   "/(main)/profile/": typeof mainProfileIndexRoute;
 }
 export interface FileRouteTypes {
@@ -180,7 +180,7 @@ export interface FileRouteTypes {
     | "/publishing"
     | "/dashboards/"
     | "/assets/$assetId"
-    | "/profile/$profileId"
+    | "/profile/$username"
     | "/profile";
   fileRoutesByTo: FileRoutesByTo;
   to:
@@ -195,7 +195,7 @@ export interface FileRouteTypes {
     | "/publishing"
     | "/dashboards"
     | "/assets/$assetId"
-    | "/profile/$profileId"
+    | "/profile/$username"
     | "/profile";
   id:
     | "__root__"
@@ -213,7 +213,7 @@ export interface FileRouteTypes {
     | "/(main)/publishing"
     | "/dashboards/"
     | "/(main)/assets/$assetId"
-    | "/(main)/profile/$profileId"
+    | "/(main)/profile/$username"
     | "/(main)/profile/";
   fileRoutesById: FileRoutesById;
 }
@@ -346,11 +346,11 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof mainProfileIndexRouteImport;
       parentRoute: typeof mainRouteRoute;
     };
-    "/(main)/profile/$profileId": {
-      id: "/(main)/profile/$profileId";
-      path: "/profile/$profileId";
-      fullPath: "/profile/$profileId";
-      preLoaderRoute: typeof mainProfileProfileIdRouteImport;
+    "/(main)/profile/$username": {
+      id: "/(main)/profile/$username";
+      path: "/profile/$username";
+      fullPath: "/profile/$username";
+      preLoaderRoute: typeof mainProfileUsernameRouteImport;
       parentRoute: typeof mainRouteRoute;
     };
     "/(main)/assets/$assetId": {
@@ -396,7 +396,7 @@ interface mainRouteRouteChildren {
   mainMySalesRoute: typeof mainMySalesRoute;
   mainPublishingRoute: typeof mainPublishingRoute;
   mainAssetsAssetIdRoute: typeof mainAssetsAssetIdRoute;
-  mainProfileProfileIdRoute: typeof mainProfileProfileIdRoute;
+  mainProfileUsernameRoute: typeof mainProfileUsernameRoute;
   mainProfileIndexRoute: typeof mainProfileIndexRoute;
 }
 
@@ -406,7 +406,7 @@ const mainRouteRouteChildren: mainRouteRouteChildren = {
   mainMySalesRoute: mainMySalesRoute,
   mainPublishingRoute: mainPublishingRoute,
   mainAssetsAssetIdRoute: mainAssetsAssetIdRoute,
-  mainProfileProfileIdRoute: mainProfileProfileIdRoute,
+  mainProfileUsernameRoute: mainProfileUsernameRoute,
   mainProfileIndexRoute: mainProfileIndexRoute,
 };
 
