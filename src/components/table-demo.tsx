@@ -52,6 +52,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
+import { JewerlyAsset } from "~/lib/db/types";
 
 export type Product = {
   id: string;
@@ -62,90 +63,7 @@ export type Product = {
   status: "active" | "inactive" | "archived";
 };
 
-const data: Product[] = [
-  {
-    id: "1",
-    image: "/placeholder.svg?height=40&width=40",
-    name: "Wireless Headphones",
-    impression: 15420,
-    sold: 342,
-    status: "active",
-  },
-  {
-    id: "2",
-    image: "/placeholder.svg?height=40&width=40",
-    name: "Smart Watch",
-    impression: 8750,
-    sold: 156,
-    status: "active",
-  },
-  {
-    id: "3",
-    image: "/placeholder.svg?height=40&width=40",
-    name: "Bluetooth Speaker",
-    impression: 12300,
-    sold: 289,
-    status: "inactive",
-  },
-  {
-    id: "4",
-    image: "/placeholder.svg?height=40&width=40",
-    name: "Gaming Mouse",
-    impression: 6890,
-    sold: 98,
-    status: "active",
-  },
-  {
-    id: "5",
-    image: "/placeholder.svg?height=40&width=40",
-    name: "USB-C Cable",
-    impression: 22100,
-    sold: 567,
-    status: "active",
-  },
-  {
-    id: "6",
-    image: "/placeholder.svg?height=40&width=40",
-    name: "Laptop Stand",
-    impression: 4560,
-    sold: 78,
-    status: "archived",
-  },
-  {
-    id: "7",
-    image: "/placeholder.svg?height=40&width=40",
-    name: "Phone Case",
-    impression: 18900,
-    sold: 445,
-    status: "active",
-  },
-  {
-    id: "8",
-    image: "/placeholder.svg?height=40&width=40",
-    name: "Wireless Charger",
-    impression: 9870,
-    sold: 234,
-    status: "inactive",
-  },
-  {
-    id: "9",
-    image: "/placeholder.svg?height=40&width=40",
-    name: "Tablet Stylus",
-    impression: 5430,
-    sold: 89,
-    status: "active",
-  },
-  {
-    id: "10",
-    image: "/placeholder.svg?height=40&width=40",
-    name: "Webcam HD",
-    impression: 11200,
-    sold: 178,
-    status: "active",
-  },
-];
-
-export const columns: ColumnDef<Product>[] = [
+export const columns: ColumnDef<JewerlyAsset>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -161,9 +79,6 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row, table }) => (
       <Checkbox
         onCheckedChange={(value) => {
-          console.log("value", value);
-          console.log("row", row);
-          console.log("is selected row?", row.getIsSelected());
           row.toggleSelected(!!value);
         }}
         aria-label="Select row"
@@ -303,7 +218,7 @@ export const columns: ColumnDef<Product>[] = [
   },
 ];
 
-export function TableDemo() {
+export function TableDemo({ jewerlies }: { jewerlies: JewerlyAsset[] }) {
   const [counter, setCounter] = React.useState(0);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -312,7 +227,7 @@ export function TableDemo() {
   const [statusFilter, setStatusFilter] = React.useState<string>("all");
 
   const table = useReactTable({
-    data,
+    data: jewerlies,
     columns,
     enableRowSelection: true,
     // onSortingChange: setSorting,
