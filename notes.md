@@ -1,0 +1,1 @@
+- display all available images: https://animate-ui.com/docs/effects/motion-effect

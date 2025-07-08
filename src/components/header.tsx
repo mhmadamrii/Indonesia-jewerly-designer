@@ -1,20 +1,15 @@
 import { useNavigate } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/animate-ui/base/popover";
 import { authClient } from "~/lib/auth/auth-client";
 import { cn } from "~/lib/utils";
 import { Button } from "./ui/button";
 import { SearchInput } from "./ui/search-input";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
 
 import {
   CommandDialog,
@@ -33,6 +28,7 @@ import {
   CreditCard,
   Images,
   Settings,
+  ShoppingCart,
   User,
   Wallet,
 } from "lucide-react";
@@ -148,7 +144,23 @@ export function Header() {
           <Button size="icon" variant="ghost" className="rounded-full border">
             <Bell />
           </Button>
-          <DropdownMenu>
+
+          <Popover>
+            <PopoverTrigger>
+              <Button size="icon" variant="ghost" className="rounded-full border">
+                <ShoppingCart />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis, odio
+                incidunt voluptatem aperiam dolor nemo recusandae blanditiis maxime
+                nesciunt, magni pariatur. Reprehenderit consequuntur inventore, itaque
+                iste, nisi suscipit sint eos quaerat cumque nesciunt magni nemo molestiae
+              </p>
+            </PopoverContent>
+          </Popover>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger className="cursor-pointer" asChild>
               <Avatar className="h-10 w-10">
                 <AvatarImage
@@ -182,7 +194,7 @@ export function Header() {
                 </Button>
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </div>
       </div>
     </div>

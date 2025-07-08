@@ -4,38 +4,53 @@ export const Route = createFileRoute("/(main)/profile/")({
   component: RouteComponent,
 });
 
-interface IDictionary {
-  reverseString(): string;
-  logger(): string;
+interface IPerson {
+  sayHello(): string;
+  sayGoodbye(): string;
 }
 
 function RouteComponent() {
-  class Dictionary implements IDictionary {
-    private s: string;
-
-    constructor(something: string) {
-      this.s = something;
+  class Person implements IPerson {
+    constructor(
+      public name: string,
+      public age: number,
+    ) {
+      this.name = name;
+      this.age = age;
     }
 
-    reverseString() {
-      if (typeof this.s !== "string") {
-        throw new Error("Not a string");
-      }
-
-      const splt = this.s.split("");
-      return splt.reverse().join("");
+    sayHello() {
+      return `Hello, my name is ${this.name} and I am ${this.age} years old.`;
     }
 
-    logger() {
-      return this.s;
+    sayGoodbye() {
+      return `Goodbye, my name is ${this.name} and I am ${this.age} years old.`;
     }
-
-    sayHello() {}
   }
 
-  const test = new Dictionary("This is just a test");
-  console.log(test.logger());
-  console.log(test.reverseString());
+  class Employee extends Person {
+    constructor(
+      public company: string,
+      name: string,
+      age: number,
+    ) {
+      super(name, age);
+      this.company = company;
+    }
+
+    sayHello(): string {
+      return `Hello, my name is ${this.name} and I am ${this.age} years old. I work for ${this.company}.`;
+    }
+
+    static create(task: string, amount: number): string {
+      return `${this.name} creates ${task} for ${amount} dollars`;
+    }
+  }
+
+  const employee = new Employee("Acme Inc.", "John Doe", 30);
+  console.log(employee.sayHello());
+  console.log(employee.sayGoodbye());
+  console.log(Employee.create("Task", 100));
 
   return (
     <section>
