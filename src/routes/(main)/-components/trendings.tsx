@@ -1,5 +1,6 @@
 import { ClientOnly, Link } from "@tanstack/react-router";
 import { IKImage } from "imagekitio-react";
+import { useState } from "react";
 import { ModelViewer } from "~/components/3D/model-viewer";
 import { Card, CardContent } from "~/components/ui/card";
 import { JewerlyWithUser } from "~/lib/db/types";
@@ -9,6 +10,8 @@ type TrendingsProps = {
 };
 
 export function Trendings({ jewerlies }: TrendingsProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
       {jewerlies?.map((item) => (

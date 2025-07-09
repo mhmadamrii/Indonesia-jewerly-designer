@@ -1,9 +1,8 @@
-"use client";
-
 import * as z from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
+import { Loader } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -54,7 +53,10 @@ export function RegisterForm({ onClickRegisterForm }: IProps) {
         },
         {
           onSuccess: (res) => {
-            console.log("res", res);
+            toast.success("Sign up successful");
+            navigate({
+              to: "/dashboard",
+            });
           },
           onError: (error) => {
             console.log("error", error);
@@ -85,6 +87,7 @@ export function RegisterForm({ onClickRegisterForm }: IProps) {
                 <FormLabel>Name</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={isLoading}
                     className="w-full rounded-xl"
                     placeholder="John Doe"
                     type="text"
@@ -104,6 +107,7 @@ export function RegisterForm({ onClickRegisterForm }: IProps) {
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={isLoading}
                     className="w-full rounded-xl"
                     placeholder="john@gmail.com"
                     type="email"
@@ -123,6 +127,7 @@ export function RegisterForm({ onClickRegisterForm }: IProps) {
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <PasswordInput
+                    disabled={isLoading}
                     className="w-full rounded-xl"
                     placeholder="password"
                     {...field}
@@ -134,10 +139,10 @@ export function RegisterForm({ onClickRegisterForm }: IProps) {
           />
           <div className="flex w-full flex-col items-center justify-center gap-2">
             <Button
-              className="w-full cursor-pointer rounded-3xl bg-[#FF3B30] hover:bg-[#FF3B30]/80"
+              className="w-full cursor-pointer rounded-3xl bg-[#FF3B30] hover:bg-[#FF3B30]/80 dark:text-white"
               type="submit"
             >
-              Submit
+              {isLoading ? <Loader className="animate-spin" /> : "Submit"}
             </Button>
             <Button
               onClick={() => onClickRegisterForm(true)}

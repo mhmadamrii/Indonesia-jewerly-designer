@@ -1,5 +1,3 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -117,7 +115,7 @@ export function LoginForm({ onClickLoginForm }: IProps) {
           <div className="flex w-full flex-col items-center justify-center gap-2">
             <Button
               disabled={isLoading}
-              className="w-full cursor-pointer rounded-3xl bg-[#FF3B30] hover:bg-[#FF3B30]/80"
+              className="w-full cursor-pointer rounded-3xl bg-[#FF3B30] hover:bg-[#FF3B30]/80 dark:text-white"
               type="submit"
             >
               {isLoading ? <Loader className="animate-spin" /> : "Submit"}

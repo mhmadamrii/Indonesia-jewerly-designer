@@ -20,16 +20,10 @@ function RouteComponent() {
 
   const handleLoginWithGmail = () => {
     setIsLoading(true);
-    authClient.signIn.social(
-      {
-        provider: "google",
-        callbackURL: redirectUrl,
-      },
-      {
-        onRequest: () => {},
-        onError: (ctx) => {},
-      },
-    );
+    authClient.signIn.social({
+      provider: "google",
+      callbackURL: redirectUrl,
+    });
   };
   return (
     <Card className="mx-0 sm:mx-auto">
