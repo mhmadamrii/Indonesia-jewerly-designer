@@ -1,8 +1,10 @@
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 import * as React from "react";
+
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
+import { JewerlyAsset } from "~/lib/db/types";
 
 import {
   Select,
@@ -52,7 +54,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
-import { JewerlyAsset } from "~/lib/db/types";
 
 export type Product = {
   id: string;
@@ -69,17 +70,17 @@ export const columns: ColumnDef<JewerlyAsset>[] = [
     header: ({ table }) => (
       <Checkbox
         onCheckedChange={(value) => {
-          console.log("value check", value);
           table.toggleAllPageRowsSelected(!!value);
-          console.log("is all selected", table.getIsAllPageRowsSelected());
         }}
         aria-label="Select all"
       />
     ),
     cell: ({ row, table }) => (
       <Checkbox
+        // checked={row.getIsSelected()}
         onCheckedChange={(value) => {
-          row.toggleSelected(!!value);
+          console.log("val", !!value);
+          return row.toggleSelected(!!value);
         }}
         aria-label="Select row"
       />
@@ -230,25 +231,27 @@ export function TableDemo({ jewerlies }: { jewerlies: JewerlyAsset[] }) {
     data: jewerlies,
     columns,
     enableRowSelection: true,
-    // onSortingChange: setSorting,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
+    onRowSelectionChange: setRowSelection,
     // onColumnFiltersChange: setColumnFilters,
     // getPaginationRowModel: getPaginationRowModel(),
     // getSortedRowModel: getSortedRowModel(),
     // getFilteredRowModel: getFilteredRowModel(),
     // onColumnVisibilityChange: setColumnVisibility,
-    // onRowSelectionChange: setRowSelection,
     // getRowId: (row) => row.id,
-    // state: {
-    //   sorting,
-    //   columnFilters,
-    //   columnVisibility,
-    //   rowSelection,
-    // },
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
   });
+
   console.log("table", table.getSelectedRowModel().rows);
   console.log("is some selected", table.getIsSomeRowsSelected());
   console.log("is all selected", table.getIsAllRowsSelected());
+  console.log("rowSelection", rowSelection);
 
   return (
     <div className="w-full p-4">

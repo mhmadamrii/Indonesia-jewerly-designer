@@ -1,16 +1,11 @@
-'use client';
+import { Switch as SwitchPrimitives } from "@base-ui-components/react/switch";
+import { motion, type HTMLMotionProps } from "motion/react";
+import * as React from "react";
 
-import * as React from 'react';
-import { Switch as SwitchPrimitives } from '@base-ui-components/react/switch';
-import { motion, type HTMLMotionProps } from 'motion/react';
+import { cn } from "~/lib/utils";
 
-import { cn } from '~/lib/utils';
-
-type SwitchProps = Omit<
-  React.ComponentProps<typeof SwitchPrimitives.Root>,
-  'render'
-> & {
-  motionProps?: HTMLMotionProps<'button'>;
+type SwitchProps = Omit<React.ComponentProps<typeof SwitchPrimitives.Root>, "render"> & {
+  motionProps?: HTMLMotionProps<"button">;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   thumbIcon?: React.ReactNode;
@@ -48,7 +43,7 @@ function Switch({
       {...props}
       onCheckedChange={handleCheckedChange}
       className={cn(
-        'peer relative inline-flex p-[3px] h-6 w-10 shrink-0 cursor-pointer items-center rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[checked]:bg-primary data-[unchecked]:bg-input data-[checked]:justify-end data-[unchecked]:justify-start',
+        "peer focus-visible:ring-ring focus-visible:ring-offset-background data-[checked]:bg-primary data-[unchecked]:bg-input relative inline-flex h-6 w-10 shrink-0 cursor-pointer items-center rounded-full p-[3px] transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[checked]:justify-end data-[unchecked]:justify-start",
         className,
       )}
       render={
@@ -65,26 +60,22 @@ function Switch({
       {leftIcon && (
         <motion.div
           data-slot="switch-left-icon"
-          animate={
-            isChecked ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }
-          }
-          transition={{ type: 'spring', bounce: 0 }}
-          className="absolute top-1/2 -translate-y-1/2 dark:text-neutral-500 text-neutral-400 [&_svg]:size-3 left-1"
+          animate={isChecked ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+          transition={{ type: "spring", bounce: 0 }}
+          className="absolute top-1/2 left-1 -translate-y-1/2 text-neutral-400 dark:text-neutral-500 [&_svg]:size-3"
         >
-          {typeof leftIcon !== 'string' ? leftIcon : null}
+          {typeof leftIcon !== "string" ? leftIcon : null}
         </motion.div>
       )}
 
       {rightIcon && (
         <motion.div
           data-slot="switch-right-icon"
-          animate={
-            isChecked ? { scale: 0, opacity: 0 } : { scale: 1, opacity: 1 }
-          }
-          transition={{ type: 'spring', bounce: 0 }}
-          className="absolute top-1/2 -translate-y-1/2 dark:text-neutral-400 text-neutral-500 [&_svg]:size-3 right-1"
+          animate={isChecked ? { scale: 0, opacity: 0 } : { scale: 1, opacity: 1 }}
+          transition={{ type: "spring", bounce: 0 }}
+          className="absolute top-1/2 right-1 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 [&_svg]:size-3"
         >
-          {typeof rightIcon !== 'string' ? rightIcon : null}
+          {typeof rightIcon !== "string" ? rightIcon : null}
         </motion.div>
       )}
 
@@ -93,9 +84,9 @@ function Switch({
         render={
           <motion.div
             whileTap="tab"
-            className="relative pointer-events-none z-[1] [&_svg]:size-3 flex items-center justify-center rounded-full bg-background shadow-lg ring-0 dark:text-neutral-400 text-neutral-500"
+            className="bg-background pointer-events-none relative z-[1] flex items-center justify-center rounded-full text-neutral-500 shadow-lg ring-0 dark:text-neutral-400 [&_svg]:size-3"
             layout
-            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
             style={{ width: 18, height: 18 }}
             animate={
               isTapped
@@ -108,7 +99,7 @@ function Switch({
           />
         }
       >
-        {thumbIcon && typeof thumbIcon !== 'string' ? thumbIcon : null}
+        {thumbIcon && typeof thumbIcon !== "string" ? thumbIcon : null}
       </SwitchPrimitives.Thumb>
     </SwitchPrimitives.Root>
   );

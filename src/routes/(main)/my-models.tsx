@@ -1,7 +1,7 @@
 import { Await, ClientOnly, createFileRoute } from "@tanstack/react-router";
 import { getMyJewerlyAssets } from "~/actions/jewerly.action";
-import { TableDemo } from "~/components/table-demo";
 import { Card, CardContent } from "~/components/ui/card";
+import { MyModelsTable } from "./-components/tables/my-models-table";
 
 export const Route = createFileRoute("/(main)/my-models")({
   loader: async () => {
@@ -30,7 +30,7 @@ function RouteComponent() {
           <Await promise={myAssets} fallback={<span>Loading...</span>}>
             {({ data }) => (
               <ClientOnly>
-                <TableDemo jewerlies={data} />
+                <MyModelsTable jewerlies={data} />
               </ClientOnly>
             )}
           </Await>

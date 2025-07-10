@@ -11,6 +11,7 @@ type TrendingsProps = {
 
 export function Trendings({ jewerlies }: TrendingsProps) {
   const [isOpen, setIsOpen] = useState(false);
+  console.log(jewerlies);
 
   return (
     <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
