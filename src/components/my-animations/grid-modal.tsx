@@ -1,25 +1,29 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 
-export const Route = createFileRoute("/(main)/profile/")({
-  component: RouteComponent,
-});
+// How JavaScript Closures and Class Declarations Can Affect UI Animations
 
-function RouteComponent() {
+export function GridModal() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
-  class Person {}
-
+  class Person {
+    constructor(
+      public name: string,
+      public age: number,
+    ) {
+      this.name = name;
+      this.age = age;
+    }
+  }
   return (
-    <motion.div layout className="flex h-screen flex-col items-center justify-center">
-      <div className="grid w-full grid-cols-3 gap-4 border p-4">
+    <>
+      <div className="grid w-full grid-cols-3 gap-4 p-4">
         {Array.from({ length: 10 }).map((item, idx) => (
           <motion.div
             key={idx + 1}
             layoutId={`card-${idx + 1}`}
             onClick={() => setSelectedId(idx + 1)}
-            className={`h-24 cursor-pointer rounded-md bg-blue-500`}
+            className={`h-24 cursor-pointer rounded-md bg-green-500`}
           />
         ))}
       </div>
@@ -45,6 +49,6 @@ function RouteComponent() {
           </>
         )}
       </AnimatePresence>
-    </motion.div>
+    </>
   );
 }

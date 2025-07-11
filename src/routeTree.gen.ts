@@ -16,6 +16,7 @@ import { Route as mainRouteRouteImport } from "./routes/(main)/route";
 import { Route as authRouteRouteImport } from "./routes/(auth)/route";
 import { Route as IndexRouteImport } from "./routes/index";
 import { Route as DashboardsIndexRouteImport } from "./routes/dashboards/index";
+import { Route as marketingMarketingRouteImport } from "./routes/(marketing)/marketing";
 import { Route as mainPublishingRouteImport } from "./routes/(main)/publishing";
 import { Route as mainMySalesRouteImport } from "./routes/(main)/my-sales";
 import { Route as mainMyModelsRouteImport } from "./routes/(main)/my-models";
@@ -54,6 +55,11 @@ const DashboardsIndexRoute = DashboardsIndexRouteImport.update({
   id: "/",
   path: "/",
   getParentRoute: () => DashboardsRouteRoute,
+} as any);
+const marketingMarketingRoute = marketingMarketingRouteImport.update({
+  id: "/(marketing)/marketing",
+  path: "/marketing",
+  getParentRoute: () => rootRouteImport,
 } as any);
 const mainPublishingRoute = mainPublishingRouteImport.update({
   id: "/publishing",
@@ -133,6 +139,7 @@ export interface FileRoutesByFullPath {
   "/my-models": typeof mainMyModelsRoute;
   "/my-sales": typeof mainMySalesRoute;
   "/publishing": typeof mainPublishingRoute;
+  "/marketing": typeof marketingMarketingRoute;
   "/dashboards/": typeof DashboardsIndexRoute;
   "/assets/$assetId": typeof mainAssetsAssetIdRoute;
   "/profile/$username": typeof mainProfileUsernameRoute;
@@ -149,6 +156,7 @@ export interface FileRoutesByTo {
   "/my-models": typeof mainMyModelsRoute;
   "/my-sales": typeof mainMySalesRoute;
   "/publishing": typeof mainPublishingRoute;
+  "/marketing": typeof marketingMarketingRoute;
   "/dashboards": typeof DashboardsIndexRoute;
   "/assets/$assetId": typeof mainAssetsAssetIdRoute;
   "/profile/$username": typeof mainProfileUsernameRoute;
@@ -169,6 +177,7 @@ export interface FileRoutesById {
   "/(main)/my-models": typeof mainMyModelsRoute;
   "/(main)/my-sales": typeof mainMySalesRoute;
   "/(main)/publishing": typeof mainPublishingRoute;
+  "/(marketing)/marketing": typeof marketingMarketingRoute;
   "/dashboards/": typeof DashboardsIndexRoute;
   "/(main)/assets/$assetId": typeof mainAssetsAssetIdRoute;
   "/(main)/profile/$username": typeof mainProfileUsernameRoute;
@@ -188,6 +197,7 @@ export interface FileRouteTypes {
     | "/my-models"
     | "/my-sales"
     | "/publishing"
+    | "/marketing"
     | "/dashboards/"
     | "/assets/$assetId"
     | "/profile/$username"
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
     | "/my-models"
     | "/my-sales"
     | "/publishing"
+    | "/marketing"
     | "/dashboards"
     | "/assets/$assetId"
     | "/profile/$username"
@@ -223,6 +234,7 @@ export interface FileRouteTypes {
     | "/(main)/my-models"
     | "/(main)/my-sales"
     | "/(main)/publishing"
+    | "/(marketing)/marketing"
     | "/dashboards/"
     | "/(main)/assets/$assetId"
     | "/(main)/profile/$username"
@@ -235,6 +247,7 @@ export interface RootRouteChildren {
   mainRouteRoute: typeof mainRouteRouteWithChildren;
   DashboardsRouteRoute: typeof DashboardsRouteRouteWithChildren;
   adminAdminRoute: typeof adminAdminRoute;
+  marketingMarketingRoute: typeof marketingMarketingRoute;
 }
 export interface FileServerRoutesByFullPath {
   "/api/auth/$": typeof ApiAuthSplatServerRoute;
@@ -294,6 +307,13 @@ declare module "@tanstack/react-router" {
       fullPath: "/dashboards/";
       preLoaderRoute: typeof DashboardsIndexRouteImport;
       parentRoute: typeof DashboardsRouteRoute;
+    };
+    "/(marketing)/marketing": {
+      id: "/(marketing)/marketing";
+      path: "/marketing";
+      fullPath: "/marketing";
+      preLoaderRoute: typeof marketingMarketingRouteImport;
+      parentRoute: typeof rootRouteImport;
     };
     "/(main)/publishing": {
       id: "/(main)/publishing";
@@ -453,6 +473,7 @@ const rootRouteChildren: RootRouteChildren = {
   mainRouteRoute: mainRouteRouteWithChildren,
   DashboardsRouteRoute: DashboardsRouteRouteWithChildren,
   adminAdminRoute: adminAdminRoute,
+  marketingMarketingRoute: marketingMarketingRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

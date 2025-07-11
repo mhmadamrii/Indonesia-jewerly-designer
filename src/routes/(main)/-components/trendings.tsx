@@ -1,11 +1,12 @@
-import { ClientOnly, Link } from "@tanstack/react-router";
 import { IKImage } from "imagekitio-react";
+import { AnimatePresence, motion } from "motion/react";
 import { lazy, Suspense, useState } from "react";
-import { Card, CardContent } from "~/components/ui/card";
 import { JewerlyWithUser } from "~/lib/db/types";
 
 const ModelViewer = lazy(() =>
-  import("~/components/3D/model-viewer").then((module) => ({ default: module.ModelViewer }))
+  import("~/components/3D/model-viewer").then((module) => ({
+    default: module.ModelViewer,
+  })),
 );
 
 type TrendingsProps = {
@@ -13,14 +14,22 @@ type TrendingsProps = {
 };
 
 export function Trendings({ jewerlies }: TrendingsProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   console.log(jewerlies);
+  class Person {
+    constructor() {}
+  }
 
   return (
     <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
-      {jewerlies?.map((item) => (
-        <Card className="relative w-full rounded-sm" key={item.jewerly_assets.id}>
-          <CardContent className="flex h-[300px] flex-col gap-5">
+      {jewerlies?.map((item, idx) => (
+        <motion.div
+          layoutId={`card-${idx + 1}`}
+          onClick={() => setSelectedId(idx + 1)}
+          className="relative w-full rounded-sm"
+          key={item.jewerly_assets.id}
+        >
+          <div className="dark:bg-card bg-card flex h-[300px] flex-col gap-5 rounded-md border p-4 shadow">
             {item.jewerly_assets.imageUrl && item.jewerly_assets.typeAsset == "image" && (
               <IKImage
                 src={item.jewerly_assets.imageUrl ?? ""}
@@ -35,24 +44,41 @@ export function Trendings({ jewerlies }: TrendingsProps) {
                 </Suspense>
               )}
             <div className="flex w-full items-center justify-between">
-              <Link
-                to="/assets/$assetId"
-                params={{
-                  assetId: item.jewerly_assets.id,
-                }}
-              >
+              <div>
                 <h1 className="text-xl font-semibold">{item.jewerly_assets.name}</h1>
                 <span>{item.jewerly_assets.description}</span>
-              </Link>
+              </div>
               <span className="text-muted-foreground">21.5K Views</span>
             </div>
             <div className="flex items-center justify-between">
               <span>Price</span>
               <span className="uppercase">$ {item.jewerly_assets.price}</span>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </motion.div>
       ))}
+
+      <AnimatePresence>
+        {selectedId && (
+          <>
+            <motion.div
+              className="fixed inset-0 z-40 bg-black/50"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedId(null)}
+            />
+
+            <motion.div
+              layoutId={`card-${selectedId}`}
+              className="bg-card fixed top-1/2 left-1/2 z-50 h-[80vh] w-[70vw] -translate-x-1/2 -translate-y-1/2 rounded-lg p-6 shadow-xl"
+            >
+              <h2 className="mb-2 text-xl font-bold text-red-500">Item {selectedId}</h2>
+              <p>This is the expanded view.</p>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

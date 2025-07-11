@@ -30,11 +30,7 @@ export function TopArtists({ users }: TopArtistsProps) {
                   </div>
                 </div>
                 <div className="">
-                  <FlipButton
-                    frontText="Follow"
-                    backText="😳"
-                    className="rounded-full text-[#5429FF] hover:bg-[EEEAFF]/80"
-                  />
+                  <FlipButton frontText="Follow" backText="😳" />
                   {/* <Button
                     className={cn(
                       "cursor-pointer rounded-full bg-[#EEEAFF] text-[#5429FF] hover:bg-[EEEAFF]/80",
