@@ -1,8 +1,7 @@
+import { FlipButton } from "~/components/animate-ui/buttons/flip";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardTitle } from "~/components/ui/card";
 import { User } from "~/lib/db/types";
-import { cn } from "~/lib/utils";
 
 type TopArtistsProps = {
   users: User[];
@@ -31,13 +30,18 @@ export function TopArtists({ users }: TopArtistsProps) {
                   </div>
                 </div>
                 <div className="">
-                  <Button
+                  <FlipButton
+                    frontText="Follow"
+                    backText="😳"
+                    className="rounded-full text-[#5429FF] hover:bg-[EEEAFF]/80"
+                  />
+                  {/* <Button
                     className={cn(
                       "cursor-pointer rounded-full bg-[#EEEAFF] text-[#5429FF] hover:bg-[EEEAFF]/80",
                     )}
                   >
                     Follow
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
             </div>

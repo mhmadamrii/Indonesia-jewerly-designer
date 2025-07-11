@@ -3,15 +3,9 @@ import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { authClient } from "~/lib/auth/auth-client";
 import { cn } from "~/lib/utils";
-import { CartContent } from "./cart-content";
+import { CartDrawer } from "./cart-drawer";
 import { Button } from "./ui/button";
 import { SearchInput } from "./ui/search-input";
-
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/animate-ui/base/popover";
 
 import {
   CommandDialog,
@@ -30,7 +24,6 @@ import {
   CreditCard,
   Images,
   Settings,
-  ShoppingCart,
   User,
   Wallet,
 } from "lucide-react";
@@ -148,14 +141,7 @@ export function Header() {
             <Bell />
           </Button>
 
-          <Popover>
-            <PopoverTrigger>
-              <ShoppingCart />
-            </PopoverTrigger>
-            <PopoverContent className="h-[400px]">
-              <CartContent className="h-full" number={counter} setNumber={setCounter} />
-            </PopoverContent>
-          </Popover>
+          <CartDrawer />
           {/* <DropdownMenu>
             <DropdownMenuTrigger className="cursor-pointer" asChild>
               <Avatar className="h-10 w-10">

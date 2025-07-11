@@ -1,7 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { ThemeToggle } from "~/components/theme-toggle";
 import { Button } from "~/components/ui/button";
 import { authClient } from "~/lib/auth/auth-client";
 
@@ -75,7 +74,6 @@ function Home() {
       )}
 
       <div className="flex flex-col items-center gap-2">
-        <ThemeToggle />
         <a
           className="text-muted-foreground hover:text-foreground underline"
           href="https://github.com/dotnize/react-tanstarter"
