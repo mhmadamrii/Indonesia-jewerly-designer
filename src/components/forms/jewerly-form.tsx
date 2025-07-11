@@ -43,6 +43,7 @@ interface IProps {
 
 export function JewerlyForm({ onStepClick, categories }: IProps) {
   const { addJewerlyForm, jewerlyForm } = useFormStorage();
+  console.log("jewerly form", jewerlyForm);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

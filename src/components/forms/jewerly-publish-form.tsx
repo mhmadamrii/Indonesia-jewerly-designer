@@ -49,6 +49,11 @@ export function JewerlyPublishForm() {
     }
   };
 
+  console.log(
+    'jewerlyForm.image_url && jewerlyForm.type_asset !== "image"',
+    jewerlyForm.image_url && jewerlyForm.type_asset !== "image",
+  );
+
   return (
     <section className="flex flex-col gap-4 px-10">
       <div className="flex flex-col gap-2">
@@ -77,7 +82,7 @@ export function JewerlyPublishForm() {
           />
         )}
         {jewerlyForm.image_url && jewerlyForm.type_asset !== "image" && (
-          <ModelViewer src={jewerlyForm.image_url ?? ""} />
+          <ModelViewer src={jewerlyForm.image_url} />
         )}
       </div>
       <div className="flex w-full items-center justify-end">

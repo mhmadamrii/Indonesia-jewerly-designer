@@ -1,7 +1,17 @@
-import "@google/model-viewer";
+import React, { useEffect, useState } from "react";
 
 export function ModelViewer({ src }: { src: string }) {
-  console.log(src);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    import("@google/model-viewer");
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return null;
+  }
+
   return (
     // @ts-ignore
     <model-viewer

@@ -1,11 +1,27 @@
 "use no memo";
 
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "@tanstack/react-router";
+import { ArrowUpDown, ChevronDown, MoreHorizontal, Trash2 } from "lucide-react";
 import * as React from "react";
+import { toast } from "sonner";
+import { deleteJewerlyAsset } from "~/actions/jewerly.action";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 import { JewerlyAsset } from "~/lib/db/types";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/components/ui/alert-dialog";
 
 import {
   ColumnDef,
@@ -94,9 +110,7 @@ export const columns: ColumnDef<JewerlyAsset>[] = [
   {
     accessorKey: "typeAsset",
     header: "Type",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("typeAsset")}</div>
-    ),
+    cell: ({ row }) => <div className="capitalize">{row.getValue("typeAsset")}</div>,
   },
   {
     accessorKey: "createdAt",
@@ -111,7 +125,14 @@ export const columns: ColumnDef<JewerlyAsset>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const jewerly = row.original;
+      const router = useRouter();
+      const { mutate } = useMutation({
+        mutationFn: deleteJewerlyAsset,
+        onSuccess: () => {
+          toast.success("Deleted successfully");
+          router.invalidate();
+        },
+      });
 
       return (
         <DropdownMenu>
@@ -123,10 +144,36 @@ export const columns: ColumnDef<JewerlyAsset>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(jewerly.id)}
-            >
-              Copy ID
+            <DropdownMenuItem asChild>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button className="flex items-center gap-2" variant="ghost">
+                    <Trash2 />
+                    Delete User
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete your
+                      account and remove your data from our servers.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() =>
+                        mutate({
+                          data: { id: row.original.id },
+                        })
+                      }
+                    >
+                      Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>View Details</DropdownMenuItem>
@@ -139,11 +186,8 @@ export const columns: ColumnDef<JewerlyAsset>[] = [
 
 export function MyModelsTable({ jewerlies }: { jewerlies: JewerlyAsset[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({

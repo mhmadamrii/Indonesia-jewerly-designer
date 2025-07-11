@@ -1,9 +1,12 @@
 import { ClientOnly, Link } from "@tanstack/react-router";
 import { IKImage } from "imagekitio-react";
-import { useState } from "react";
-import { ModelViewer } from "~/components/3D/model-viewer";
+import { lazy, Suspense, useState } from "react";
 import { Card, CardContent } from "~/components/ui/card";
 import { JewerlyWithUser } from "~/lib/db/types";
+
+const ModelViewer = lazy(() =>
+  import("~/components/3D/model-viewer").then((module) => ({ default: module.ModelViewer }))
+);
 
 type TrendingsProps = {
   jewerlies: JewerlyWithUser[];
@@ -27,9 +30,9 @@ export function Trendings({ jewerlies }: TrendingsProps) {
             )}
             {item.jewerly_assets.imageUrl &&
               item.jewerly_assets.typeAsset == "non-image" && (
-                <ClientOnly fallback={<div>Loading...</div>}>
+                <Suspense fallback={<div>Loading...</div>}>
                   <ModelViewer src={item.jewerly_assets.imageUrl ?? ""} />
-                </ClientOnly>
+                </Suspense>
               )}
             <div className="flex w-full items-center justify-between">
               <Link

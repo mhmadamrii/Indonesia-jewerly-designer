@@ -19,14 +19,13 @@ import { Route as DashboardsIndexRouteImport } from "./routes/dashboards/index";
 import { Route as mainPublishingRouteImport } from "./routes/(main)/publishing";
 import { Route as mainMySalesRouteImport } from "./routes/(main)/my-sales";
 import { Route as mainMyModelsRouteImport } from "./routes/(main)/my-models";
-import { Route as mainMikailLearnRouteImport } from "./routes/(main)/mikail-learn";
 import { Route as mainDashboardRouteImport } from "./routes/(main)/dashboard";
+import { Route as mainCartRouteImport } from "./routes/(main)/cart";
 import { Route as authSignupRouteImport } from "./routes/(auth)/signup";
 import { Route as authLoginRouteImport } from "./routes/(auth)/login";
 import { Route as authAuthRouteImport } from "./routes/(auth)/auth";
 import { Route as adminAdminRouteImport } from "./routes/(admin)/admin";
 import { Route as mainProfileIndexRouteImport } from "./routes/(main)/profile.index";
-import { Route as mainPaymentsIndexRouteImport } from "./routes/(main)/payments/index";
 import { Route as mainProfileUsernameRouteImport } from "./routes/(main)/profile.$username";
 import { Route as mainAssetsAssetIdRouteImport } from "./routes/(main)/assets.$assetId";
 import { ServerRoute as ApiAuthSplatServerRouteImport } from "./routes/api/auth/$";
@@ -71,14 +70,14 @@ const mainMyModelsRoute = mainMyModelsRouteImport.update({
   path: "/my-models",
   getParentRoute: () => mainRouteRoute,
 } as any);
-const mainMikailLearnRoute = mainMikailLearnRouteImport.update({
-  id: "/mikail-learn",
-  path: "/mikail-learn",
-  getParentRoute: () => mainRouteRoute,
-} as any);
 const mainDashboardRoute = mainDashboardRouteImport.update({
   id: "/dashboard",
   path: "/dashboard",
+  getParentRoute: () => mainRouteRoute,
+} as any);
+const mainCartRoute = mainCartRouteImport.update({
+  id: "/cart",
+  path: "/cart",
   getParentRoute: () => mainRouteRoute,
 } as any);
 const authSignupRoute = authSignupRouteImport.update({
@@ -106,11 +105,6 @@ const mainProfileIndexRoute = mainProfileIndexRouteImport.update({
   path: "/profile/",
   getParentRoute: () => mainRouteRoute,
 } as any);
-const mainPaymentsIndexRoute = mainPaymentsIndexRouteImport.update({
-  id: "/payments/",
-  path: "/payments/",
-  getParentRoute: () => mainRouteRoute,
-} as any);
 const mainProfileUsernameRoute = mainProfileUsernameRouteImport.update({
   id: "/profile/$username",
   path: "/profile/$username",
@@ -134,15 +128,14 @@ export interface FileRoutesByFullPath {
   "/auth": typeof authAuthRoute;
   "/login": typeof authLoginRoute;
   "/signup": typeof authSignupRoute;
+  "/cart": typeof mainCartRoute;
   "/dashboard": typeof mainDashboardRoute;
-  "/mikail-learn": typeof mainMikailLearnRoute;
   "/my-models": typeof mainMyModelsRoute;
   "/my-sales": typeof mainMySalesRoute;
   "/publishing": typeof mainPublishingRoute;
   "/dashboards/": typeof DashboardsIndexRoute;
   "/assets/$assetId": typeof mainAssetsAssetIdRoute;
   "/profile/$username": typeof mainProfileUsernameRoute;
-  "/payments": typeof mainPaymentsIndexRoute;
   "/profile": typeof mainProfileIndexRoute;
 }
 export interface FileRoutesByTo {
@@ -151,15 +144,14 @@ export interface FileRoutesByTo {
   "/auth": typeof authAuthRoute;
   "/login": typeof authLoginRoute;
   "/signup": typeof authSignupRoute;
+  "/cart": typeof mainCartRoute;
   "/dashboard": typeof mainDashboardRoute;
-  "/mikail-learn": typeof mainMikailLearnRoute;
   "/my-models": typeof mainMyModelsRoute;
   "/my-sales": typeof mainMySalesRoute;
   "/publishing": typeof mainPublishingRoute;
   "/dashboards": typeof DashboardsIndexRoute;
   "/assets/$assetId": typeof mainAssetsAssetIdRoute;
   "/profile/$username": typeof mainProfileUsernameRoute;
-  "/payments": typeof mainPaymentsIndexRoute;
   "/profile": typeof mainProfileIndexRoute;
 }
 export interface FileRoutesById {
@@ -172,15 +164,14 @@ export interface FileRoutesById {
   "/(auth)/auth": typeof authAuthRoute;
   "/(auth)/login": typeof authLoginRoute;
   "/(auth)/signup": typeof authSignupRoute;
+  "/(main)/cart": typeof mainCartRoute;
   "/(main)/dashboard": typeof mainDashboardRoute;
-  "/(main)/mikail-learn": typeof mainMikailLearnRoute;
   "/(main)/my-models": typeof mainMyModelsRoute;
   "/(main)/my-sales": typeof mainMySalesRoute;
   "/(main)/publishing": typeof mainPublishingRoute;
   "/dashboards/": typeof DashboardsIndexRoute;
   "/(main)/assets/$assetId": typeof mainAssetsAssetIdRoute;
   "/(main)/profile/$username": typeof mainProfileUsernameRoute;
-  "/(main)/payments/": typeof mainPaymentsIndexRoute;
   "/(main)/profile/": typeof mainProfileIndexRoute;
 }
 export interface FileRouteTypes {
@@ -192,15 +183,14 @@ export interface FileRouteTypes {
     | "/auth"
     | "/login"
     | "/signup"
+    | "/cart"
     | "/dashboard"
-    | "/mikail-learn"
     | "/my-models"
     | "/my-sales"
     | "/publishing"
     | "/dashboards/"
     | "/assets/$assetId"
     | "/profile/$username"
-    | "/payments"
     | "/profile";
   fileRoutesByTo: FileRoutesByTo;
   to:
@@ -209,15 +199,14 @@ export interface FileRouteTypes {
     | "/auth"
     | "/login"
     | "/signup"
+    | "/cart"
     | "/dashboard"
-    | "/mikail-learn"
     | "/my-models"
     | "/my-sales"
     | "/publishing"
     | "/dashboards"
     | "/assets/$assetId"
     | "/profile/$username"
-    | "/payments"
     | "/profile";
   id:
     | "__root__"
@@ -229,15 +218,14 @@ export interface FileRouteTypes {
     | "/(auth)/auth"
     | "/(auth)/login"
     | "/(auth)/signup"
+    | "/(main)/cart"
     | "/(main)/dashboard"
-    | "/(main)/mikail-learn"
     | "/(main)/my-models"
     | "/(main)/my-sales"
     | "/(main)/publishing"
     | "/dashboards/"
     | "/(main)/assets/$assetId"
     | "/(main)/profile/$username"
-    | "/(main)/payments/"
     | "/(main)/profile/";
   fileRoutesById: FileRoutesById;
 }
@@ -328,18 +316,18 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof mainMyModelsRouteImport;
       parentRoute: typeof mainRouteRoute;
     };
-    "/(main)/mikail-learn": {
-      id: "/(main)/mikail-learn";
-      path: "/mikail-learn";
-      fullPath: "/mikail-learn";
-      preLoaderRoute: typeof mainMikailLearnRouteImport;
-      parentRoute: typeof mainRouteRoute;
-    };
     "/(main)/dashboard": {
       id: "/(main)/dashboard";
       path: "/dashboard";
       fullPath: "/dashboard";
       preLoaderRoute: typeof mainDashboardRouteImport;
+      parentRoute: typeof mainRouteRoute;
+    };
+    "/(main)/cart": {
+      id: "/(main)/cart";
+      path: "/cart";
+      fullPath: "/cart";
+      preLoaderRoute: typeof mainCartRouteImport;
       parentRoute: typeof mainRouteRoute;
     };
     "/(auth)/signup": {
@@ -375,13 +363,6 @@ declare module "@tanstack/react-router" {
       path: "/profile";
       fullPath: "/profile";
       preLoaderRoute: typeof mainProfileIndexRouteImport;
-      parentRoute: typeof mainRouteRoute;
-    };
-    "/(main)/payments/": {
-      id: "/(main)/payments/";
-      path: "/payments";
-      fullPath: "/payments";
-      preLoaderRoute: typeof mainPaymentsIndexRouteImport;
       parentRoute: typeof mainRouteRoute;
     };
     "/(main)/profile/$username": {
@@ -429,26 +410,24 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 );
 
 interface mainRouteRouteChildren {
+  mainCartRoute: typeof mainCartRoute;
   mainDashboardRoute: typeof mainDashboardRoute;
-  mainMikailLearnRoute: typeof mainMikailLearnRoute;
   mainMyModelsRoute: typeof mainMyModelsRoute;
   mainMySalesRoute: typeof mainMySalesRoute;
   mainPublishingRoute: typeof mainPublishingRoute;
   mainAssetsAssetIdRoute: typeof mainAssetsAssetIdRoute;
   mainProfileUsernameRoute: typeof mainProfileUsernameRoute;
-  mainPaymentsIndexRoute: typeof mainPaymentsIndexRoute;
   mainProfileIndexRoute: typeof mainProfileIndexRoute;
 }
 
 const mainRouteRouteChildren: mainRouteRouteChildren = {
+  mainCartRoute: mainCartRoute,
   mainDashboardRoute: mainDashboardRoute,
-  mainMikailLearnRoute: mainMikailLearnRoute,
   mainMyModelsRoute: mainMyModelsRoute,
   mainMySalesRoute: mainMySalesRoute,
   mainPublishingRoute: mainPublishingRoute,
   mainAssetsAssetIdRoute: mainAssetsAssetIdRoute,
   mainProfileUsernameRoute: mainProfileUsernameRoute,
-  mainPaymentsIndexRoute: mainPaymentsIndexRoute,
   mainProfileIndexRoute: mainProfileIndexRoute,
 };
 

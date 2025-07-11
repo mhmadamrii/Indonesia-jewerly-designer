@@ -1,15 +1,17 @@
 import { useNavigate } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
+import { authClient } from "~/lib/auth/auth-client";
+import { cn } from "~/lib/utils";
+import { CartContent } from "./cart-content";
+import { Button } from "./ui/button";
+import { SearchInput } from "./ui/search-input";
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "~/components/animate-ui/base/popover";
-import { authClient } from "~/lib/auth/auth-client";
-import { cn } from "~/lib/utils";
-import { Button } from "./ui/button";
-import { SearchInput } from "./ui/search-input";
 
 import {
   CommandDialog,
@@ -39,6 +41,7 @@ export function Header() {
   const navigate = useNavigate();
   const roles: Role[] = ["user", "artist"];
   const [currentRole, setCurrentRole] = useState<Role>("user");
+  const [counter, setCounter] = useState(0);
 
   const [open, setOpen] = useState(false);
   const { data: session, isPending } = authClient.useSession();
@@ -147,17 +150,10 @@ export function Header() {
 
           <Popover>
             <PopoverTrigger>
-              <Button size="icon" variant="ghost" className="rounded-full border">
-                <ShoppingCart />
-              </Button>
+              <ShoppingCart />
             </PopoverTrigger>
-            <PopoverContent>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis, odio
-                incidunt voluptatem aperiam dolor nemo recusandae blanditiis maxime
-                nesciunt, magni pariatur. Reprehenderit consequuntur inventore, itaque
-                iste, nisi suscipit sint eos quaerat cumque nesciunt magni nemo molestiae
-              </p>
+            <PopoverContent className="h-[400px]">
+              <CartContent className="h-full" number={counter} setNumber={setCounter} />
             </PopoverContent>
           </Popover>
           {/* <DropdownMenu>

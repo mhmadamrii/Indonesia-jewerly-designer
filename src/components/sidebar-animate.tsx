@@ -130,7 +130,6 @@ export const SidebarAnimate = () => {
           </ClientOnly>
         </SidebarHeader>
         <SidebarContent>
-          {/* Nav Main */}
           <SidebarGroup>
             <SidebarGroupLabel>Profile</SidebarGroupLabel>
             <SidebarMenu>
@@ -146,7 +145,6 @@ export const SidebarAnimate = () => {
               ))}
             </SidebarMenu>
           </SidebarGroup>
-          {/* Nav Main */}
           <div className="mx-3">
             <Separator />
           </div>
@@ -192,16 +190,14 @@ export const SidebarAnimate = () => {
                 </SidebarMenuItem>
               ))}
               <SidebarMenuItem>
-                <SidebarMenuButton className="text-sidebar-foreground/70">
+                <SidebarMenuButton className="text-sidebar-foreground/70" asChild>
                   <ThemeToggle />
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroup>
-          {/* Nav Project */}
         </SidebarContent>
         <SidebarFooter>
-          {/* Nav User */}
           <SidebarMenu>
             <SidebarMenuItem>
               <DropdownMenu>
@@ -291,7 +287,6 @@ export const SidebarAnimate = () => {
               </DropdownMenu>
             </SidebarMenuItem>
           </SidebarMenu>
-          {/* Nav User */}
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>

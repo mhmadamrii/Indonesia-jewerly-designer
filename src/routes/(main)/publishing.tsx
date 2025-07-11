@@ -5,8 +5,10 @@ import { JewerlyForm } from "~/components/forms/jewerly-form";
 import { JewerlyLinkForm } from "~/components/forms/jewerly-link-form";
 import { JewerlyPublishForm } from "~/components/forms/jewerly-publish-form";
 import { JewerlyUploadForm } from "~/components/forms/jewerly-upload-form";
+import { JewerlyFormSkeleton } from "~/components/skeletons/jewerly-form-skeleton";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { AnimatedStepper } from "~/components/ui/stepper";
+import { useFormStorage } from "~/lib/store";
 
 export const Route = createFileRoute("/(main)/publishing")({
   component: RouteComponent,
@@ -37,9 +39,25 @@ const steps = [
 
 function RouteComponent() {
   const { categories } = Route.useLoaderData();
+  const { jewerlyForm } = useFormStorage();
   const [currentStep, setCurrentStep] = useState(1);
 
   const handleStepClick = (stepNumber: number) => {
+    const { title, price, currency, category, desc, image_url, type_asset } = jewerlyForm;
+
+    // if (
+    //   !title ||
+    //   !price ||
+    //   !currency ||
+    //   !category ||
+    //   !desc ||
+    //   !image_url ||
+    //   !type_asset
+    // ) {
+    //   toast.error("Please complete the form before proceeding");
+    //   return;
+    // }
+
     setCurrentStep(stepNumber);
   };
 
@@ -47,7 +65,7 @@ function RouteComponent() {
     switch (currentStep) {
       case 1:
         return (
-          <Await promise={categories} fallback={<div>Loading...</div>}>
+          <Await promise={categories} fallback={<JewerlyFormSkeleton />}>
             {({ data }) => (
               <JewerlyForm categories={data} onStepClick={handleStepClick} />
             )}
