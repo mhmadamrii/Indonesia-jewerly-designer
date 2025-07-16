@@ -12,11 +12,9 @@ import { createServerRootRoute } from "@tanstack/react-start/server";
 
 import { Route as rootRouteImport } from "./routes/__root";
 import { Route as DashboardsRouteRouteImport } from "./routes/dashboards/route";
-import { Route as mainRouteRouteImport } from "./routes/(main)/route";
 import { Route as authRouteRouteImport } from "./routes/(auth)/route";
 import { Route as IndexRouteImport } from "./routes/index";
 import { Route as DashboardsIndexRouteImport } from "./routes/dashboards/index";
-import { Route as marketingMarketingRouteImport } from "./routes/(marketing)/marketing";
 import { Route as mainPublishingRouteImport } from "./routes/(main)/publishing";
 import { Route as mainMySalesRouteImport } from "./routes/(main)/my-sales";
 import { Route as mainMyModelsRouteImport } from "./routes/(main)/my-models";
@@ -29,6 +27,15 @@ import { Route as adminAdminRouteImport } from "./routes/(admin)/admin";
 import { Route as mainProfileIndexRouteImport } from "./routes/(main)/profile.index";
 import { Route as mainProfileUsernameRouteImport } from "./routes/(main)/profile.$username";
 import { Route as mainAssetsAssetIdRouteImport } from "./routes/(main)/assets.$assetId";
+import { Route as mainChar126GeneralRouteRouteImport } from "./routes/(main)/~/general/route";
+import { Route as mainChar126ArtistRouteRouteImport } from "./routes/(main)/~/artist/route";
+import { Route as mainChar126GeneralPurchasedModelsIndexRouteImport } from "./routes/(main)/~/general/purchased-models/index";
+import { Route as mainChar126GeneralFeedIndexRouteImport } from "./routes/(main)/~/general/feed/index";
+import { Route as mainChar126GeneralFavoritesIndexRouteImport } from "./routes/(main)/~/general/favorites/index";
+import { Route as mainChar126GeneralExploreIndexRouteImport } from "./routes/(main)/~/general/explore/index";
+import { Route as mainChar126GeneralCartIndexRouteImport } from "./routes/(main)/~/general/cart/index";
+import { Route as mainChar126ArtistPublishingIndexRouteImport } from "./routes/(main)/~/artist/publishing/index";
+import { Route as mainChar126ArtistDashboardIndexRouteImport } from "./routes/(main)/~/artist/dashboard/index";
 import { ServerRoute as ApiAuthSplatServerRouteImport } from "./routes/api/auth/$";
 
 const rootServerRouteImport = createServerRootRoute();
@@ -36,10 +43,6 @@ const rootServerRouteImport = createServerRootRoute();
 const DashboardsRouteRoute = DashboardsRouteRouteImport.update({
   id: "/dashboards",
   path: "/dashboards",
-  getParentRoute: () => rootRouteImport,
-} as any);
-const mainRouteRoute = mainRouteRouteImport.update({
-  id: "/(main)",
   getParentRoute: () => rootRouteImport,
 } as any);
 const authRouteRoute = authRouteRouteImport.update({
@@ -56,35 +59,30 @@ const DashboardsIndexRoute = DashboardsIndexRouteImport.update({
   path: "/",
   getParentRoute: () => DashboardsRouteRoute,
 } as any);
-const marketingMarketingRoute = marketingMarketingRouteImport.update({
-  id: "/(marketing)/marketing",
-  path: "/marketing",
+const mainPublishingRoute = mainPublishingRouteImport.update({
+  id: "/(main)/publishing",
+  path: "/publishing",
   getParentRoute: () => rootRouteImport,
 } as any);
-const mainPublishingRoute = mainPublishingRouteImport.update({
-  id: "/publishing",
-  path: "/publishing",
-  getParentRoute: () => mainRouteRoute,
-} as any);
 const mainMySalesRoute = mainMySalesRouteImport.update({
-  id: "/my-sales",
+  id: "/(main)/my-sales",
   path: "/my-sales",
-  getParentRoute: () => mainRouteRoute,
+  getParentRoute: () => rootRouteImport,
 } as any);
 const mainMyModelsRoute = mainMyModelsRouteImport.update({
-  id: "/my-models",
+  id: "/(main)/my-models",
   path: "/my-models",
-  getParentRoute: () => mainRouteRoute,
+  getParentRoute: () => rootRouteImport,
 } as any);
 const mainDashboardRoute = mainDashboardRouteImport.update({
-  id: "/dashboard",
+  id: "/(main)/dashboard",
   path: "/dashboard",
-  getParentRoute: () => mainRouteRoute,
+  getParentRoute: () => rootRouteImport,
 } as any);
 const mainCartRoute = mainCartRouteImport.update({
-  id: "/cart",
+  id: "/(main)/cart",
   path: "/cart",
-  getParentRoute: () => mainRouteRoute,
+  getParentRoute: () => rootRouteImport,
 } as any);
 const authSignupRoute = authSignupRouteImport.update({
   id: "/signup",
@@ -107,20 +105,72 @@ const adminAdminRoute = adminAdminRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any);
 const mainProfileIndexRoute = mainProfileIndexRouteImport.update({
-  id: "/profile/",
+  id: "/(main)/profile/",
   path: "/profile/",
-  getParentRoute: () => mainRouteRoute,
+  getParentRoute: () => rootRouteImport,
 } as any);
 const mainProfileUsernameRoute = mainProfileUsernameRouteImport.update({
-  id: "/profile/$username",
+  id: "/(main)/profile/$username",
   path: "/profile/$username",
-  getParentRoute: () => mainRouteRoute,
+  getParentRoute: () => rootRouteImport,
 } as any);
 const mainAssetsAssetIdRoute = mainAssetsAssetIdRouteImport.update({
-  id: "/assets/$assetId",
+  id: "/(main)/assets/$assetId",
   path: "/assets/$assetId",
-  getParentRoute: () => mainRouteRoute,
+  getParentRoute: () => rootRouteImport,
 } as any);
+const mainChar126GeneralRouteRoute = mainChar126GeneralRouteRouteImport.update({
+  id: "/(main)/~/general",
+  path: "/~/general",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const mainChar126ArtistRouteRoute = mainChar126ArtistRouteRouteImport.update({
+  id: "/(main)/~/artist",
+  path: "/~/artist",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const mainChar126GeneralPurchasedModelsIndexRoute =
+  mainChar126GeneralPurchasedModelsIndexRouteImport.update({
+    id: "/purchased-models/",
+    path: "/purchased-models/",
+    getParentRoute: () => mainChar126GeneralRouteRoute,
+  } as any);
+const mainChar126GeneralFeedIndexRoute =
+  mainChar126GeneralFeedIndexRouteImport.update({
+    id: "/feed/",
+    path: "/feed/",
+    getParentRoute: () => mainChar126GeneralRouteRoute,
+  } as any);
+const mainChar126GeneralFavoritesIndexRoute =
+  mainChar126GeneralFavoritesIndexRouteImport.update({
+    id: "/favorites/",
+    path: "/favorites/",
+    getParentRoute: () => mainChar126GeneralRouteRoute,
+  } as any);
+const mainChar126GeneralExploreIndexRoute =
+  mainChar126GeneralExploreIndexRouteImport.update({
+    id: "/explore/",
+    path: "/explore/",
+    getParentRoute: () => mainChar126GeneralRouteRoute,
+  } as any);
+const mainChar126GeneralCartIndexRoute =
+  mainChar126GeneralCartIndexRouteImport.update({
+    id: "/cart/",
+    path: "/cart/",
+    getParentRoute: () => mainChar126GeneralRouteRoute,
+  } as any);
+const mainChar126ArtistPublishingIndexRoute =
+  mainChar126ArtistPublishingIndexRouteImport.update({
+    id: "/publishing/",
+    path: "/publishing/",
+    getParentRoute: () => mainChar126ArtistRouteRoute,
+  } as any);
+const mainChar126ArtistDashboardIndexRoute =
+  mainChar126ArtistDashboardIndexRouteImport.update({
+    id: "/dashboard/",
+    path: "/dashboard/",
+    getParentRoute: () => mainChar126ArtistRouteRoute,
+  } as any);
 const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
   id: "/api/auth/$",
   path: "/api/auth/$",
@@ -128,7 +178,7 @@ const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
 } as any);
 
 export interface FileRoutesByFullPath {
-  "/": typeof mainRouteRouteWithChildren;
+  "/": typeof authRouteRouteWithChildren;
   "/dashboards": typeof DashboardsRouteRouteWithChildren;
   "/admin": typeof adminAdminRoute;
   "/auth": typeof authAuthRoute;
@@ -139,14 +189,22 @@ export interface FileRoutesByFullPath {
   "/my-models": typeof mainMyModelsRoute;
   "/my-sales": typeof mainMySalesRoute;
   "/publishing": typeof mainPublishingRoute;
-  "/marketing": typeof marketingMarketingRoute;
   "/dashboards/": typeof DashboardsIndexRoute;
+  "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
+  "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/assets/$assetId": typeof mainAssetsAssetIdRoute;
   "/profile/$username": typeof mainProfileUsernameRoute;
   "/profile": typeof mainProfileIndexRoute;
+  "/~/artist/dashboard": typeof mainChar126ArtistDashboardIndexRoute;
+  "/~/artist/publishing": typeof mainChar126ArtistPublishingIndexRoute;
+  "/~/general/cart": typeof mainChar126GeneralCartIndexRoute;
+  "/~/general/explore": typeof mainChar126GeneralExploreIndexRoute;
+  "/~/general/favorites": typeof mainChar126GeneralFavoritesIndexRoute;
+  "/~/general/feed": typeof mainChar126GeneralFeedIndexRoute;
+  "/~/general/purchased-models": typeof mainChar126GeneralPurchasedModelsIndexRoute;
 }
 export interface FileRoutesByTo {
-  "/": typeof mainRouteRouteWithChildren;
+  "/": typeof authRouteRouteWithChildren;
   "/admin": typeof adminAdminRoute;
   "/auth": typeof authAuthRoute;
   "/login": typeof authLoginRoute;
@@ -156,17 +214,24 @@ export interface FileRoutesByTo {
   "/my-models": typeof mainMyModelsRoute;
   "/my-sales": typeof mainMySalesRoute;
   "/publishing": typeof mainPublishingRoute;
-  "/marketing": typeof marketingMarketingRoute;
   "/dashboards": typeof DashboardsIndexRoute;
+  "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
+  "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/assets/$assetId": typeof mainAssetsAssetIdRoute;
   "/profile/$username": typeof mainProfileUsernameRoute;
   "/profile": typeof mainProfileIndexRoute;
+  "/~/artist/dashboard": typeof mainChar126ArtistDashboardIndexRoute;
+  "/~/artist/publishing": typeof mainChar126ArtistPublishingIndexRoute;
+  "/~/general/cart": typeof mainChar126GeneralCartIndexRoute;
+  "/~/general/explore": typeof mainChar126GeneralExploreIndexRoute;
+  "/~/general/favorites": typeof mainChar126GeneralFavoritesIndexRoute;
+  "/~/general/feed": typeof mainChar126GeneralFeedIndexRoute;
+  "/~/general/purchased-models": typeof mainChar126GeneralPurchasedModelsIndexRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/": typeof IndexRoute;
   "/(auth)": typeof authRouteRouteWithChildren;
-  "/(main)": typeof mainRouteRouteWithChildren;
   "/dashboards": typeof DashboardsRouteRouteWithChildren;
   "/(admin)/admin": typeof adminAdminRoute;
   "/(auth)/auth": typeof authAuthRoute;
@@ -177,11 +242,19 @@ export interface FileRoutesById {
   "/(main)/my-models": typeof mainMyModelsRoute;
   "/(main)/my-sales": typeof mainMySalesRoute;
   "/(main)/publishing": typeof mainPublishingRoute;
-  "/(marketing)/marketing": typeof marketingMarketingRoute;
   "/dashboards/": typeof DashboardsIndexRoute;
+  "/(main)/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
+  "/(main)/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/(main)/assets/$assetId": typeof mainAssetsAssetIdRoute;
   "/(main)/profile/$username": typeof mainProfileUsernameRoute;
   "/(main)/profile/": typeof mainProfileIndexRoute;
+  "/(main)/~/artist/dashboard/": typeof mainChar126ArtistDashboardIndexRoute;
+  "/(main)/~/artist/publishing/": typeof mainChar126ArtistPublishingIndexRoute;
+  "/(main)/~/general/cart/": typeof mainChar126GeneralCartIndexRoute;
+  "/(main)/~/general/explore/": typeof mainChar126GeneralExploreIndexRoute;
+  "/(main)/~/general/favorites/": typeof mainChar126GeneralFavoritesIndexRoute;
+  "/(main)/~/general/feed/": typeof mainChar126GeneralFeedIndexRoute;
+  "/(main)/~/general/purchased-models/": typeof mainChar126GeneralPurchasedModelsIndexRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
@@ -197,11 +270,19 @@ export interface FileRouteTypes {
     | "/my-models"
     | "/my-sales"
     | "/publishing"
-    | "/marketing"
     | "/dashboards/"
+    | "/~/artist"
+    | "/~/general"
     | "/assets/$assetId"
     | "/profile/$username"
-    | "/profile";
+    | "/profile"
+    | "/~/artist/dashboard"
+    | "/~/artist/publishing"
+    | "/~/general/cart"
+    | "/~/general/explore"
+    | "/~/general/favorites"
+    | "/~/general/feed"
+    | "/~/general/purchased-models";
   fileRoutesByTo: FileRoutesByTo;
   to:
     | "/"
@@ -214,16 +295,23 @@ export interface FileRouteTypes {
     | "/my-models"
     | "/my-sales"
     | "/publishing"
-    | "/marketing"
     | "/dashboards"
+    | "/~/artist"
+    | "/~/general"
     | "/assets/$assetId"
     | "/profile/$username"
-    | "/profile";
+    | "/profile"
+    | "/~/artist/dashboard"
+    | "/~/artist/publishing"
+    | "/~/general/cart"
+    | "/~/general/explore"
+    | "/~/general/favorites"
+    | "/~/general/feed"
+    | "/~/general/purchased-models";
   id:
     | "__root__"
     | "/"
     | "/(auth)"
-    | "/(main)"
     | "/dashboards"
     | "/(admin)/admin"
     | "/(auth)/auth"
@@ -234,20 +322,36 @@ export interface FileRouteTypes {
     | "/(main)/my-models"
     | "/(main)/my-sales"
     | "/(main)/publishing"
-    | "/(marketing)/marketing"
     | "/dashboards/"
+    | "/(main)/~/artist"
+    | "/(main)/~/general"
     | "/(main)/assets/$assetId"
     | "/(main)/profile/$username"
-    | "/(main)/profile/";
+    | "/(main)/profile/"
+    | "/(main)/~/artist/dashboard/"
+    | "/(main)/~/artist/publishing/"
+    | "/(main)/~/general/cart/"
+    | "/(main)/~/general/explore/"
+    | "/(main)/~/general/favorites/"
+    | "/(main)/~/general/feed/"
+    | "/(main)/~/general/purchased-models/";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
   authRouteRoute: typeof authRouteRouteWithChildren;
-  mainRouteRoute: typeof mainRouteRouteWithChildren;
   DashboardsRouteRoute: typeof DashboardsRouteRouteWithChildren;
   adminAdminRoute: typeof adminAdminRoute;
-  marketingMarketingRoute: typeof marketingMarketingRoute;
+  mainCartRoute: typeof mainCartRoute;
+  mainDashboardRoute: typeof mainDashboardRoute;
+  mainMyModelsRoute: typeof mainMyModelsRoute;
+  mainMySalesRoute: typeof mainMySalesRoute;
+  mainPublishingRoute: typeof mainPublishingRoute;
+  mainChar126ArtistRouteRoute: typeof mainChar126ArtistRouteRouteWithChildren;
+  mainChar126GeneralRouteRoute: typeof mainChar126GeneralRouteRouteWithChildren;
+  mainAssetsAssetIdRoute: typeof mainAssetsAssetIdRoute;
+  mainProfileUsernameRoute: typeof mainProfileUsernameRoute;
+  mainProfileIndexRoute: typeof mainProfileIndexRoute;
 }
 export interface FileServerRoutesByFullPath {
   "/api/auth/$": typeof ApiAuthSplatServerRoute;
@@ -280,13 +384,6 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof DashboardsRouteRouteImport;
       parentRoute: typeof rootRouteImport;
     };
-    "/(main)": {
-      id: "/(main)";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof mainRouteRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
     "/(auth)": {
       id: "/(auth)";
       path: "/";
@@ -308,47 +405,40 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof DashboardsIndexRouteImport;
       parentRoute: typeof DashboardsRouteRoute;
     };
-    "/(marketing)/marketing": {
-      id: "/(marketing)/marketing";
-      path: "/marketing";
-      fullPath: "/marketing";
-      preLoaderRoute: typeof marketingMarketingRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
     "/(main)/publishing": {
       id: "/(main)/publishing";
       path: "/publishing";
       fullPath: "/publishing";
       preLoaderRoute: typeof mainPublishingRouteImport;
-      parentRoute: typeof mainRouteRoute;
+      parentRoute: typeof rootRouteImport;
     };
     "/(main)/my-sales": {
       id: "/(main)/my-sales";
       path: "/my-sales";
       fullPath: "/my-sales";
       preLoaderRoute: typeof mainMySalesRouteImport;
-      parentRoute: typeof mainRouteRoute;
+      parentRoute: typeof rootRouteImport;
     };
     "/(main)/my-models": {
       id: "/(main)/my-models";
       path: "/my-models";
       fullPath: "/my-models";
       preLoaderRoute: typeof mainMyModelsRouteImport;
-      parentRoute: typeof mainRouteRoute;
+      parentRoute: typeof rootRouteImport;
     };
     "/(main)/dashboard": {
       id: "/(main)/dashboard";
       path: "/dashboard";
       fullPath: "/dashboard";
       preLoaderRoute: typeof mainDashboardRouteImport;
-      parentRoute: typeof mainRouteRoute;
+      parentRoute: typeof rootRouteImport;
     };
     "/(main)/cart": {
       id: "/(main)/cart";
       path: "/cart";
       fullPath: "/cart";
       preLoaderRoute: typeof mainCartRouteImport;
-      parentRoute: typeof mainRouteRoute;
+      parentRoute: typeof rootRouteImport;
     };
     "/(auth)/signup": {
       id: "/(auth)/signup";
@@ -383,21 +473,84 @@ declare module "@tanstack/react-router" {
       path: "/profile";
       fullPath: "/profile";
       preLoaderRoute: typeof mainProfileIndexRouteImport;
-      parentRoute: typeof mainRouteRoute;
+      parentRoute: typeof rootRouteImport;
     };
     "/(main)/profile/$username": {
       id: "/(main)/profile/$username";
       path: "/profile/$username";
       fullPath: "/profile/$username";
       preLoaderRoute: typeof mainProfileUsernameRouteImport;
-      parentRoute: typeof mainRouteRoute;
+      parentRoute: typeof rootRouteImport;
     };
     "/(main)/assets/$assetId": {
       id: "/(main)/assets/$assetId";
       path: "/assets/$assetId";
       fullPath: "/assets/$assetId";
       preLoaderRoute: typeof mainAssetsAssetIdRouteImport;
-      parentRoute: typeof mainRouteRoute;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/(main)/~/general": {
+      id: "/(main)/~/general";
+      path: "/~/general";
+      fullPath: "/~/general";
+      preLoaderRoute: typeof mainChar126GeneralRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/(main)/~/artist": {
+      id: "/(main)/~/artist";
+      path: "/~/artist";
+      fullPath: "/~/artist";
+      preLoaderRoute: typeof mainChar126ArtistRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/(main)/~/general/purchased-models/": {
+      id: "/(main)/~/general/purchased-models/";
+      path: "/purchased-models";
+      fullPath: "/~/general/purchased-models";
+      preLoaderRoute: typeof mainChar126GeneralPurchasedModelsIndexRouteImport;
+      parentRoute: typeof mainChar126GeneralRouteRoute;
+    };
+    "/(main)/~/general/feed/": {
+      id: "/(main)/~/general/feed/";
+      path: "/feed";
+      fullPath: "/~/general/feed";
+      preLoaderRoute: typeof mainChar126GeneralFeedIndexRouteImport;
+      parentRoute: typeof mainChar126GeneralRouteRoute;
+    };
+    "/(main)/~/general/favorites/": {
+      id: "/(main)/~/general/favorites/";
+      path: "/favorites";
+      fullPath: "/~/general/favorites";
+      preLoaderRoute: typeof mainChar126GeneralFavoritesIndexRouteImport;
+      parentRoute: typeof mainChar126GeneralRouteRoute;
+    };
+    "/(main)/~/general/explore/": {
+      id: "/(main)/~/general/explore/";
+      path: "/explore";
+      fullPath: "/~/general/explore";
+      preLoaderRoute: typeof mainChar126GeneralExploreIndexRouteImport;
+      parentRoute: typeof mainChar126GeneralRouteRoute;
+    };
+    "/(main)/~/general/cart/": {
+      id: "/(main)/~/general/cart/";
+      path: "/cart";
+      fullPath: "/~/general/cart";
+      preLoaderRoute: typeof mainChar126GeneralCartIndexRouteImport;
+      parentRoute: typeof mainChar126GeneralRouteRoute;
+    };
+    "/(main)/~/artist/publishing/": {
+      id: "/(main)/~/artist/publishing/";
+      path: "/publishing";
+      fullPath: "/~/artist/publishing";
+      preLoaderRoute: typeof mainChar126ArtistPublishingIndexRouteImport;
+      parentRoute: typeof mainChar126ArtistRouteRoute;
+    };
+    "/(main)/~/artist/dashboard/": {
+      id: "/(main)/~/artist/dashboard/";
+      path: "/dashboard";
+      fullPath: "/~/artist/dashboard";
+      preLoaderRoute: typeof mainChar126ArtistDashboardIndexRouteImport;
+      parentRoute: typeof mainChar126ArtistRouteRoute;
     };
   }
 }
@@ -429,32 +582,6 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
   authRouteRouteChildren,
 );
 
-interface mainRouteRouteChildren {
-  mainCartRoute: typeof mainCartRoute;
-  mainDashboardRoute: typeof mainDashboardRoute;
-  mainMyModelsRoute: typeof mainMyModelsRoute;
-  mainMySalesRoute: typeof mainMySalesRoute;
-  mainPublishingRoute: typeof mainPublishingRoute;
-  mainAssetsAssetIdRoute: typeof mainAssetsAssetIdRoute;
-  mainProfileUsernameRoute: typeof mainProfileUsernameRoute;
-  mainProfileIndexRoute: typeof mainProfileIndexRoute;
-}
-
-const mainRouteRouteChildren: mainRouteRouteChildren = {
-  mainCartRoute: mainCartRoute,
-  mainDashboardRoute: mainDashboardRoute,
-  mainMyModelsRoute: mainMyModelsRoute,
-  mainMySalesRoute: mainMySalesRoute,
-  mainPublishingRoute: mainPublishingRoute,
-  mainAssetsAssetIdRoute: mainAssetsAssetIdRoute,
-  mainProfileUsernameRoute: mainProfileUsernameRoute,
-  mainProfileIndexRoute: mainProfileIndexRoute,
-};
-
-const mainRouteRouteWithChildren = mainRouteRoute._addFileChildren(
-  mainRouteRouteChildren,
-);
-
 interface DashboardsRouteRouteChildren {
   DashboardsIndexRoute: typeof DashboardsIndexRoute;
 }
@@ -467,13 +594,62 @@ const DashboardsRouteRouteWithChildren = DashboardsRouteRoute._addFileChildren(
   DashboardsRouteRouteChildren,
 );
 
+interface mainChar126ArtistRouteRouteChildren {
+  mainChar126ArtistDashboardIndexRoute: typeof mainChar126ArtistDashboardIndexRoute;
+  mainChar126ArtistPublishingIndexRoute: typeof mainChar126ArtistPublishingIndexRoute;
+}
+
+const mainChar126ArtistRouteRouteChildren: mainChar126ArtistRouteRouteChildren =
+  {
+    mainChar126ArtistDashboardIndexRoute: mainChar126ArtistDashboardIndexRoute,
+    mainChar126ArtistPublishingIndexRoute:
+      mainChar126ArtistPublishingIndexRoute,
+  };
+
+const mainChar126ArtistRouteRouteWithChildren =
+  mainChar126ArtistRouteRoute._addFileChildren(
+    mainChar126ArtistRouteRouteChildren,
+  );
+
+interface mainChar126GeneralRouteRouteChildren {
+  mainChar126GeneralCartIndexRoute: typeof mainChar126GeneralCartIndexRoute;
+  mainChar126GeneralExploreIndexRoute: typeof mainChar126GeneralExploreIndexRoute;
+  mainChar126GeneralFavoritesIndexRoute: typeof mainChar126GeneralFavoritesIndexRoute;
+  mainChar126GeneralFeedIndexRoute: typeof mainChar126GeneralFeedIndexRoute;
+  mainChar126GeneralPurchasedModelsIndexRoute: typeof mainChar126GeneralPurchasedModelsIndexRoute;
+}
+
+const mainChar126GeneralRouteRouteChildren: mainChar126GeneralRouteRouteChildren =
+  {
+    mainChar126GeneralCartIndexRoute: mainChar126GeneralCartIndexRoute,
+    mainChar126GeneralExploreIndexRoute: mainChar126GeneralExploreIndexRoute,
+    mainChar126GeneralFavoritesIndexRoute:
+      mainChar126GeneralFavoritesIndexRoute,
+    mainChar126GeneralFeedIndexRoute: mainChar126GeneralFeedIndexRoute,
+    mainChar126GeneralPurchasedModelsIndexRoute:
+      mainChar126GeneralPurchasedModelsIndexRoute,
+  };
+
+const mainChar126GeneralRouteRouteWithChildren =
+  mainChar126GeneralRouteRoute._addFileChildren(
+    mainChar126GeneralRouteRouteChildren,
+  );
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   authRouteRoute: authRouteRouteWithChildren,
-  mainRouteRoute: mainRouteRouteWithChildren,
   DashboardsRouteRoute: DashboardsRouteRouteWithChildren,
   adminAdminRoute: adminAdminRoute,
-  marketingMarketingRoute: marketingMarketingRoute,
+  mainCartRoute: mainCartRoute,
+  mainDashboardRoute: mainDashboardRoute,
+  mainMyModelsRoute: mainMyModelsRoute,
+  mainMySalesRoute: mainMySalesRoute,
+  mainPublishingRoute: mainPublishingRoute,
+  mainChar126ArtistRouteRoute: mainChar126ArtistRouteRouteWithChildren,
+  mainChar126GeneralRouteRoute: mainChar126GeneralRouteRouteWithChildren,
+  mainAssetsAssetIdRoute: mainAssetsAssetIdRoute,
+  mainProfileUsernameRoute: mainProfileUsernameRoute,
+  mainProfileIndexRoute: mainProfileIndexRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -14,7 +14,7 @@ export const Route = createFileRoute("/(auth)/login")({
 function LoginForm() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const redirectUrl = "/dashboard";
+  const redirectUrl = "/~/general/feed";
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -35,7 +35,7 @@ function LoginForm() {
       {
         email,
         password,
-        callbackURL: "/dashboard",
+        callbackURL: "/~/general/feed",
       },
       {
         onError: (ctx) => {
@@ -44,7 +44,7 @@ function LoginForm() {
         },
         onSuccess: async () => {
           await queryClient.invalidateQueries({ queryKey: ["user"] });
-          navigate({ to: "/dashboard" });
+          navigate({ to: "/~/general/feed" });
         },
       },
     );

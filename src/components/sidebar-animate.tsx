@@ -4,8 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { authClient } from "~/lib/auth/auth-client";
 import { Header } from "./header";
-import { ThemeToggle } from "./theme-toggle";
-import { Separator } from "./ui/separator";
 
 import {
   DropdownMenu,
@@ -26,7 +24,6 @@ import {
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
@@ -37,79 +34,111 @@ import {
   BadgeCheck,
   Bell,
   ChevronsUpDown,
+  Clock,
   CreditCard,
-  Folder,
-  Forward,
-  Frame,
+  Download,
+  Heart,
+  HelpCircle,
   Home,
-  ImageUp,
+  Library,
   LogOut,
-  Map,
-  MoreHorizontal,
-  PieChart,
+  Mail,
+  Receipt,
+  Search,
+  ShoppingCart,
   Sparkles,
-  Trash2,
-  User2Icon,
-  Wallet,
+  UserCog,
 } from "lucide-react";
 
-const DATA = {
-  user: {
-    name: "Skyleen",
-    email: "skyleen@example.com",
-    avatar:
-      "https://pbs.twimg.com/profile_images/1909615404789506048/MTqvRsjo_400x400.jpg",
+const USER_SIDEBAR = [
+  {
+    labelGroup: "General",
+    items: [
+      {
+        label: "Home / Feed",
+        link: "/~/general/feed",
+        icon: Home,
+      },
+      {
+        label: "Explore",
+        link: "/~/general/explore",
+        icon: Search,
+      },
+    ],
   },
-  links: [
-    {
-      name: "Dashboard",
-      url: "/dashboard",
-      icon: Home,
-    },
-    {
-      name: "Publishing",
-      url: "/publishing",
-      icon: ImageUp,
-    },
-    {
-      name: "My Model",
-      url: "/my-models",
-      icon: PieChart,
-    },
-    {
-      name: "My Sale",
-      url: "/my-sales",
-      icon: Wallet,
-    },
-    {
-      name: "Profile",
-      url: "/profile",
-      icon: User2Icon,
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
-};
+  {
+    labelGroup: "My Library",
+    items: [
+      {
+        label: "Purchased Models",
+        link: "/~/general/purchased-models",
+        icon: Library,
+      },
+      {
+        label: "Downloads",
+        icon: Download,
+      },
+      {
+        label: "Favorites / Wishlist",
+        link: "/~/general/favorites",
+        icon: Heart,
+      },
+    ],
+  },
+  {
+    labelGroup: "Cart & Orders",
+    items: [
+      {
+        label: "My Cart",
+        link: "/~/general/cart",
+        icon: ShoppingCart,
+      },
+      {
+        label: "Orders & Invoices",
+        icon: Receipt,
+      },
+    ],
+  },
+  {
+    labelGroup: "Account",
+    items: [
+      {
+        label: "Settings",
+        icon: UserCog,
+      },
+      {
+        label: "Payment Methods",
+        icon: CreditCard,
+      },
+      {
+        label: "Notifications",
+        icon: Bell,
+      },
+      {
+        label: "Billing History",
+        icon: Clock,
+      },
+    ],
+  },
+  {
+    labelGroup: "Help & Support",
+    items: [
+      {
+        label: "FAQ",
+        icon: HelpCircle,
+      },
+      {
+        label: "Contact Support",
+        icon: Mail,
+      },
+    ],
+  },
+];
 
 export const SidebarAnimate = () => {
   const isMobile = useIsMobile();
   const { theme } = useTheme();
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session } = authClient.useSession();
 
   return (
     <SidebarProvider>
@@ -131,70 +160,23 @@ export const SidebarAnimate = () => {
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel>Profile</SidebarGroupLabel>
-            <SidebarMenu>
-              {DATA.links.map((item, idx) => (
-                <Link to={item.url} key={idx}>
-                  <SidebarMenuItem className="cursor-pointer">
-                    <SidebarMenuButton tooltip={item.name}>
-                      <item.icon />
-                      {item.name}
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </Link>
-              ))}
-            </SidebarMenu>
-          </SidebarGroup>
-          <div className="mx-3">
-            <Separator />
-          </div>
-
-          <SidebarGroup>
-            <SidebarGroupLabel>Other</SidebarGroupLabel>
-            <SidebarMenu>
-              {DATA.projects.map((item) => (
-                <SidebarMenuItem key={item.name}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.name}</span>
-                    </a>
-                  </SidebarMenuButton>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <SidebarMenuAction showOnHover>
-                        <MoreHorizontal />
-                        <span className="sr-only">More</span>
-                      </SidebarMenuAction>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      className="w-48 rounded-lg"
-                      side={isMobile ? "bottom" : "right"}
-                      align={isMobile ? "end" : "start"}
-                    >
-                      <DropdownMenuItem>
-                        <Folder className="text-muted-foreground" />
-                        <span>View Project</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Forward className="text-muted-foreground" />
-                        <span>Share Project</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>
-                        <Trash2 className="text-muted-foreground" />
-                        <span>Delete Project</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </SidebarMenuItem>
-              ))}
-              <SidebarMenuItem>
-                <SidebarMenuButton className="text-sidebar-foreground/70" asChild>
-                  <ThemeToggle />
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
+            {USER_SIDEBAR.map((item) => (
+              <SidebarGroup key={item.labelGroup}>
+                <SidebarGroupLabel>{item.labelGroup}</SidebarGroupLabel>
+                <SidebarMenu>
+                  {item.items.map((item, idx) => (
+                    <Link to={item.label} key={idx}>
+                      <SidebarMenuItem className="cursor-pointer">
+                        <SidebarMenuButton tooltip={item.label}>
+                          <item.icon />
+                          {item.label}
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    </Link>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroup>
+            ))}
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
@@ -207,15 +189,15 @@ export const SidebarAnimate = () => {
                     className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                   >
                     <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarImage src={session?.user.image ?? ""} alt={DATA.user.name} />
+                      <AvatarImage src={session?.user.image ?? ""} alt="avatar" />
                       <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate font-semibold">
-                        {session?.user.name ?? DATA.user.name}
+                        {session?.user.name ?? ""}
                       </span>
                       <span className="truncate text-xs">
-                        {session?.user.email ?? DATA.user.email}
+                        {session?.user.email ?? ""}
                       </span>
                     </div>
                     <ChevronsUpDown className="ml-auto size-4" />
@@ -230,10 +212,7 @@ export const SidebarAnimate = () => {
                   <DropdownMenuLabel className="p-0 font-normal">
                     <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                       <Avatar className="h-8 w-8 rounded-lg">
-                        <AvatarImage
-                          src={session?.user?.image ?? DATA.user.avatar}
-                          alt={DATA.user.name}
-                        />
+                        <AvatarImage src={session?.user?.image ?? ""} alt="avatar" />
                         <AvatarFallback className="rounded-lg">
                           {session?.user.name.charAt(0)}
                         </AvatarFallback>

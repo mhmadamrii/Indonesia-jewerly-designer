@@ -2,7 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
-import { ArrowUpDown, ChevronDown, MoreHorizontal, Trash2 } from "lucide-react";
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 import * as React from "react";
 import { toast } from "sonner";
 import { deleteJewerlyAsset } from "~/actions/jewerly.action";
@@ -148,8 +148,7 @@ export const columns: ColumnDef<JewerlyAsset>[] = [
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button className="flex items-center gap-2" variant="ghost">
-                    <Trash2 />
-                    Delete User
+                    Delete
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>

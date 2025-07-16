@@ -15,7 +15,6 @@ type TrendingsProps = {
 
 export function Trendings({ jewerlies }: TrendingsProps) {
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  console.log(jewerlies);
   class Person {
     constructor() {}
   }

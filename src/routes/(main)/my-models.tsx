@@ -1,8 +1,8 @@
 import { Await, ClientOnly, createFileRoute } from "@tanstack/react-router";
 import { getMyJewerlyAssets } from "~/actions/jewerly.action";
 import { Card, CardContent } from "~/components/ui/card";
-import { MyModelsTable } from "./-components/tables/my-models-table";
-import { MyModelsTableSkeleton } from "./-components/tables/my-models-table-skeleton";
+import { MyModelsTable } from "./~/general/feed/-components/tables/my-models-table";
+import { MyModelsTableSkeleton } from "./~/general/feed/-components/tables/my-models-table-skeleton";
 
 export const Route = createFileRoute("/(main)/my-models")({
   loader: async () => {

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { authClient } from "~/lib/auth/auth-client";
 import { cn } from "~/lib/utils";
 import { CartDrawer } from "./cart-drawer";
+import { DialogConfirmArtist } from "./dialog-confirm-artist";
 import { Button } from "./ui/button";
 import { SearchInput } from "./ui/search-input";
 
@@ -32,12 +33,20 @@ type Role = "user" | "artist";
 
 export function Header() {
   const navigate = useNavigate();
+  const { data: session } = authClient.useSession();
   const roles: Role[] = ["user", "artist"];
-  const [currentRole, setCurrentRole] = useState<Role>("user");
-  const [counter, setCounter] = useState(0);
+  console.log("session", session);
 
+  const [isOpenConfirmArtist, setIsOpenConfirmArtist] = useState(false);
+  const [currentRole, setCurrentRole] = useState<Role>("user");
   const [open, setOpen] = useState(false);
-  const { data: session, isPending } = authClient.useSession();
+
+  useEffect(() => {
+    // @ts-expect-error
+    if (session?.user?.role === "user" && currentRole === "artist") {
+      setIsOpenConfirmArtist(true);
+    }
+  }, [currentRole, session]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -179,6 +188,13 @@ export function Header() {
           </DropdownMenu> */}
         </div>
       </div>
+      <DialogConfirmArtist
+        open={isOpenConfirmArtist}
+        onClose={() => {
+          setCurrentRole("user");
+          setIsOpenConfirmArtist(false);
+        }}
+      />
     </div>
   );
 }

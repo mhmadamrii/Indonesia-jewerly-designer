@@ -51,7 +51,7 @@ export function LoginForm({ onClickLoginForm }: IProps) {
         {
           onSuccess: () => {
             navigate({
-              to: "/dashboard",
+              to: "/~/general/feed",
             });
             toast.success("Sign in successful");
           },

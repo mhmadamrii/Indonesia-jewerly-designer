@@ -55,7 +55,7 @@ export function RegisterForm({ onClickRegisterForm }: IProps) {
           onSuccess: (res) => {
             toast.success("Sign up successful");
             navigate({
-              to: "/dashboard",
+              to: "/~/general/feed",
             });
           },
           onError: (error) => {

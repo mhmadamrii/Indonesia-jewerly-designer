@@ -12,7 +12,6 @@ export const Route = createFileRoute("/(auth)/signup")({
 });
 
 function SignupForm() {
-  const { redirectUrl } = Route.useRouteContext();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -44,7 +43,7 @@ function SignupForm() {
         name,
         email,
         password,
-        callbackURL: redirectUrl,
+        callbackURL: "",
       },
       {
         onError: (ctx) => {
@@ -53,7 +52,7 @@ function SignupForm() {
         },
         onSuccess: async () => {
           await queryClient.invalidateQueries({ queryKey: ["user"] });
-          navigate({ to: redirectUrl });
+          navigate({ to: "/~/general/feed" });
         },
       },
     );

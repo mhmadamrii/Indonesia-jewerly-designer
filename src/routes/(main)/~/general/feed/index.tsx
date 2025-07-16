@@ -7,11 +7,11 @@ import { TrendingCollectionsSkeleton } from "~/components/skeletons/trending-col
 import { Card, CardContent } from "~/components/ui/card";
 import { authClient } from "~/lib/auth/auth-client";
 import { cn } from "~/lib/utils";
-import { CategoryFilters } from "./~/general/feed/-components/category-filters";
-import { TopArtists } from "./~/general/feed/-components/top-artists";
-import { Trendings } from "./~/general/feed/-components/trendings";
+import { CategoryFilters } from "./-components/category-filters";
+import { TopArtists } from "./-components/top-artists";
+import { Trendings } from "./-components/trendings";
 
-export const Route = createFileRoute("/(main)/dashboard")({
+export const Route = createFileRoute("/(main)/~/general/feed/")({
   loader: async () => {
     const dashboard = getDashboard();
     return { dashboard };

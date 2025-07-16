@@ -15,7 +15,7 @@ export function TopArtists({ users }: TopArtistsProps) {
         <h1 className="text-muted-foreground text-sm">See All</h1>
       </CardTitle>
       <CardContent className="px-3">
-        {users?.map((item) => {
+        {users?.slice(0, 5).map((item) => {
           return (
             <div className="mb-4 w-full max-w-[300px]" key={item.id}>
               <div className="flex items-center justify-between gap-2">

@@ -1,9 +1,10 @@
 import { serverOnly } from "@tanstack/react-start";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { inferAdditionalFields } from "better-auth/client/plugins";
 import { reactStartCookies } from "better-auth/react-start";
-
 import { db } from "~/lib/db";
+import { user } from "../db/schema";
 
 const getAuthConfig = serverOnly(() =>
   betterAuth({
@@ -13,7 +14,7 @@ const getAuthConfig = serverOnly(() =>
     }),
 
     // https://www.better-auth.com/docs/integrations/tanstack#usage-tips
-    plugins: [reactStartCookies()],
+    plugins: [reactStartCookies(), inferAdditionalFields<typeof user>()],
 
     // https://www.better-auth.com/docs/concepts/session-management#session-caching
     // session: {
@@ -38,6 +39,16 @@ const getAuthConfig = serverOnly(() =>
     // https://www.better-auth.com/docs/authentication/email-password
     emailAndPassword: {
       enabled: true,
+      autoSignIn: true,
+    },
+    user: {
+      additionalFields: {
+        role: {
+          type: "string",
+          default: "user",
+          enum: ["user", "artist"],
+        },
+      },
     },
   }),
 );

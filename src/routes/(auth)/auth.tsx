@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Loader } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useTheme } from "~/components/theme-provider";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { authClient } from "~/lib/auth/auth-client";
@@ -13,10 +14,11 @@ export const Route = createFileRoute("/(auth)/auth")({
 });
 
 function RouteComponent() {
+  const { theme } = useTheme();
   const [isLoginForm, setIsLoginForm] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const redirectUrl = "/dashboard";
+  const redirectUrl = "/~/general/feed";
 
   const handleLoginWithGmail = () => {
     setIsLoading(true);
@@ -28,7 +30,13 @@ function RouteComponent() {
   return (
     <Card className="mx-0 sm:mx-auto">
       <section className="flex w-full flex-col items-center justify-center">
-        <img src="/djiwaID.svg" alt="djiwaID" className="h-[80px] w-[120px]" />
+        <img
+          src={
+            theme === "dark" || theme === "system" ? "/djiwaID-dark.svg" : "/djiwaID.svg"
+          }
+          alt="djiwaID"
+          className="h-[80px] w-[120px]"
+        />
         <h1 className="text-lg font-bold">Login</h1>
       </section>
       <section className="flex w-full flex-col gap-2 px-5 text-center">
