@@ -56,6 +56,7 @@ import {
   Users,
   UserSquare,
 } from "lucide-react";
+import { RoleRedirectProvider } from "~/components/role-redirect-provider";
 
 const ARTIST_SIDEBAR = [
   {
@@ -296,8 +297,10 @@ function MainLayout() {
 
         <SidebarInset>
           <section className="pt-3">
-            <Header />
-            <Outlet />
+            <RoleRedirectProvider>
+              <Header />
+              <Outlet />
+            </RoleRedirectProvider>
           </section>
         </SidebarInset>
       </SidebarProvider>

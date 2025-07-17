@@ -11,19 +11,14 @@
 import { createServerRootRoute } from "@tanstack/react-start/server";
 
 import { Route as rootRouteImport } from "./routes/__root";
-import { Route as DashboardsRouteRouteImport } from "./routes/dashboards/route";
 import { Route as authRouteRouteImport } from "./routes/(auth)/route";
 import { Route as IndexRouteImport } from "./routes/index";
-import { Route as DashboardsIndexRouteImport } from "./routes/dashboards/index";
 import { Route as mainPublishingRouteImport } from "./routes/(main)/publishing";
 import { Route as mainMySalesRouteImport } from "./routes/(main)/my-sales";
 import { Route as mainMyModelsRouteImport } from "./routes/(main)/my-models";
 import { Route as mainDashboardRouteImport } from "./routes/(main)/dashboard";
 import { Route as mainCartRouteImport } from "./routes/(main)/cart";
-import { Route as authSignupRouteImport } from "./routes/(auth)/signup";
-import { Route as authLoginRouteImport } from "./routes/(auth)/login";
 import { Route as authAuthRouteImport } from "./routes/(auth)/auth";
-import { Route as adminAdminRouteImport } from "./routes/(admin)/admin";
 import { Route as mainProfileIndexRouteImport } from "./routes/(main)/profile.index";
 import { Route as mainProfileUsernameRouteImport } from "./routes/(main)/profile.$username";
 import { Route as mainAssetsAssetIdRouteImport } from "./routes/(main)/assets.$assetId";
@@ -40,11 +35,6 @@ import { ServerRoute as ApiAuthSplatServerRouteImport } from "./routes/api/auth/
 
 const rootServerRouteImport = createServerRootRoute();
 
-const DashboardsRouteRoute = DashboardsRouteRouteImport.update({
-  id: "/dashboards",
-  path: "/dashboards",
-  getParentRoute: () => rootRouteImport,
-} as any);
 const authRouteRoute = authRouteRouteImport.update({
   id: "/(auth)",
   getParentRoute: () => rootRouteImport,
@@ -53,11 +43,6 @@ const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
   getParentRoute: () => rootRouteImport,
-} as any);
-const DashboardsIndexRoute = DashboardsIndexRouteImport.update({
-  id: "/",
-  path: "/",
-  getParentRoute: () => DashboardsRouteRoute,
 } as any);
 const mainPublishingRoute = mainPublishingRouteImport.update({
   id: "/(main)/publishing",
@@ -84,25 +69,10 @@ const mainCartRoute = mainCartRouteImport.update({
   path: "/cart",
   getParentRoute: () => rootRouteImport,
 } as any);
-const authSignupRoute = authSignupRouteImport.update({
-  id: "/signup",
-  path: "/signup",
-  getParentRoute: () => authRouteRoute,
-} as any);
-const authLoginRoute = authLoginRouteImport.update({
-  id: "/login",
-  path: "/login",
-  getParentRoute: () => authRouteRoute,
-} as any);
 const authAuthRoute = authAuthRouteImport.update({
   id: "/auth",
   path: "/auth",
   getParentRoute: () => authRouteRoute,
-} as any);
-const adminAdminRoute = adminAdminRouteImport.update({
-  id: "/(admin)/admin",
-  path: "/admin",
-  getParentRoute: () => rootRouteImport,
 } as any);
 const mainProfileIndexRoute = mainProfileIndexRouteImport.update({
   id: "/(main)/profile/",
@@ -179,17 +149,12 @@ const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
 
 export interface FileRoutesByFullPath {
   "/": typeof authRouteRouteWithChildren;
-  "/dashboards": typeof DashboardsRouteRouteWithChildren;
-  "/admin": typeof adminAdminRoute;
   "/auth": typeof authAuthRoute;
-  "/login": typeof authLoginRoute;
-  "/signup": typeof authSignupRoute;
   "/cart": typeof mainCartRoute;
   "/dashboard": typeof mainDashboardRoute;
   "/my-models": typeof mainMyModelsRoute;
   "/my-sales": typeof mainMySalesRoute;
   "/publishing": typeof mainPublishingRoute;
-  "/dashboards/": typeof DashboardsIndexRoute;
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/assets/$assetId": typeof mainAssetsAssetIdRoute;
@@ -205,16 +170,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   "/": typeof authRouteRouteWithChildren;
-  "/admin": typeof adminAdminRoute;
   "/auth": typeof authAuthRoute;
-  "/login": typeof authLoginRoute;
-  "/signup": typeof authSignupRoute;
   "/cart": typeof mainCartRoute;
   "/dashboard": typeof mainDashboardRoute;
   "/my-models": typeof mainMyModelsRoute;
   "/my-sales": typeof mainMySalesRoute;
   "/publishing": typeof mainPublishingRoute;
-  "/dashboards": typeof DashboardsIndexRoute;
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/assets/$assetId": typeof mainAssetsAssetIdRoute;
@@ -232,17 +193,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/": typeof IndexRoute;
   "/(auth)": typeof authRouteRouteWithChildren;
-  "/dashboards": typeof DashboardsRouteRouteWithChildren;
-  "/(admin)/admin": typeof adminAdminRoute;
   "/(auth)/auth": typeof authAuthRoute;
-  "/(auth)/login": typeof authLoginRoute;
-  "/(auth)/signup": typeof authSignupRoute;
   "/(main)/cart": typeof mainCartRoute;
   "/(main)/dashboard": typeof mainDashboardRoute;
   "/(main)/my-models": typeof mainMyModelsRoute;
   "/(main)/my-sales": typeof mainMySalesRoute;
   "/(main)/publishing": typeof mainPublishingRoute;
-  "/dashboards/": typeof DashboardsIndexRoute;
   "/(main)/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/(main)/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/(main)/assets/$assetId": typeof mainAssetsAssetIdRoute;
@@ -260,17 +216,12 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
     | "/"
-    | "/dashboards"
-    | "/admin"
     | "/auth"
-    | "/login"
-    | "/signup"
     | "/cart"
     | "/dashboard"
     | "/my-models"
     | "/my-sales"
     | "/publishing"
-    | "/dashboards/"
     | "/~/artist"
     | "/~/general"
     | "/assets/$assetId"
@@ -286,16 +237,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo;
   to:
     | "/"
-    | "/admin"
     | "/auth"
-    | "/login"
-    | "/signup"
     | "/cart"
     | "/dashboard"
     | "/my-models"
     | "/my-sales"
     | "/publishing"
-    | "/dashboards"
     | "/~/artist"
     | "/~/general"
     | "/assets/$assetId"
@@ -312,17 +259,12 @@ export interface FileRouteTypes {
     | "__root__"
     | "/"
     | "/(auth)"
-    | "/dashboards"
-    | "/(admin)/admin"
     | "/(auth)/auth"
-    | "/(auth)/login"
-    | "/(auth)/signup"
     | "/(main)/cart"
     | "/(main)/dashboard"
     | "/(main)/my-models"
     | "/(main)/my-sales"
     | "/(main)/publishing"
-    | "/dashboards/"
     | "/(main)/~/artist"
     | "/(main)/~/general"
     | "/(main)/assets/$assetId"
@@ -340,8 +282,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
   authRouteRoute: typeof authRouteRouteWithChildren;
-  DashboardsRouteRoute: typeof DashboardsRouteRouteWithChildren;
-  adminAdminRoute: typeof adminAdminRoute;
   mainCartRoute: typeof mainCartRoute;
   mainDashboardRoute: typeof mainDashboardRoute;
   mainMyModelsRoute: typeof mainMyModelsRoute;
@@ -377,13 +317,6 @@ export interface RootServerRouteChildren {
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    "/dashboards": {
-      id: "/dashboards";
-      path: "/dashboards";
-      fullPath: "/dashboards";
-      preLoaderRoute: typeof DashboardsRouteRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
     "/(auth)": {
       id: "/(auth)";
       path: "/";
@@ -397,13 +330,6 @@ declare module "@tanstack/react-router" {
       fullPath: "/";
       preLoaderRoute: typeof IndexRouteImport;
       parentRoute: typeof rootRouteImport;
-    };
-    "/dashboards/": {
-      id: "/dashboards/";
-      path: "/";
-      fullPath: "/dashboards/";
-      preLoaderRoute: typeof DashboardsIndexRouteImport;
-      parentRoute: typeof DashboardsRouteRoute;
     };
     "/(main)/publishing": {
       id: "/(main)/publishing";
@@ -440,33 +366,12 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof mainCartRouteImport;
       parentRoute: typeof rootRouteImport;
     };
-    "/(auth)/signup": {
-      id: "/(auth)/signup";
-      path: "/signup";
-      fullPath: "/signup";
-      preLoaderRoute: typeof authSignupRouteImport;
-      parentRoute: typeof authRouteRoute;
-    };
-    "/(auth)/login": {
-      id: "/(auth)/login";
-      path: "/login";
-      fullPath: "/login";
-      preLoaderRoute: typeof authLoginRouteImport;
-      parentRoute: typeof authRouteRoute;
-    };
     "/(auth)/auth": {
       id: "/(auth)/auth";
       path: "/auth";
       fullPath: "/auth";
       preLoaderRoute: typeof authAuthRouteImport;
       parentRoute: typeof authRouteRoute;
-    };
-    "/(admin)/admin": {
-      id: "/(admin)/admin";
-      path: "/admin";
-      fullPath: "/admin";
-      preLoaderRoute: typeof adminAdminRouteImport;
-      parentRoute: typeof rootRouteImport;
     };
     "/(main)/profile/": {
       id: "/(main)/profile/";
@@ -568,30 +473,14 @@ declare module "@tanstack/react-start/server" {
 
 interface authRouteRouteChildren {
   authAuthRoute: typeof authAuthRoute;
-  authLoginRoute: typeof authLoginRoute;
-  authSignupRoute: typeof authSignupRoute;
 }
 
 const authRouteRouteChildren: authRouteRouteChildren = {
   authAuthRoute: authAuthRoute,
-  authLoginRoute: authLoginRoute,
-  authSignupRoute: authSignupRoute,
 };
 
 const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
   authRouteRouteChildren,
-);
-
-interface DashboardsRouteRouteChildren {
-  DashboardsIndexRoute: typeof DashboardsIndexRoute;
-}
-
-const DashboardsRouteRouteChildren: DashboardsRouteRouteChildren = {
-  DashboardsIndexRoute: DashboardsIndexRoute,
-};
-
-const DashboardsRouteRouteWithChildren = DashboardsRouteRoute._addFileChildren(
-  DashboardsRouteRouteChildren,
 );
 
 interface mainChar126ArtistRouteRouteChildren {
@@ -638,8 +527,6 @@ const mainChar126GeneralRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   authRouteRoute: authRouteRouteWithChildren,
-  DashboardsRouteRoute: DashboardsRouteRouteWithChildren,
-  adminAdminRoute: adminAdminRoute,
   mainCartRoute: mainCartRoute,
   mainDashboardRoute: mainDashboardRoute,
   mainMyModelsRoute: mainMyModelsRoute,

@@ -1,19 +1,21 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { useRoleStore } from "~/lib/store/role.store";
 
 export const Route = createFileRoute("/(auth)")({
   component: RouteComponent,
   beforeLoad: async ({ context }) => {
+    const { role } = useRoleStore.getState();
     console.log("context", context);
     const REDIRECT_URL_USER = "/~/general/feed";
     const REDIRECT_URL_ARTIST = "/~/artist/dashboard";
 
-    if (context?.user?.role === "user") {
+    if (context?.user?.role === "user" && role === "user") {
       throw redirect({
         to: REDIRECT_URL_USER,
       });
     }
 
-    if (context?.user?.role === "artist") {
+    if (context?.user?.role === "artist" && role === "artist") {
       throw redirect({
         to: REDIRECT_URL_ARTIST,
       });

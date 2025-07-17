@@ -1,4 +1,5 @@
 import { Header } from "~/components/header";
+import { RoleRedirectProvider } from "~/components/role-redirect-provider";
 import { useTheme } from "~/components/theme-provider";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useIsMobile } from "~/hooks/use-mobile";
@@ -294,8 +295,10 @@ function MainLayout() {
 
         <SidebarInset>
           <section className="pt-3">
-            <Header />
-            <Outlet />
+            <RoleRedirectProvider>
+              <Header />
+              <Outlet />
+            </RoleRedirectProvider>
           </section>
         </SidebarInset>
       </SidebarProvider>

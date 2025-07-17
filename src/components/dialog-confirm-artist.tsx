@@ -16,6 +16,8 @@ import {
   DialogPanel,
   DialogTitle,
 } from "./animate-ui/headless/dialog";
+import { useRoleStore } from "~/lib/store/role.store";
+import { useNavigate } from "@tanstack/react-router";
 
 export function DialogConfirmArtist({
   open,
@@ -25,10 +27,15 @@ export function DialogConfirmArtist({
   onClose: () => void;
 }) {
   const [isAgree, setIsAgree] = useState(false);
+  const { setRole } = useRoleStore();
+  const navigate = useNavigate();
   const { mutate, isPending } = useMutation({
     mutationFn: registerToArtist,
     onSuccess: () => {
       toast.success("Registered successfully");
+      setRole("artist");
+      navigate({ to: "/~/artist/dashboard" });
+      onClose();
     },
   });
 
@@ -45,7 +52,7 @@ export function DialogConfirmArtist({
         <div className="flex items-center gap-2">
           <Checkbox
             checked={isAgree}
-            onCheckedChange={(value) => setIsAgree(!isAgree)}
+            onCheckedChange={() => setIsAgree(!isAgree)}
             id="terms"
             defaultChecked={true}
           />

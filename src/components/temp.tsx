@@ -284,6 +284,39 @@ export function FuckingGood() {
           </Button>
         </div>
       </div>
+      {/* <DropdownMenu>
+        <DropdownMenuTrigger className="cursor-pointer" asChild>
+          <Avatar className="h-10 w-10">
+            <AvatarImage src={session?.user.image ?? "https://github.com/shadcn.png"} />
+            <AvatarFallback>{session?.user.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="bg-card">
+          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>{session?.user.name}</DropdownMenuItem>
+          <DropdownMenuItem>{session?.user.email}</DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Button
+              variant="destructive"
+              className="w-full cursor-pointer"
+              onClick={() => {
+                authClient.signOut({
+                  fetchOptions: {
+                    onSuccess: () => {
+                      navigate({
+                        to: "/auth",
+                      });
+                    },
+                  },
+                });
+              }}
+            >
+              Sign Out
+            </Button>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu> */}
     </div>
   );
 }
