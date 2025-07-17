@@ -7,7 +7,7 @@ export const Route = createFileRoute("/(main)/~/artist/publishing/")({
 
 function RouteComponent() {
   return (
-    <section>
+    <section className="flex items-center justify-center border px-4 py-2">
       <AssetPublish onClose={() => console.log("close")} />
     </section>
   );

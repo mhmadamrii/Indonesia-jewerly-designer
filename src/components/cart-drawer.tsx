@@ -1,10 +1,10 @@
-"use client";
-
+import { useLocation } from "@tanstack/react-router";
 import { Minus, Plus, ShoppingCart, Trash2, X } from "lucide-react";
 import * as React from "react";
-
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
+import { Separator } from "~/components/ui/separator";
+
 import {
   Drawer,
   DrawerClose,
@@ -15,7 +15,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "~/components/ui/drawer";
-import { Separator } from "~/components/ui/separator";
 
 interface CartItem {
   id: string;
@@ -50,6 +49,8 @@ const initialCartItems: CartItem[] = [
 ];
 
 export function CartDrawer() {
+  const location = useLocation();
+  console.log("locations", location);
   const [cartItems, setCartItems] = React.useState<CartItem[]>(initialCartItems);
 
   const updateQuantity = (id: string, newQuantity: number) => {
@@ -68,6 +69,10 @@ export function CartDrawer() {
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  if (location.pathname.includes("artist")) {
+    return;
+  }
 
   return (
     <Drawer direction="right">

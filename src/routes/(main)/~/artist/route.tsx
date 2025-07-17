@@ -74,7 +74,7 @@ const ARTIST_SIDEBAR = [
     items: [
       {
         label: "My 3D Models",
-        link: "/~/artist/dashboard",
+        link: "/~/artist/my-models",
         icon: PackagePlus,
       },
       {
@@ -84,7 +84,7 @@ const ARTIST_SIDEBAR = [
       },
       {
         label: "Drafts & Previews",
-        link: "/~/artist/dashboard",
+        link: "/~/artist/drafts",
         icon: FileArchive,
       },
     ],
@@ -94,12 +94,12 @@ const ARTIST_SIDEBAR = [
     items: [
       {
         label: "Earnings & Payouts",
-        link: "/~/artist/dashboard",
+        link: "/~/artist/earnings",
         icon: DollarSign,
       },
       {
         label: "Order Details",
-        link: "/~/artist/dashboard",
+        link: "/~/artist/orders",
         icon: Receipt,
       },
     ],
@@ -109,12 +109,12 @@ const ARTIST_SIDEBAR = [
     items: [
       {
         label: "Artist Profile Page",
-        link: "/~/artist/dashboard",
+        link: "/~/artist/profile",
         icon: UserSquare,
       },
       {
         label: "Portfolio Showcase",
-        link: "/~/artist/dashboard",
+        link: "/~/artist/my-showcases",
         icon: Image,
       },
     ],

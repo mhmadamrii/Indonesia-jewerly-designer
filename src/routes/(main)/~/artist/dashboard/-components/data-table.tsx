@@ -1,3 +1,5 @@
+"use no memo";
+
 import * as React from "react";
 
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
