@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { CartDrawer } from "./cart-drawer";
 import { SwitchRole } from "./switch-role";
+import { ThemeToggle } from "./theme-toggle";
 import { Button } from "./ui/button";
 import { SearchInput } from "./ui/search-input";
 
@@ -101,6 +102,7 @@ export function Header() {
         </div>
         <div className="flex items-center gap-4">
           <SwitchRole />
+          <ThemeToggle />
           <Button size="icon" variant="ghost" className="rounded-full border">
             <Bell />
           </Button>

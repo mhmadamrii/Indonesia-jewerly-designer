@@ -7,7 +7,6 @@ export function RoleRedirectProvider({ children }: { children: React.ReactNode }
   const navigate = useNavigate();
 
   const { role: currentRole, isRoleChanging } = useRoleStore();
-  console.log("current role provider", currentRole);
 
   useEffect(() => {
     if (currentRole === "artist") {
