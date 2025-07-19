@@ -295,7 +295,8 @@ function MainLayout() {
 
         <SidebarInset>
           <section className="pt-3">
-            <RoleRedirectProvider>
+            {/* @ts-expect-error */}
+            <RoleRedirectProvider sessionRole={session?.user?.role}>
               <Header />
               <Outlet />
             </RoleRedirectProvider>

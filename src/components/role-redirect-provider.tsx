@@ -3,13 +3,19 @@ import { Loader } from "lucide-react";
 import { useEffect } from "react";
 import { useRoleStore } from "~/lib/store/role.store";
 
-export function RoleRedirectProvider({ children }: { children: React.ReactNode }) {
+export function RoleRedirectProvider({
+  children,
+  sessionRole,
+}: {
+  children: React.ReactNode;
+  sessionRole: string;
+}) {
   const navigate = useNavigate();
 
   const { role: currentRole, isRoleChanging } = useRoleStore();
 
   useEffect(() => {
-    if (currentRole === "artist") {
+    if (currentRole === "artist" && sessionRole === "artist") {
       navigate({
         to: "/~/artist/dashboard",
       });
@@ -18,7 +24,7 @@ export function RoleRedirectProvider({ children }: { children: React.ReactNode }
         to: "/~/general/feed",
       });
     }
-  }, [currentRole]);
+  }, [currentRole, sessionRole]);
 
   return (
     <>

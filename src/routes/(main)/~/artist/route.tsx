@@ -1,4 +1,5 @@
 import { Header } from "~/components/header";
+import { RoleRedirectProvider } from "~/components/role-redirect-provider";
 import { useTheme } from "~/components/theme-provider";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useIsMobile } from "~/hooks/use-mobile";
@@ -56,7 +57,6 @@ import {
   Users,
   UserSquare,
 } from "lucide-react";
-import { RoleRedirectProvider } from "~/components/role-redirect-provider";
 
 const ARTIST_SIDEBAR = [
   {
@@ -163,6 +163,7 @@ function MainLayout() {
   const isMobile = useIsMobile();
   const { theme } = useTheme();
   const { data: session } = authClient.useSession();
+  console.log("session", session);
 
   return (
     <main className="flex min-h-screen">
@@ -297,7 +298,8 @@ function MainLayout() {
 
         <SidebarInset>
           <section className="pt-3">
-            <RoleRedirectProvider>
+            {/* @ts-expect-error */}
+            <RoleRedirectProvider sessionRole={session?.user?.role}>
               <Header />
               <Outlet />
             </RoleRedirectProvider>

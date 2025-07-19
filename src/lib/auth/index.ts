@@ -12,6 +12,7 @@ const getAuthConfig = serverOnly(() =>
     database: drizzleAdapter(db, {
       provider: "pg",
     }),
+    trustedOrigins: ["/~/general/feed"],
 
     // https://www.better-auth.com/docs/integrations/tanstack#usage-tips
     plugins: [reactStartCookies(), inferAdditionalFields<typeof user>()],

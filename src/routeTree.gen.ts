@@ -14,6 +14,7 @@ import { Route as rootRouteImport } from "./routes/__root";
 import { Route as authRouteRouteImport } from "./routes/(auth)/route";
 import { Route as IndexRouteImport } from "./routes/index";
 import { Route as mainPublishingRouteImport } from "./routes/(main)/publishing";
+import { Route as mainPlaygroundRouteImport } from "./routes/(main)/playground";
 import { Route as mainMySalesRouteImport } from "./routes/(main)/my-sales";
 import { Route as mainMyModelsRouteImport } from "./routes/(main)/my-models";
 import { Route as mainDashboardRouteImport } from "./routes/(main)/dashboard";
@@ -47,6 +48,11 @@ const IndexRoute = IndexRouteImport.update({
 const mainPublishingRoute = mainPublishingRouteImport.update({
   id: "/(main)/publishing",
   path: "/publishing",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const mainPlaygroundRoute = mainPlaygroundRouteImport.update({
+  id: "/(main)/playground",
+  path: "/playground",
   getParentRoute: () => rootRouteImport,
 } as any);
 const mainMySalesRoute = mainMySalesRouteImport.update({
@@ -154,6 +160,7 @@ export interface FileRoutesByFullPath {
   "/dashboard": typeof mainDashboardRoute;
   "/my-models": typeof mainMyModelsRoute;
   "/my-sales": typeof mainMySalesRoute;
+  "/playground": typeof mainPlaygroundRoute;
   "/publishing": typeof mainPublishingRoute;
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
@@ -175,6 +182,7 @@ export interface FileRoutesByTo {
   "/dashboard": typeof mainDashboardRoute;
   "/my-models": typeof mainMyModelsRoute;
   "/my-sales": typeof mainMySalesRoute;
+  "/playground": typeof mainPlaygroundRoute;
   "/publishing": typeof mainPublishingRoute;
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
@@ -198,6 +206,7 @@ export interface FileRoutesById {
   "/(main)/dashboard": typeof mainDashboardRoute;
   "/(main)/my-models": typeof mainMyModelsRoute;
   "/(main)/my-sales": typeof mainMySalesRoute;
+  "/(main)/playground": typeof mainPlaygroundRoute;
   "/(main)/publishing": typeof mainPublishingRoute;
   "/(main)/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/(main)/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
@@ -221,6 +230,7 @@ export interface FileRouteTypes {
     | "/dashboard"
     | "/my-models"
     | "/my-sales"
+    | "/playground"
     | "/publishing"
     | "/~/artist"
     | "/~/general"
@@ -242,6 +252,7 @@ export interface FileRouteTypes {
     | "/dashboard"
     | "/my-models"
     | "/my-sales"
+    | "/playground"
     | "/publishing"
     | "/~/artist"
     | "/~/general"
@@ -264,6 +275,7 @@ export interface FileRouteTypes {
     | "/(main)/dashboard"
     | "/(main)/my-models"
     | "/(main)/my-sales"
+    | "/(main)/playground"
     | "/(main)/publishing"
     | "/(main)/~/artist"
     | "/(main)/~/general"
@@ -286,6 +298,7 @@ export interface RootRouteChildren {
   mainDashboardRoute: typeof mainDashboardRoute;
   mainMyModelsRoute: typeof mainMyModelsRoute;
   mainMySalesRoute: typeof mainMySalesRoute;
+  mainPlaygroundRoute: typeof mainPlaygroundRoute;
   mainPublishingRoute: typeof mainPublishingRoute;
   mainChar126ArtistRouteRoute: typeof mainChar126ArtistRouteRouteWithChildren;
   mainChar126GeneralRouteRoute: typeof mainChar126GeneralRouteRouteWithChildren;
@@ -336,6 +349,13 @@ declare module "@tanstack/react-router" {
       path: "/publishing";
       fullPath: "/publishing";
       preLoaderRoute: typeof mainPublishingRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/(main)/playground": {
+      id: "/(main)/playground";
+      path: "/playground";
+      fullPath: "/playground";
+      preLoaderRoute: typeof mainPlaygroundRouteImport;
       parentRoute: typeof rootRouteImport;
     };
     "/(main)/my-sales": {
@@ -531,6 +551,7 @@ const rootRouteChildren: RootRouteChildren = {
   mainDashboardRoute: mainDashboardRoute,
   mainMyModelsRoute: mainMyModelsRoute,
   mainMySalesRoute: mainMySalesRoute,
+  mainPlaygroundRoute: mainPlaygroundRoute,
   mainPublishingRoute: mainPublishingRoute,
   mainChar126ArtistRouteRoute: mainChar126ArtistRouteRouteWithChildren,
   mainChar126GeneralRouteRoute: mainChar126GeneralRouteRouteWithChildren,
