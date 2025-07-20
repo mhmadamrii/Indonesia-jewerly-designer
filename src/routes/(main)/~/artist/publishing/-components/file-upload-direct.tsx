@@ -1,10 +1,12 @@
 import { useImageKit } from "imagekit-react-hook";
-import { Upload, X } from "lucide-react";
-import * as React from "react";
+import { LoaderIcon, Upload, X } from "lucide-react";
+import { useCallback, useState } from "react";
 import { toast } from "sonner";
+import { ModelViewer } from "~/components/3D/model-viewer";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
+import { Badge } from "~/components/ui/badge";
 import {
   FileUpload,
   FileUploadDropzone,
@@ -19,21 +21,36 @@ import {
 } from "~/components/ui/file-upload";
 
 type FileUploadDirectProps = {
-  onSetImageUrl: (url: string) => void;
-  onSetThumbnailUrl: (url: string) => void;
+  isUploadingImage: boolean;
+  setIsUploadingImage: React.Dispatch<React.SetStateAction<boolean>>;
+  onSetImageUrl: React.Dispatch<
+    React.SetStateAction<{ asset_url: string; thumbnail_url: string }>
+  >;
 };
 
 export function FileUploadDirect({
+  isUploadingImage,
   onSetImageUrl,
-  onSetThumbnailUrl,
+  setIsUploadingImage,
 }: FileUploadDirectProps) {
-  const [thumbnailIdx, setThumbnailIdx] = React.useState(0);
-  const [files, setFiles] = React.useState<File[]>([]);
+  const [imageKitImageList, setImageKitImageList] = useState<
+    {
+      url: string;
+      fileType: string;
+    }[]
+  >([]);
+
+  const [thumbNailId, setThumbnailId] = useState("");
+  const [files, setFiles] = useState<File[]>([]);
   const { upload } = useImageKit();
 
-  const onUpload: NonNullable<FileUploadProps["onUpload"]> = React.useCallback(
+  console.log("imageKitImageList", imageKitImageList);
+  console.log("files", files);
+
+  const onUpload: NonNullable<FileUploadProps["onUpload"]> = useCallback(
     async (files, { onProgress, onSuccess, onError }) => {
       const uploadPromises = files.map(async (file) => {
+        setIsUploadingImage(true);
         const totalChunks = 10;
         let uploadedChunks = 0;
 
@@ -49,9 +66,18 @@ export function FileUploadDirect({
             file,
             fileName: file.name,
           });
-          console.log("res", res);
+          if (res.fileType === "image") {
+            setThumbnailId(res.fileId);
+            onSetImageUrl((prev) => ({ ...prev, thumbnail_url: res.url }));
+          } else {
+            onSetImageUrl((prev) => ({ ...prev, asset_url: res.url }));
+          }
+          setImageKitImageList((prev) => [...prev, res]);
         } catch (error) {
           onError(file, error instanceof Error ? error : new Error("Upload failed"));
+        } finally {
+          setIsUploadingImage(false);
+          toast.success("Image uploaded successfully");
         }
       });
 
@@ -60,7 +86,7 @@ export function FileUploadDirect({
     [upload],
   );
 
-  const onFileReject = React.useCallback((file: File, message: string) => {
+  const onFileReject = useCallback((file: File, message: string) => {
     toast(message, {
       description: `"${file.name.length > 20 ? `${file.name.slice(0, 20)}...` : file.name}" has been rejected`,
     });
@@ -76,7 +102,11 @@ export function FileUploadDirect({
       className="w-full"
       multiple
     >
-      <FileUploadDropzone>
+      <FileUploadDropzone
+        className={cn("flex items-center justify-center", {
+          hidden: imageKitImageList.length === 2,
+        })}
+      >
         <div className="flex flex-col items-center gap-1 text-center">
           <div className="flex items-center justify-center rounded-full border p-2.5">
             <Upload className="text-muted-foreground size-6" />
@@ -97,15 +127,13 @@ export function FileUploadDirect({
           <FileUploadItem
             key={index}
             value={file}
-            onClick={() => setThumbnailIdx(index)}
-            className={cn("cursor-pointer flex-col", {
-              "border border-blue-500": index === thumbnailIdx,
-            })}
+            className={cn("cursor-pointer flex-col", {})}
           >
             <div className="flex w-full items-center gap-2">
               <FileUploadItemPreview />
               <FileUploadItemMetadata />
-              {thumbnailIdx === index && <span>Set as thumbnail</span>}
+              {isUploadingImage && <LoaderIcon className="animate-spin" />}
+              {file.type.includes("image") && <Badge>Thumbnail</Badge>}
               <FileUploadItemDelete asChild>
                 <Button variant="ghost" size="icon" className="size-7">
                   <X />
@@ -116,6 +144,18 @@ export function FileUploadDirect({
           </FileUploadItem>
         ))}
       </FileUploadList>
+      <div
+        className={cn("h-[400px] w-full", {
+          hidden:
+            imageKitImageList.filter((item) => item.fileType !== "image").length === 0,
+        })}
+      >
+        {imageKitImageList
+          .filter((item) => item.fileType !== "image")
+          .map((item) => (
+            <ModelViewer key={item.url} src={item.url} />
+          ))}
+      </div>
     </FileUpload>
   );
 }

@@ -30,6 +30,7 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 
+import { useNavigate } from "@tanstack/react-router";
 import {
   Select,
   SelectContent,
@@ -40,9 +41,9 @@ import {
 
 const formSchema = z.object({
   name: z.string().min(1).min(3).max(20),
-  price: z.number().min(1).max(500000),
+  price: z.coerce.number().min(1).max(500000),
   currency: z.string(),
-  category: z.string().min(3).max(30),
+  category: z.string().min(3).max(500),
   description: z.string().min(5).max(200),
 });
 
@@ -82,15 +83,18 @@ const OPTIONS: Option[] = [
 ];
 
 export function AssetPublish() {
-  const [imageUrl, setImageUrl] = useState("");
-  const [thumbnailUrl, setThumbnailUrl] = useState("");
+  const navigate = useNavigate();
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [imageUrl, setImageUrl] = useState({
+    asset_url: "",
+    thumbnail_url: "",
+  });
 
   const { data: categories } = useQuery({
     queryKey: ["getAllCategories"],
     queryFn: () => getAllCategories(),
   });
 
-  console.log("categories", categories);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -107,6 +111,9 @@ export function AssetPublish() {
     onSuccess: (res) => {
       console.log("res", res);
       toast.success("Data saved successfully");
+      navigate({
+        to: "/~/artist/my-models",
+      });
     },
   });
 
@@ -117,8 +124,8 @@ export function AssetPublish() {
           name: values.name,
           description: values.description,
           price: values.price,
-          imageUrl,
-          thumbnailUrl,
+          imageUrl: imageUrl.asset_url,
+          thumbnailUrl: imageUrl.thumbnail_url,
           categoryId: values.category,
           typeAsset: "image",
         },
@@ -155,7 +162,7 @@ export function AssetPublish() {
                         placeholder="Miniatur"
                         type="text"
                         {...field}
-                        disabled={isPending}
+                        disabled={isPending || isUploadingImage}
                       />
                     </FormControl>
                     <FormDescription>Your models title</FormDescription>
@@ -177,7 +184,7 @@ export function AssetPublish() {
                         placeholder="200"
                         type="number"
                         {...field}
-                        disabled={isPending}
+                        disabled={isPending || isUploadingImage}
                       />
                     </FormControl>
                     <FormDescription>Your models price</FormDescription>
@@ -195,7 +202,7 @@ export function AssetPublish() {
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                      disabled={isPending}
+                      disabled={isPending || isUploadingImage}
                     >
                       <FormControl>
                         <SelectTrigger className="w-full">
@@ -223,7 +230,7 @@ export function AssetPublish() {
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
-                    disabled={isPending}
+                    disabled={isPending || isUploadingImage}
                   >
                     <FormControl>
                       <SelectTrigger className="w-full">
@@ -232,7 +239,7 @@ export function AssetPublish() {
                     </FormControl>
                     <SelectContent>
                       {categories?.data.map((item) => (
-                        <SelectItem id={item.id} value={item.id}>
+                        <SelectItem key={item.id} id={item.id} value={item.id}>
                           {item.name}
                         </SelectItem>
                       ))}
@@ -268,7 +275,7 @@ export function AssetPublish() {
                       placeholder="Your future asset investment"
                       className="resize-none"
                       {...field}
-                      disabled={isPending}
+                      disabled={isPending || isUploadingImage}
                     />
                   </FormControl>
                   <FormDescription>Provide clear description</FormDescription>
@@ -279,8 +286,9 @@ export function AssetPublish() {
 
             <div className="flex w-full justify-center">
               <FileUploadDirect
+                isUploadingImage={isUploadingImage}
+                setIsUploadingImage={setIsUploadingImage}
                 onSetImageUrl={setImageUrl}
-                onSetThumbnailUrl={setThumbnailUrl}
               />
             </div>
 
@@ -288,7 +296,7 @@ export function AssetPublish() {
               <Button
                 className="w-[100px] cursor-pointer"
                 type="submit"
-                disabled={isPending}
+                disabled={isPending || isUploadingImage || imageUrl.asset_url === ""}
               >
                 {isPending ? "Submitting..." : "Submit"}
               </Button>

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export function ModelViewer({ src }: { src: string }) {
   const [isClient, setIsClient] = useState(false);
+  // https://ik.imagekit.io/mhmadamrii/jewelry_SXMHTiP6m.glb
 
   useEffect(() => {
     import("@google/model-viewer");

@@ -1,6 +1,6 @@
 import { IKImage } from "imagekitio-react";
 import { AnimatePresence, motion } from "motion/react";
-import { lazy, Suspense, useState } from "react";
+import { lazy, useState } from "react";
 import { JewerlyWithUser } from "~/lib/db/types";
 
 const ModelViewer = lazy(() =>
@@ -28,20 +28,14 @@ export function Trendings({ jewerlies }: TrendingsProps) {
           className="relative w-full rounded-sm"
           key={item.jewerly_assets.id}
         >
-          <div className="dark:bg-card bg-card flex h-[300px] flex-col gap-5 rounded-md border p-4 shadow">
-            {item.jewerly_assets.imageUrl && item.jewerly_assets.typeAsset == "image" && (
+          <div className="dark:bg-card bg-card flex h-[400px] flex-col gap-5 rounded-md border p-4 shadow">
+            {item.jewerly_assets.thumbnailUrl && (
               <IKImage
-                src={item.jewerly_assets.imageUrl ?? ""}
-                className="h-full w-full rounded-lg sm:h-[200px] sm:w-[300px]"
+                src={item.jewerly_assets.thumbnailUrl ?? ""}
+                className="h-full w-full rounded-lg"
                 alt="Asset Image"
               />
             )}
-            {item.jewerly_assets.imageUrl &&
-              item.jewerly_assets.typeAsset == "non-image" && (
-                <Suspense fallback={<div>Loading...</div>}>
-                  <ModelViewer src={item.jewerly_assets.imageUrl ?? ""} />
-                </Suspense>
-              )}
             <div className="flex w-full items-center justify-between">
               <div>
                 <h1 className="text-xl font-semibold">{item.jewerly_assets.name}</h1>
