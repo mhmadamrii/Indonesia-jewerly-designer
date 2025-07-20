@@ -21,8 +21,6 @@ export const Route = createFileRoute("/(main)/~/general/feed/")({
 
 function RouteComponent() {
   const { data: session, isPending } = authClient.useSession();
-  console.log("session", session);
-
   const { dashboard } = Route.useLoaderData();
   const [selectedCategory, setSelectedCategory] = useState("");
 

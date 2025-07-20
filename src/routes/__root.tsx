@@ -37,7 +37,7 @@ export const Route = createRootRouteWithContext<{
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "React TanStarter",
+        title: "Indonesia Jewerly Designer",
       },
       {
         name: "description",

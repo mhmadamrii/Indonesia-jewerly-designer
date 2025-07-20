@@ -1,14 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { getAllCategories } from "~/actions/category.action";
 import { createJewerlyAsset } from "~/actions/jewerly.action";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { MultipleSelector, Option } from "~/components/ui/multi-select";
 import { Textarea } from "~/components/ui/textarea";
+import { FileUploadDirect } from "./file-upload-direct";
 
 import {
   Card,
@@ -35,11 +37,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { FileUploadDirect } from "./file-upload-direct";
-
-interface AssetUploadProps {
-  onClose: () => void;
-}
 
 const formSchema = z.object({
   name: z.string().min(1).min(3).max(20),
@@ -84,11 +81,25 @@ const OPTIONS: Option[] = [
   },
 ];
 
-export function AssetPublish({ onClose }: AssetUploadProps) {
-  const [dragOver, setDragOver] = useState(false);
+export function AssetPublish() {
+  const [imageUrl, setImageUrl] = useState("");
+  const [thumbnailUrl, setThumbnailUrl] = useState("");
 
+  const { data: categories } = useQuery({
+    queryKey: ["getAllCategories"],
+    queryFn: () => getAllCategories(),
+  });
+
+  console.log("categories", categories);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      price: 0,
+      currency: "m@example.com",
+      category: "arts",
+      description: "",
+    },
   });
 
   const { mutateAsync, isPending } = useMutation({
@@ -106,7 +117,8 @@ export function AssetPublish({ onClose }: AssetUploadProps) {
           name: values.name,
           description: values.description,
           price: values.price,
-          imageUrl: "",
+          imageUrl,
+          thumbnailUrl,
           categoryId: values.category,
           typeAsset: "image",
         },
@@ -191,9 +203,8 @@ export function AssetPublish({ onClose }: AssetUploadProps) {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="m@example.com">m@example.com</SelectItem>
-                        <SelectItem value="m@google.com">m@google.com</SelectItem>
-                        <SelectItem value="m@support.com">m@support.com</SelectItem>
+                        <SelectItem value="idr">IDR</SelectItem>
+                        <SelectItem value="usd">USD</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormDescription>Your currency model</FormDescription>
@@ -220,9 +231,11 @@ export function AssetPublish({ onClose }: AssetUploadProps) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="m@example.com">m@example.com</SelectItem>
-                      <SelectItem value="m@google.com">m@google.com</SelectItem>
-                      <SelectItem value="m@support.com">m@support.com</SelectItem>
+                      {categories?.data.map((item) => (
+                        <SelectItem id={item.id} value={item.id}>
+                          {item.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormDescription>Your models category</FormDescription>
@@ -265,7 +278,10 @@ export function AssetPublish({ onClose }: AssetUploadProps) {
             />
 
             <div className="flex w-full justify-center">
-              <FileUploadDirect />
+              <FileUploadDirect
+                onSetImageUrl={setImageUrl}
+                onSetThumbnailUrl={setThumbnailUrl}
+              />
             </div>
 
             <div className="flex w-full items-center justify-end">

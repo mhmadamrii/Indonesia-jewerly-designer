@@ -1,9 +1,7 @@
 import { useImageKit } from "imagekit-react-hook";
-import { IKContext } from "imagekitio-react";
 import { Upload, X } from "lucide-react";
 import * as React from "react";
 import { toast } from "sonner";
-import { imageKitAuthenticator } from "~/actions/imagekit.action";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
@@ -20,7 +18,15 @@ import {
   type FileUploadProps,
 } from "~/components/ui/file-upload";
 
-function FileUploadComponent() {
+type FileUploadDirectProps = {
+  onSetImageUrl: (url: string) => void;
+  onSetThumbnailUrl: (url: string) => void;
+};
+
+export function FileUploadDirect({
+  onSetImageUrl,
+  onSetThumbnailUrl,
+}: FileUploadDirectProps) {
   const [thumbnailIdx, setThumbnailIdx] = React.useState(0);
   const [files, setFiles] = React.useState<File[]>([]);
   const { upload } = useImageKit();
@@ -111,16 +117,5 @@ function FileUploadComponent() {
         ))}
       </FileUploadList>
     </FileUpload>
-  );
-}
-
-export function FileUploadDirect() {
-  return (
-    <IKContext
-      urlEndpoint="https://ik.imagekit.io/mhmadamrii"
-      authenticator={imageKitAuthenticator}
-    >
-      <FileUploadComponent />
-    </IKContext>
   );
 }

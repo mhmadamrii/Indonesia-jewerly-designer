@@ -20,6 +20,7 @@ import { Route as mainMyModelsRouteImport } from "./routes/(main)/my-models";
 import { Route as mainDashboardRouteImport } from "./routes/(main)/dashboard";
 import { Route as mainCartRouteImport } from "./routes/(main)/cart";
 import { Route as authAuthRouteImport } from "./routes/(auth)/auth";
+import { Route as adminAdminRouteImport } from "./routes/(admin)/admin";
 import { Route as mainProfileIndexRouteImport } from "./routes/(main)/profile.index";
 import { Route as mainProfileUsernameRouteImport } from "./routes/(main)/profile.$username";
 import { Route as mainAssetsAssetIdRouteImport } from "./routes/(main)/assets.$assetId";
@@ -80,6 +81,11 @@ const authAuthRoute = authAuthRouteImport.update({
   id: "/auth",
   path: "/auth",
   getParentRoute: () => authRouteRoute,
+} as any);
+const adminAdminRoute = adminAdminRouteImport.update({
+  id: "/(admin)/admin",
+  path: "/admin",
+  getParentRoute: () => rootRouteImport,
 } as any);
 const mainProfileIndexRoute = mainProfileIndexRouteImport.update({
   id: "/(main)/profile/",
@@ -161,6 +167,7 @@ const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
 
 export interface FileRoutesByFullPath {
   "/": typeof authRouteRouteWithChildren;
+  "/admin": typeof adminAdminRoute;
   "/auth": typeof authAuthRoute;
   "/cart": typeof mainCartRoute;
   "/dashboard": typeof mainDashboardRoute;
@@ -183,6 +190,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   "/": typeof authRouteRouteWithChildren;
+  "/admin": typeof adminAdminRoute;
   "/auth": typeof authAuthRoute;
   "/cart": typeof mainCartRoute;
   "/dashboard": typeof mainDashboardRoute;
@@ -207,6 +215,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/": typeof IndexRoute;
   "/(auth)": typeof authRouteRouteWithChildren;
+  "/(admin)/admin": typeof adminAdminRoute;
   "/(auth)/auth": typeof authAuthRoute;
   "/(main)/cart": typeof mainCartRoute;
   "/(main)/dashboard": typeof mainDashboardRoute;
@@ -231,6 +240,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
     | "/"
+    | "/admin"
     | "/auth"
     | "/cart"
     | "/dashboard"
@@ -253,6 +263,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo;
   to:
     | "/"
+    | "/admin"
     | "/auth"
     | "/cart"
     | "/dashboard"
@@ -276,6 +287,7 @@ export interface FileRouteTypes {
     | "__root__"
     | "/"
     | "/(auth)"
+    | "/(admin)/admin"
     | "/(auth)/auth"
     | "/(main)/cart"
     | "/(main)/dashboard"
@@ -300,6 +312,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
   authRouteRoute: typeof authRouteRouteWithChildren;
+  adminAdminRoute: typeof adminAdminRoute;
   mainCartRoute: typeof mainCartRoute;
   mainDashboardRoute: typeof mainDashboardRoute;
   mainMyModelsRoute: typeof mainMyModelsRoute;
@@ -402,6 +415,13 @@ declare module "@tanstack/react-router" {
       fullPath: "/auth";
       preLoaderRoute: typeof authAuthRouteImport;
       parentRoute: typeof authRouteRoute;
+    };
+    "/(admin)/admin": {
+      id: "/(admin)/admin";
+      path: "/admin";
+      fullPath: "/admin";
+      preLoaderRoute: typeof adminAdminRouteImport;
+      parentRoute: typeof rootRouteImport;
     };
     "/(main)/profile/": {
       id: "/(main)/profile/";
@@ -564,6 +584,7 @@ const mainChar126GeneralRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   authRouteRoute: authRouteRouteWithChildren,
+  adminAdminRoute: adminAdminRoute,
   mainCartRoute: mainCartRoute,
   mainDashboardRoute: mainDashboardRoute,
   mainMyModelsRoute: mainMyModelsRoute,

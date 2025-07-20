@@ -50,7 +50,6 @@ const initialCartItems: CartItem[] = [
 
 export function CartDrawer() {
   const location = useLocation();
-  console.log("locations", location);
   const [cartItems, setCartItems] = React.useState<CartItem[]>(initialCartItems);
 
   const updateQuantity = (id: string, newQuantity: number) => {

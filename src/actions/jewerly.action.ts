@@ -13,6 +13,7 @@ const JewerlyAssetSchema = z.object({
   imageUrl: z.string(),
   categoryId: z.string(),
   typeAsset: z.string(),
+  thumbnailUrl: z.string(),
 });
 
 export const getAllCategories = createServerFn({ method: "GET" }).handler(async () => {
@@ -58,7 +59,7 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
   .validator(JewerlyAssetSchema)
   .middleware([authMiddleware])
   .handler(async ({ data, context }) => {
-    const { name, description, categoryId, imageUrl, price, typeAsset } = data;
+    const { name, description, categoryId, imageUrl, price, typeAsset, thumbnailUrl } = data; // prettier-ignore
     const res = await db
       .insert(jewerlyAssets)
       .values({
@@ -68,7 +69,8 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
         price,
         description,
         categoryId,
-        imageUrl,
+        assetUrl: imageUrl,
+        thumbnailUrl: thumbnailUrl,
       })
       .returning({ id: jewerlyAssets.id });
 
