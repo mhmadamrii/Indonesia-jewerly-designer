@@ -23,7 +23,11 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
 
     const [categories, jewerlies, users] = await Promise.all([
       db.select().from(category),
-      db.select().from(jewerlyAssets).leftJoin(user, eq(user.id, jewerlyAssets.userId)),
+      db
+        .select()
+        .from(jewerlyAssets)
+        .leftJoin(user, eq(user.id, jewerlyAssets.userId))
+        .leftJoin(category, eq(jewerlyAssets.categoryId, category.id)),
       db.select().from(user),
     ]);
 

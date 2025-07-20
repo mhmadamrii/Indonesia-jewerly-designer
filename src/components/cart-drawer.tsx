@@ -76,7 +76,11 @@ export function CartDrawer() {
   return (
     <Drawer direction="right">
       <DrawerTrigger asChild>
-        <Button variant="outline" size="lg" className="relative bg-transparent">
+        <Button
+          variant="outline"
+          size="lg"
+          className="relative cursor-pointer bg-transparent"
+        >
           <ShoppingCart className="h-5 w-5" />
           {totalItems > 0 && (
             <Badge

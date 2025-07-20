@@ -12,6 +12,7 @@ export type User = InferSelectModel<typeof userTable>;
 export type JewerlyWithUser = {
   jewerly_assets: JewerlyAsset;
   user: User | null;
+  category: Category | null;
 };
 
 export type DashboardData = {

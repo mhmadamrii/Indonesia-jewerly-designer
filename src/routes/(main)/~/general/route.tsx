@@ -44,7 +44,6 @@ import {
   ChevronsUpDown,
   Clock,
   CreditCard,
-  Download,
   Heart,
   HelpCircle,
   Home,
@@ -82,11 +81,11 @@ const USER_SIDEBAR = [
         link: "/~/general/purchased-models",
         icon: Library,
       },
-      {
-        label: "Downloads",
-        link: "/~/general/purchased-models",
-        icon: Download,
-      },
+      // {
+      //   label: "Downloads",
+      //   link: "/~/general/purchased-models",
+      //   icon: Download,
+      // },
       {
         label: "Favorites / Wishlist",
         link: "/~/general/favorites",
@@ -104,6 +103,7 @@ const USER_SIDEBAR = [
       },
       {
         label: "Orders & Invoices",
+        link: "/~/general/invoices",
         icon: Receipt,
       },
     ],
@@ -113,18 +113,22 @@ const USER_SIDEBAR = [
     items: [
       {
         label: "Settings",
+        link: "/~/general/invoices",
         icon: UserCog,
       },
       {
         label: "Payment Methods",
+        link: "/~/general/invoices",
         icon: CreditCard,
       },
       {
         label: "Notifications",
+        link: "/~/general/invoices",
         icon: Bell,
       },
       {
         label: "Billing History",
+        link: "/~/general/invoices",
         icon: Clock,
       },
     ],
@@ -134,10 +138,12 @@ const USER_SIDEBAR = [
     items: [
       {
         label: "FAQ",
+        link: "/~/general/invoices",
         icon: HelpCircle,
       },
       {
         label: "Contact Support",
+        link: "/~/general/invoices",
         icon: Mail,
       },
     ],

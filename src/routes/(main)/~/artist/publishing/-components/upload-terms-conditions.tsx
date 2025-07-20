@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader } from "~/components/ui/card";
 
 export function UploadTermsConditions() {
   return (
-    <Card className="sticky top-3 h-[500px] w-[40%]">
+    <Card className="sticky top-3 h-[300px] w-[40%]">
       <CardHeader>Terms & Conditions</CardHeader>
       <CardContent>
         <ul className="list-disc pl-5">

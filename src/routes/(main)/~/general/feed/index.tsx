@@ -68,7 +68,7 @@ function RouteComponent() {
           >
             <div className="grid h-full grid-cols-2 gap-2">
               <Card className="h-full rounded-sm">
-                <CardContent className="h-full">Revenue</CardContent>
+                <CardContent className="h-full">Transactions</CardContent>
               </Card>
               <Card className="h-full rounded-sm">
                 <CardContent className="h-full">Spending</CardContent>

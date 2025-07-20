@@ -27,6 +27,7 @@ import { Route as mainAssetsAssetIdRouteImport } from "./routes/(main)/assets.$a
 import { Route as mainChar126GeneralRouteRouteImport } from "./routes/(main)/~/general/route";
 import { Route as mainChar126ArtistRouteRouteImport } from "./routes/(main)/~/artist/route";
 import { Route as mainChar126GeneralPurchasedModelsIndexRouteImport } from "./routes/(main)/~/general/purchased-models/index";
+import { Route as mainChar126GeneralInvoicesIndexRouteImport } from "./routes/(main)/~/general/invoices/index";
 import { Route as mainChar126GeneralFeedIndexRouteImport } from "./routes/(main)/~/general/feed/index";
 import { Route as mainChar126GeneralFavoritesIndexRouteImport } from "./routes/(main)/~/general/favorites/index";
 import { Route as mainChar126GeneralExploreIndexRouteImport } from "./routes/(main)/~/general/explore/index";
@@ -120,6 +121,12 @@ const mainChar126GeneralPurchasedModelsIndexRoute =
     path: "/purchased-models/",
     getParentRoute: () => mainChar126GeneralRouteRoute,
   } as any);
+const mainChar126GeneralInvoicesIndexRoute =
+  mainChar126GeneralInvoicesIndexRouteImport.update({
+    id: "/invoices/",
+    path: "/invoices/",
+    getParentRoute: () => mainChar126GeneralRouteRoute,
+  } as any);
 const mainChar126GeneralFeedIndexRoute =
   mainChar126GeneralFeedIndexRouteImport.update({
     id: "/feed/",
@@ -202,6 +209,7 @@ export interface FileRoutesByFullPath {
   "/~/general/explore": typeof mainChar126GeneralExploreIndexRoute;
   "/~/general/favorites": typeof mainChar126GeneralFavoritesIndexRoute;
   "/~/general/feed": typeof mainChar126GeneralFeedIndexRoute;
+  "/~/general/invoices": typeof mainChar126GeneralInvoicesIndexRoute;
   "/~/general/purchased-models": typeof mainChar126GeneralPurchasedModelsIndexRoute;
 }
 export interface FileRoutesByTo {
@@ -227,6 +235,7 @@ export interface FileRoutesByTo {
   "/~/general/explore": typeof mainChar126GeneralExploreIndexRoute;
   "/~/general/favorites": typeof mainChar126GeneralFavoritesIndexRoute;
   "/~/general/feed": typeof mainChar126GeneralFeedIndexRoute;
+  "/~/general/invoices": typeof mainChar126GeneralInvoicesIndexRoute;
   "/~/general/purchased-models": typeof mainChar126GeneralPurchasedModelsIndexRoute;
 }
 export interface FileRoutesById {
@@ -254,6 +263,7 @@ export interface FileRoutesById {
   "/(main)/~/general/explore/": typeof mainChar126GeneralExploreIndexRoute;
   "/(main)/~/general/favorites/": typeof mainChar126GeneralFavoritesIndexRoute;
   "/(main)/~/general/feed/": typeof mainChar126GeneralFeedIndexRoute;
+  "/(main)/~/general/invoices/": typeof mainChar126GeneralInvoicesIndexRoute;
   "/(main)/~/general/purchased-models/": typeof mainChar126GeneralPurchasedModelsIndexRoute;
 }
 export interface FileRouteTypes {
@@ -281,6 +291,7 @@ export interface FileRouteTypes {
     | "/~/general/explore"
     | "/~/general/favorites"
     | "/~/general/feed"
+    | "/~/general/invoices"
     | "/~/general/purchased-models";
   fileRoutesByTo: FileRoutesByTo;
   to:
@@ -306,6 +317,7 @@ export interface FileRouteTypes {
     | "/~/general/explore"
     | "/~/general/favorites"
     | "/~/general/feed"
+    | "/~/general/invoices"
     | "/~/general/purchased-models";
   id:
     | "__root__"
@@ -332,6 +344,7 @@ export interface FileRouteTypes {
     | "/(main)/~/general/explore/"
     | "/(main)/~/general/favorites/"
     | "/(main)/~/general/feed/"
+    | "/(main)/~/general/invoices/"
     | "/(main)/~/general/purchased-models/";
   fileRoutesById: FileRoutesById;
 }
@@ -491,6 +504,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof mainChar126GeneralPurchasedModelsIndexRouteImport;
       parentRoute: typeof mainChar126GeneralRouteRoute;
     };
+    "/(main)/~/general/invoices/": {
+      id: "/(main)/~/general/invoices/";
+      path: "/invoices";
+      fullPath: "/~/general/invoices";
+      preLoaderRoute: typeof mainChar126GeneralInvoicesIndexRouteImport;
+      parentRoute: typeof mainChar126GeneralRouteRoute;
+    };
     "/(main)/~/general/feed/": {
       id: "/(main)/~/general/feed/";
       path: "/feed";
@@ -606,6 +626,7 @@ interface mainChar126GeneralRouteRouteChildren {
   mainChar126GeneralExploreIndexRoute: typeof mainChar126GeneralExploreIndexRoute;
   mainChar126GeneralFavoritesIndexRoute: typeof mainChar126GeneralFavoritesIndexRoute;
   mainChar126GeneralFeedIndexRoute: typeof mainChar126GeneralFeedIndexRoute;
+  mainChar126GeneralInvoicesIndexRoute: typeof mainChar126GeneralInvoicesIndexRoute;
   mainChar126GeneralPurchasedModelsIndexRoute: typeof mainChar126GeneralPurchasedModelsIndexRoute;
 }
 
@@ -616,6 +637,7 @@ const mainChar126GeneralRouteRouteChildren: mainChar126GeneralRouteRouteChildren
     mainChar126GeneralFavoritesIndexRoute:
       mainChar126GeneralFavoritesIndexRoute,
     mainChar126GeneralFeedIndexRoute: mainChar126GeneralFeedIndexRoute,
+    mainChar126GeneralInvoicesIndexRoute: mainChar126GeneralInvoicesIndexRoute,
     mainChar126GeneralPurchasedModelsIndexRoute:
       mainChar126GeneralPurchasedModelsIndexRoute,
   };
