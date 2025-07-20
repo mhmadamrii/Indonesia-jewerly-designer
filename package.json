@@ -52,6 +52,7 @@
     "cmdk": "^1.1.1",
     "drizzle-orm": "^0.44.2",
     "imagekit": "^6.0.0",
+    "imagekit-react-hook": "^1.5.4",
     "imagekitio-react": "^4.3.0",
     "ioredis": "^5.6.1",
     "lucide-react": "^0.514.0",

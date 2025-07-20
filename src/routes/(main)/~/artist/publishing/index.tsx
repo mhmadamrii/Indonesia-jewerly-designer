@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AssetPublish } from "./-components/asset-publish";
+import { UploadTermsConditions } from "./-components/upload-terms-conditions";
 
 export const Route = createFileRoute("/(main)/~/artist/publishing/")({
   component: RouteComponent,
@@ -7,8 +8,9 @@ export const Route = createFileRoute("/(main)/~/artist/publishing/")({
 
 function RouteComponent() {
   return (
-    <section className="flex items-center justify-center border px-4 py-2">
+    <section className="flex justify-center gap-3 border px-4 py-2">
       <AssetPublish onClose={() => console.log("close")} />
+      <UploadTermsConditions />
     </section>
   );
 }

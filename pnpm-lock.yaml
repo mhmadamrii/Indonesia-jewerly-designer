@@ -116,6 +116,9 @@ importers:
       imagekit:
         specifier: ^6.0.0
         version: 6.0.0
+      imagekit-react-hook:
+        specifier: ^1.5.4
+        version: 1.5.4(react@19.1.0)
       imagekitio-react:
         specifier: ^4.3.0
         version: 4.3.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -3772,8 +3775,16 @@ packages:
     resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
 
+  imagekit-javascript@1.5.2:
+    resolution: {integrity: sha512-qZquDA8vL4TGrn4VhKzzlnaDqPoYrn1Asrcfzfq0HvAy0w0P9jrPTl8foL6bPbvAGzx7Kj2P2M51HrOQKLX4IQ==}
+
   imagekit-javascript@3.1.0:
     resolution: {integrity: sha512-56YmmOg6vKarIg4A41E9T08qQ2ri8862AYU/Ykhrbr9Cd8i6BIeKkroR16cmsNYFOIoLk35/O7b8o7I8DoyGaQ==}
+
+  imagekit-react-hook@1.5.4:
+    resolution: {integrity: sha512-hW8/WKDYXz8cpQComlEmsQkwtt89IGjOeXrlrGSABVny8u2toYn58wVfFpyg3xIsIKHsVYAAqBKZbOfEvg5lLg==}
+    peerDependencies:
+      react: '>16.0.0'
 
   imagekit@6.0.0:
     resolution: {integrity: sha512-0MsxThZM2PYH6ngwN3zi9PDa8pCB5mEZG2FSySYiZk3Hfri8IMwUqVNzRlLQewBHQ3YtTN9M59O0Xe9HRewtOA==}
@@ -9460,7 +9471,14 @@ snapshots:
 
   ignore@7.0.5: {}
 
+  imagekit-javascript@1.5.2: {}
+
   imagekit-javascript@3.1.0: {}
+
+  imagekit-react-hook@1.5.4(react@19.1.0):
+    dependencies:
+      imagekit-javascript: 1.5.2
+      react: 19.1.0
 
   imagekit@6.0.0:
     dependencies:

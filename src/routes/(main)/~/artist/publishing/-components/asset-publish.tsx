@@ -1,10 +1,10 @@
-import { useState } from "react";
-
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ImageIcon, Upload } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { createJewerlyAsset } from "~/actions/jewerly.action";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { MultipleSelector, Option } from "~/components/ui/multi-select";
@@ -35,6 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { FileUploadDirect } from "./file-upload-direct";
 
 interface AssetUploadProps {
   onClose: () => void;
@@ -90,14 +91,26 @@ export function AssetPublish({ onClose }: AssetUploadProps) {
     resolver: zodResolver(formSchema),
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: createJewerlyAsset,
+    onSuccess: (res) => {
+      console.log("res", res);
+      toast.success("Data saved successfully");
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      console.log(values);
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>,
-      );
+      await mutateAsync({
+        data: {
+          name: values.name,
+          description: values.description,
+          price: values.price,
+          imageUrl: "",
+          categoryId: values.category,
+          typeAsset: "image",
+        },
+      });
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to submit the form. Please try again.");
@@ -113,51 +126,6 @@ export function AssetPublish({ onClose }: AssetUploadProps) {
         <CardDescription>Upload & post your 3D models</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          <label className="block text-sm font-medium">3D Model File</label>
-          <div
-            className={`rounded-lg border-2 border-dashed p-8 text-center transition-colors duration-200 ${
-              dragOver ? "" : "hover:border-gray-400"
-            }`}
-            onDragOver={(e) => {
-              e.preventDefault();
-              setDragOver(true);
-            }}
-            onDragLeave={() => setDragOver(false)}
-            onDrop={(e) => {
-              e.preventDefault();
-              setDragOver(false);
-            }}
-          >
-            <Upload className="mx-auto mb-4 h-12 w-12" />
-            <p className="mb-2">Drop your 3D model file here, or</p>
-            <button
-              type="button"
-              className="font-medium text-indigo-600 hover:text-indigo-800"
-            >
-              browse to upload
-            </button>
-            <p className="mt-2 text-xs">
-              Supports .gltf, .glb, .fbx, .obj files up to 50MB
-            </p>
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <label className="block text-sm font-medium">Preview Images</label>
-          <div className="grid grid-cols-2 gap-4">
-            {[1, 2].map((i) => (
-              <div
-                key={i}
-                className="rounded-lg border-2 border-dashed p-4 text-center transition-colors duration-200 hover:border-gray-400"
-              >
-                <ImageIcon className="mx-auto mb-2 h-8 w-8" />
-                <p className="text-sm">Upload image {i}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -171,7 +139,12 @@ export function AssetPublish({ onClose }: AssetUploadProps) {
                   <FormItem className="w-full">
                     <FormLabel>Title</FormLabel>
                     <FormControl>
-                      <Input placeholder="Miniatur" type="text" {...field} />
+                      <Input
+                        placeholder="Miniatur"
+                        type="text"
+                        {...field}
+                        disabled={isPending}
+                      />
                     </FormControl>
                     <FormDescription>Your models title</FormDescription>
                     <FormMessage />
@@ -188,7 +161,12 @@ export function AssetPublish({ onClose }: AssetUploadProps) {
                   <FormItem className="w-full">
                     <FormLabel>Price</FormLabel>
                     <FormControl>
-                      <Input placeholder="200" type="number" {...field} />
+                      <Input
+                        placeholder="200"
+                        type="number"
+                        {...field}
+                        disabled={isPending}
+                      />
                     </FormControl>
                     <FormDescription>Your models price</FormDescription>
                     <FormMessage />
@@ -202,7 +180,11 @@ export function AssetPublish({ onClose }: AssetUploadProps) {
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>Currency</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      disabled={isPending}
+                    >
                       <FormControl>
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select listed currency" />
@@ -227,7 +209,11 @@ export function AssetPublish({ onClose }: AssetUploadProps) {
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel>Category</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={isPending}
+                  >
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Arts" />
@@ -269,6 +255,7 @@ export function AssetPublish({ onClose }: AssetUploadProps) {
                       placeholder="Your future asset investment"
                       className="resize-none"
                       {...field}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormDescription>Provide clear description</FormDescription>
@@ -277,8 +264,18 @@ export function AssetPublish({ onClose }: AssetUploadProps) {
               )}
             />
 
+            <div className="flex w-full justify-center">
+              <FileUploadDirect />
+            </div>
+
             <div className="flex w-full items-center justify-end">
-              <Button type="submit">Submit</Button>
+              <Button
+                className="w-[100px] cursor-pointer"
+                type="submit"
+                disabled={isPending}
+              >
+                {isPending ? "Submitting..." : "Submit"}
+              </Button>
             </div>
           </form>
         </Form>

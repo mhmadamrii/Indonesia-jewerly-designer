@@ -32,6 +32,7 @@ import { Route as mainChar126GeneralExploreIndexRouteImport } from "./routes/(ma
 import { Route as mainChar126GeneralCartIndexRouteImport } from "./routes/(main)/~/general/cart/index";
 import { Route as mainChar126ArtistPublishingIndexRouteImport } from "./routes/(main)/~/artist/publishing/index";
 import { Route as mainChar126ArtistDashboardIndexRouteImport } from "./routes/(main)/~/artist/dashboard/index";
+import { ServerRoute as ApiImagekitUploadServerRouteImport } from "./routes/api/imagekit/upload";
 import { ServerRoute as ApiAuthSplatServerRouteImport } from "./routes/api/auth/$";
 
 const rootServerRouteImport = createServerRootRoute();
@@ -147,6 +148,11 @@ const mainChar126ArtistDashboardIndexRoute =
     path: "/dashboard/",
     getParentRoute: () => mainChar126ArtistRouteRoute,
   } as any);
+const ApiImagekitUploadServerRoute = ApiImagekitUploadServerRouteImport.update({
+  id: "/api/imagekit/upload",
+  path: "/api/imagekit/upload",
+  getParentRoute: () => rootServerRouteImport,
+} as any);
 const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
   id: "/api/auth/$",
   path: "/api/auth/$",
@@ -308,24 +314,28 @@ export interface RootRouteChildren {
 }
 export interface FileServerRoutesByFullPath {
   "/api/auth/$": typeof ApiAuthSplatServerRoute;
+  "/api/imagekit/upload": typeof ApiImagekitUploadServerRoute;
 }
 export interface FileServerRoutesByTo {
   "/api/auth/$": typeof ApiAuthSplatServerRoute;
+  "/api/imagekit/upload": typeof ApiImagekitUploadServerRoute;
 }
 export interface FileServerRoutesById {
   __root__: typeof rootServerRouteImport;
   "/api/auth/$": typeof ApiAuthSplatServerRoute;
+  "/api/imagekit/upload": typeof ApiImagekitUploadServerRoute;
 }
 export interface FileServerRouteTypes {
   fileServerRoutesByFullPath: FileServerRoutesByFullPath;
-  fullPaths: "/api/auth/$";
+  fullPaths: "/api/auth/$" | "/api/imagekit/upload";
   fileServerRoutesByTo: FileServerRoutesByTo;
-  to: "/api/auth/$";
-  id: "__root__" | "/api/auth/$";
+  to: "/api/auth/$" | "/api/imagekit/upload";
+  id: "__root__" | "/api/auth/$" | "/api/imagekit/upload";
   fileServerRoutesById: FileServerRoutesById;
 }
 export interface RootServerRouteChildren {
   ApiAuthSplatServerRoute: typeof ApiAuthSplatServerRoute;
+  ApiImagekitUploadServerRoute: typeof ApiImagekitUploadServerRoute;
 }
 
 declare module "@tanstack/react-router" {
@@ -481,6 +491,13 @@ declare module "@tanstack/react-router" {
 }
 declare module "@tanstack/react-start/server" {
   interface ServerFileRoutesByPath {
+    "/api/imagekit/upload": {
+      id: "/api/imagekit/upload";
+      path: "/api/imagekit/upload";
+      fullPath: "/api/imagekit/upload";
+      preLoaderRoute: typeof ApiImagekitUploadServerRouteImport;
+      parentRoute: typeof rootServerRouteImport;
+    };
     "/api/auth/$": {
       id: "/api/auth/$";
       path: "/api/auth/$";
@@ -564,6 +581,7 @@ export const routeTree = rootRouteImport
   ._addFileTypes<FileRouteTypes>();
 const rootServerRouteChildren: RootServerRouteChildren = {
   ApiAuthSplatServerRoute: ApiAuthSplatServerRoute,
+  ApiImagekitUploadServerRoute: ApiImagekitUploadServerRoute,
 };
 export const serverRouteTree = rootServerRouteImport
   ._addFileChildren(rootServerRouteChildren)

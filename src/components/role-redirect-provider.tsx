@@ -1,4 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
+import { ImageKitProvider } from "imagekit-react-hook";
 import { Loader } from "lucide-react";
 import { useEffect } from "react";
 import { useRoleStore } from "~/lib/store/role.store";
@@ -33,7 +34,13 @@ export function RoleRedirectProvider({
           <Loader className="animate-spin" />
         </div>
       )}
-      {children}
+      <ImageKitProvider
+        authenticationEndpoint={`${import.meta.env.VITE_BASE_URL}/api/imagekit/upload`}
+        publicKey="public_L+2o58FFDcS0R36N5glkVvxZt/M="
+        urlEndpoint="https://ik.imagekit.io/mhmadamrii"
+      >
+        {children}
+      </ImageKitProvider>
     </>
   );
 }
