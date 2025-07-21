@@ -23,7 +23,6 @@ export function SwitchRole() {
 
     setIsRoleChanging(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       // @ts-expect-error
       if (newRole === "artist" && session?.user?.role === "user") {
         setIsOpenConfirmArtist(true);
@@ -32,8 +31,6 @@ export function SwitchRole() {
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      setIsRoleChanging(false);
     }
   };
 

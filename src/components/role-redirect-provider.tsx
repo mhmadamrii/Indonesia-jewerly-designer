@@ -12,11 +12,10 @@ export function RoleRedirectProvider({
   sessionRole: string;
 }) {
   const navigate = useNavigate();
-
   const { role: currentRole, isRoleChanging } = useRoleStore();
 
   useEffect(() => {
-    if (currentRole === "artist" && sessionRole === "artist") {
+    if (currentRole === "artist") {
       navigate({
         to: "/~/artist/dashboard",
       });

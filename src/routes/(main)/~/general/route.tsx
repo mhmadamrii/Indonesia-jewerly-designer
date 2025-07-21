@@ -1,9 +1,11 @@
+import { useEffect } from "react";
 import { Header } from "~/components/header";
 import { RoleRedirectProvider } from "~/components/role-redirect-provider";
 import { useTheme } from "~/components/theme-provider";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { authClient } from "~/lib/auth/auth-client";
+import { useRoleStore } from "~/lib/store/role.store";
 
 import {
   ClientOnly,
@@ -166,7 +168,12 @@ export const Route = createFileRoute("/(main)/~/general")({
 function MainLayout() {
   const isMobile = useIsMobile();
   const { theme } = useTheme();
+  const { setIsRoleChanging } = useRoleStore();
   const { data: session } = authClient.useSession();
+
+  useEffect(() => {
+    setIsRoleChanging(false);
+  }, []);
 
   return (
     <main className="flex min-h-screen">

@@ -5,6 +5,7 @@ import { SectionCards } from "./-components/section-cards";
 import { data_tables } from "./data";
 
 export const Route = createFileRoute("/(main)/~/artist/dashboard/")({
+  ssr: false,
   component: RouteComponent,
 });
 
