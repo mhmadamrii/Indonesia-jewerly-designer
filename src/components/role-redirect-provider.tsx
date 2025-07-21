@@ -29,7 +29,7 @@ export function RoleRedirectProvider({
   return (
     <>
       {isRoleChanging && (
-        <div className="fixed top-0 left-0 z-50 flex h-full w-full flex-col items-center justify-center bg-black/50">
+        <div className="fixed top-0 left-0 z-50 flex h-full w-full cursor-wait flex-col items-center justify-center bg-black/50">
           <Loader className="animate-spin" />
         </div>
       )}

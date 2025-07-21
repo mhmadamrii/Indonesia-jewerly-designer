@@ -1,50 +1,41 @@
 "use no memo";
 
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "@tanstack/react-router";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
-import * as React from "react";
-import { toast } from "sonner";
-import { deleteJewerlyAsset } from "~/actions/jewerly.action";
-import { Button } from "~/components/ui/button";
+import { SearchIcon } from "lucide-react";
+import { useId, useMemo, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Badge } from "~/components/ui/badge";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import { JewerlyAsset } from "~/lib/db/types";
+import { cn } from "~/lib/utils";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "~/components/ui/alert-dialog";
-
-import {
+import type {
+  Column,
   ColumnDef,
   ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
+  RowData,
   SortingState,
-  useReactTable,
-  VisibilityState,
 } from "@tanstack/react-table";
 
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
+  flexRender,
+  getCoreRowModel,
+  getFacetedMinMaxValues,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 
 import {
   Table,
@@ -55,7 +46,24 @@ import {
   TableRow,
 } from "~/components/ui/table";
 
-export const columns: ColumnDef<JewerlyAsset>[] = [
+declare module "@tanstack/react-table" {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface ColumnMeta<TData extends RowData, TValue> {
+    filterVariant?: "text" | "range" | "select";
+  }
+}
+
+type Item = {
+  id: string;
+  product: string;
+  productImage: string;
+  fallback: string;
+  price: number;
+  availability: "In Stock" | "Out of Stock" | "Limited";
+  rating: number;
+};
+
+const columns: ColumnDef<Item>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -75,183 +83,305 @@ export const columns: ColumnDef<JewerlyAsset>[] = [
         aria-label="Select row"
       />
     ),
-    enableSorting: false,
-    enableHiding: false,
   },
   {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
-  },
-  {
-    accessorKey: "price",
-    header: () => <div className="text-right">Price</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("price"));
-
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
-  },
-  {
-    accessorKey: "typeAsset",
-    header: "Type",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("typeAsset")}</div>,
-  },
-  {
-    accessorKey: "createdAt",
-    header: "Created At",
+    header: "Product",
+    accessorKey: "product",
     cell: ({ row }) => (
-      <div className="capitalize">
-        {new Date(row.getValue("createdAt")).toLocaleDateString()}
+      <div className="flex items-center gap-3">
+        <Avatar className="rounded-sm">
+          <AvatarImage src={row.original.productImage} alt={row.original.fallback} />
+          <AvatarFallback className="text-xs">{row.original.fallback}</AvatarFallback>
+        </Avatar>
+        <div className="font-medium">{row.getValue("product")}</div>
       </div>
     ),
   },
   {
-    id: "actions",
-    enableHiding: false,
+    header: "Price",
+    accessorKey: "price",
+    cell: ({ row }) => <div>${row.getValue("price")}</div>,
+    enableSorting: false,
+    meta: {
+      filterVariant: "range",
+    },
+  },
+  {
+    header: "Availability",
+    accessorKey: "availability",
     cell: ({ row }) => {
-      const router = useRouter();
-      const { mutate } = useMutation({
-        mutationFn: deleteJewerlyAsset,
-        onSuccess: () => {
-          toast.success("Deleted successfully");
-          router.invalidate();
-        },
-      });
+      const availability = row.getValue("availability") as string;
+
+      const styles = {
+        "In Stock":
+          "bg-green-600/10 text-green-600 focus-visible:ring-green-600/20 dark:bg-green-400/10 dark:text-green-400 dark:focus-visible:ring-green-400/40 [a&]:hover:bg-green-600/5 dark:[a&]:hover:bg-green-400/5",
+        "Out of Stock":
+          "bg-destructive/10 [a&]:hover:bg-destructive/5 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 text-destructive",
+        Limited:
+          "bg-amber-600/10 text-amber-600 focus-visible:ring-amber-600/20 dark:bg-amber-400/10 dark:text-amber-400 dark:focus-visible:ring-amber-400/40 [a&]:hover:bg-amber-600/5 dark:[a&]:hover:bg-amber-400/5",
+      }[availability];
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem asChild>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button className="flex items-center gap-2" variant="ghost">
-                    Delete
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete your
-                      account and remove your data from our servers.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={() =>
-                        mutate({
-                          data: { id: row.original.id },
-                        })
-                      }
-                    >
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View Details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Badge
+          className={(cn("rounded-full border-none focus-visible:outline-none"), styles)}
+        >
+          {row.getValue("availability")}
+        </Badge>
       );
+    },
+    enableSorting: false,
+    meta: {
+      filterVariant: "select",
+    },
+  },
+  {
+    header: "Rating",
+    accessorKey: "rating",
+    cell: ({ row }) => <div>{row.getValue("rating")}</div>,
+    meta: {
+      filterVariant: "range",
     },
   },
 ];
 
+const items: Item[] = [
+  {
+    id: "1",
+    product: "Black Chair",
+    productImage: "https://cdn.shadcnstudio.com/ss-assets/products/product-1.png",
+    fallback: "BC",
+    price: 159,
+    availability: "In Stock",
+    rating: 3.9,
+  },
+  {
+    id: "2",
+    product: "Nike Jordan",
+    productImage: "https://cdn.shadcnstudio.com/ss-assets/products/product-2.png",
+    fallback: "NJ",
+    price: 599,
+    availability: "Limited",
+    rating: 4.4,
+  },
+  {
+    id: "3",
+    product: "OnePlus 7 Pro",
+    productImage: "https://cdn.shadcnstudio.com/ss-assets/products/product-3.png",
+    fallback: "O7P",
+    price: 1299,
+    availability: "Out of Stock",
+    rating: 3.5,
+  },
+  {
+    id: "4",
+    product: "Nintendo Switch",
+    productImage: "https://cdn.shadcnstudio.com/ss-assets/products/product-4.png",
+    fallback: "NS",
+    price: 499,
+    availability: "In Stock",
+    rating: 4.9,
+  },
+  {
+    id: "5",
+    product: "Apple magic mouse",
+    productImage: "https://cdn.shadcnstudio.com/ss-assets/products/product-5.png",
+    fallback: "AMM",
+    price: 970,
+    availability: "Limited",
+    rating: 4.1,
+  },
+  {
+    id: "6",
+    product: "Apple watch",
+    productImage: "https://cdn.shadcnstudio.com/ss-assets/products/product-6.png",
+    fallback: "AW",
+    price: 1500,
+    availability: "Limited",
+    rating: 3.1,
+  },
+  {
+    id: "7",
+    product: "Casio G-Shock",
+    productImage: "https://cdn.shadcnstudio.com/ss-assets/products/product-8.png",
+    fallback: "CGS",
+    price: 194,
+    availability: "Out of Stock",
+    rating: 1.5,
+  },
+  {
+    id: "8",
+    product: "RayBan Sunglasses",
+    productImage: "https://cdn.shadcnstudio.com/ss-assets/products/product-10.png",
+    fallback: "RBS",
+    price: 199,
+    availability: "Out of Stock",
+    rating: 2.4,
+  },
+];
+
+function Filter({ column }: { column: Column<any, unknown> }) {
+  const id = useId();
+  const columnFilterValue = column.getFilterValue();
+  const { filterVariant } = column.columnDef.meta ?? {};
+  const columnHeader =
+    typeof column.columnDef.header === "string" ? column.columnDef.header : "";
+
+  const sortedUniqueValues = useMemo(() => {
+    if (filterVariant === "range") return [];
+
+    const values = Array.from(column.getFacetedUniqueValues().keys());
+
+    const flattenedValues = values.reduce((acc: string[], curr) => {
+      if (Array.isArray(curr)) {
+        return [...acc, ...curr];
+      }
+
+      return [...acc, curr];
+    }, []);
+
+    return Array.from(new Set(flattenedValues)).sort();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [column.getFacetedUniqueValues(), filterVariant]);
+
+  if (filterVariant === "range") {
+    return (
+      <div className="*:not-first:mt-2">
+        <Label>{columnHeader}</Label>
+        <div className="flex">
+          <Input
+            id={`${id}-range-1`}
+            className="flex-1 rounded-e-none [-moz-appearance:_textfield] focus:z-10 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+            value={(columnFilterValue as [number, number])?.[0] ?? ""}
+            onChange={(e) =>
+              column.setFilterValue((old: [number, number]) => [
+                e.target.value ? Number(e.target.value) : undefined,
+                old?.[1],
+              ])
+            }
+            placeholder="Min"
+            type="number"
+            aria-label={`${columnHeader} min`}
+          />
+          <Input
+            id={`${id}-range-2`}
+            className="-ms-px flex-1 rounded-s-none [-moz-appearance:_textfield] focus:z-10 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+            value={(columnFilterValue as [number, number])?.[1] ?? ""}
+            onChange={(e) =>
+              column.setFilterValue((old: [number, number]) => [
+                old?.[0],
+                e.target.value ? Number(e.target.value) : undefined,
+              ])
+            }
+            placeholder="Max"
+            type="number"
+            aria-label={`${columnHeader} max`}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (filterVariant === "select") {
+    return (
+      <div className="*:not-first:mt-2">
+        <Label htmlFor={`${id}-select`}>{columnHeader}</Label>
+        <Select
+          value={columnFilterValue?.toString() ?? "all"}
+          onValueChange={(value) => {
+            column.setFilterValue(value === "all" ? undefined : value);
+          }}
+        >
+          <SelectTrigger id={`${id}-select`} className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            {sortedUniqueValues.map((value) => (
+              <SelectItem key={String(value)} value={String(value)}>
+                {String(value)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    );
+  }
+
+  return (
+    <div className="*:not-first:mt-2">
+      <Label htmlFor={`${id}-input`}>{columnHeader}</Label>
+      <div className="relative">
+        <Input
+          id={`${id}-input`}
+          className="peer ps-9"
+          value={(columnFilterValue ?? "") as string}
+          onChange={(e) => column.setFilterValue(e.target.value)}
+          placeholder={`Search ${columnHeader.toLowerCase()}`}
+          type="text"
+        />
+        <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+          <SearchIcon size={16} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function MyModelsTable({ jewerlies }: { jewerlies: JewerlyAsset[] }) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+  const [sorting, setSorting] = useState<SortingState>([
+    {
+      id: "price",
+      desc: false,
+    },
+  ]);
 
   const table = useReactTable({
-    data: jewerlies,
+    data: items,
     columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
-      columnVisibility,
-      rowSelection,
     },
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedMinMaxValues: getFacetedMinMaxValues(),
+    onSortingChange: setSorting,
+    enableSortingRemoval: false,
   });
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter by name..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
       <div className="rounded-md border">
+        <div className="flex flex-wrap gap-3 px-2 py-6">
+          <div className="w-44">
+            <Filter column={table.getColumn("product")!} />
+          </div>
+          <div className="w-36">
+            <Filter column={table.getColumn("price")!} />
+          </div>
+          <div className="w-44">
+            <Filter column={table.getColumn("availability")!} />
+          </div>
+          <div className="w-36">
+            <Filter column={table.getColumn("rating")!} />
+          </div>
+        </div>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="bg-muted/50">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      className="relative h-10 border-t select-none"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(header.column.columnDef.header, header.getContext())}
@@ -282,30 +412,10 @@ export function MyModelsTable({ jewerlies }: { jewerlies: JewerlyAsset[] }) {
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="text-muted-foreground flex-1 text-sm">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+
+      <p className="text-muted-foreground mt-4 text-center text-sm">
+        Data table with column filter
+      </p>
     </div>
   );
 }
