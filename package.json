@@ -51,6 +51,8 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "drizzle-orm": "^0.44.2",
+    "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
     "imagekit": "^6.0.0",
     "imagekit-react-hook": "^1.5.4",
     "imagekitio-react": "^4.3.0",

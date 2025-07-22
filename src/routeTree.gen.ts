@@ -15,15 +15,8 @@ import { Route as authRouteRouteImport } from "./routes/(auth)/route";
 import { Route as IndexRouteImport } from "./routes/index";
 import { Route as mainPublishingRouteImport } from "./routes/(main)/publishing";
 import { Route as mainPlaygroundRouteImport } from "./routes/(main)/playground";
-import { Route as mainMySalesRouteImport } from "./routes/(main)/my-sales";
-import { Route as mainMyModelsRouteImport } from "./routes/(main)/my-models";
-import { Route as mainDashboardRouteImport } from "./routes/(main)/dashboard";
-import { Route as mainCartRouteImport } from "./routes/(main)/cart";
 import { Route as authAuthRouteImport } from "./routes/(auth)/auth";
 import { Route as adminAdminRouteImport } from "./routes/(admin)/admin";
-import { Route as mainProfileIndexRouteImport } from "./routes/(main)/profile.index";
-import { Route as mainProfileUsernameRouteImport } from "./routes/(main)/profile.$username";
-import { Route as mainAssetsAssetIdRouteImport } from "./routes/(main)/assets.$assetId";
 import { Route as mainChar126GeneralRouteRouteImport } from "./routes/(main)/~/general/route";
 import { Route as mainChar126ArtistRouteRouteImport } from "./routes/(main)/~/artist/route";
 import { Route as mainChar126GeneralPurchasedModelsIndexRouteImport } from "./routes/(main)/~/general/purchased-models/index";
@@ -60,26 +53,6 @@ const mainPlaygroundRoute = mainPlaygroundRouteImport.update({
   path: "/playground",
   getParentRoute: () => rootRouteImport,
 } as any);
-const mainMySalesRoute = mainMySalesRouteImport.update({
-  id: "/(main)/my-sales",
-  path: "/my-sales",
-  getParentRoute: () => rootRouteImport,
-} as any);
-const mainMyModelsRoute = mainMyModelsRouteImport.update({
-  id: "/(main)/my-models",
-  path: "/my-models",
-  getParentRoute: () => rootRouteImport,
-} as any);
-const mainDashboardRoute = mainDashboardRouteImport.update({
-  id: "/(main)/dashboard",
-  path: "/dashboard",
-  getParentRoute: () => rootRouteImport,
-} as any);
-const mainCartRoute = mainCartRouteImport.update({
-  id: "/(main)/cart",
-  path: "/cart",
-  getParentRoute: () => rootRouteImport,
-} as any);
 const authAuthRoute = authAuthRouteImport.update({
   id: "/auth",
   path: "/auth",
@@ -88,21 +61,6 @@ const authAuthRoute = authAuthRouteImport.update({
 const adminAdminRoute = adminAdminRouteImport.update({
   id: "/(admin)/admin",
   path: "/admin",
-  getParentRoute: () => rootRouteImport,
-} as any);
-const mainProfileIndexRoute = mainProfileIndexRouteImport.update({
-  id: "/(main)/profile/",
-  path: "/profile/",
-  getParentRoute: () => rootRouteImport,
-} as any);
-const mainProfileUsernameRoute = mainProfileUsernameRouteImport.update({
-  id: "/(main)/profile/$username",
-  path: "/profile/$username",
-  getParentRoute: () => rootRouteImport,
-} as any);
-const mainAssetsAssetIdRoute = mainAssetsAssetIdRouteImport.update({
-  id: "/(main)/assets/$assetId",
-  path: "/assets/$assetId",
   getParentRoute: () => rootRouteImport,
 } as any);
 const mainChar126GeneralRouteRoute = mainChar126GeneralRouteRouteImport.update({
@@ -190,17 +148,10 @@ export interface FileRoutesByFullPath {
   "/": typeof authRouteRouteWithChildren;
   "/admin": typeof adminAdminRoute;
   "/auth": typeof authAuthRoute;
-  "/cart": typeof mainCartRoute;
-  "/dashboard": typeof mainDashboardRoute;
-  "/my-models": typeof mainMyModelsRoute;
-  "/my-sales": typeof mainMySalesRoute;
   "/playground": typeof mainPlaygroundRoute;
   "/publishing": typeof mainPublishingRoute;
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
-  "/assets/$assetId": typeof mainAssetsAssetIdRoute;
-  "/profile/$username": typeof mainProfileUsernameRoute;
-  "/profile": typeof mainProfileIndexRoute;
   "/~/artist/dashboard": typeof mainChar126ArtistDashboardIndexRoute;
   "/~/artist/lah": typeof mainChar126ArtistLahIndexRoute;
   "/~/artist/my-models": typeof mainChar126ArtistMyModelsIndexRoute;
@@ -216,17 +167,10 @@ export interface FileRoutesByTo {
   "/": typeof authRouteRouteWithChildren;
   "/admin": typeof adminAdminRoute;
   "/auth": typeof authAuthRoute;
-  "/cart": typeof mainCartRoute;
-  "/dashboard": typeof mainDashboardRoute;
-  "/my-models": typeof mainMyModelsRoute;
-  "/my-sales": typeof mainMySalesRoute;
   "/playground": typeof mainPlaygroundRoute;
   "/publishing": typeof mainPublishingRoute;
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
-  "/assets/$assetId": typeof mainAssetsAssetIdRoute;
-  "/profile/$username": typeof mainProfileUsernameRoute;
-  "/profile": typeof mainProfileIndexRoute;
   "/~/artist/dashboard": typeof mainChar126ArtistDashboardIndexRoute;
   "/~/artist/lah": typeof mainChar126ArtistLahIndexRoute;
   "/~/artist/my-models": typeof mainChar126ArtistMyModelsIndexRoute;
@@ -244,17 +188,10 @@ export interface FileRoutesById {
   "/(auth)": typeof authRouteRouteWithChildren;
   "/(admin)/admin": typeof adminAdminRoute;
   "/(auth)/auth": typeof authAuthRoute;
-  "/(main)/cart": typeof mainCartRoute;
-  "/(main)/dashboard": typeof mainDashboardRoute;
-  "/(main)/my-models": typeof mainMyModelsRoute;
-  "/(main)/my-sales": typeof mainMySalesRoute;
   "/(main)/playground": typeof mainPlaygroundRoute;
   "/(main)/publishing": typeof mainPublishingRoute;
   "/(main)/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/(main)/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
-  "/(main)/assets/$assetId": typeof mainAssetsAssetIdRoute;
-  "/(main)/profile/$username": typeof mainProfileUsernameRoute;
-  "/(main)/profile/": typeof mainProfileIndexRoute;
   "/(main)/~/artist/dashboard/": typeof mainChar126ArtistDashboardIndexRoute;
   "/(main)/~/artist/lah/": typeof mainChar126ArtistLahIndexRoute;
   "/(main)/~/artist/my-models/": typeof mainChar126ArtistMyModelsIndexRoute;
@@ -272,17 +209,10 @@ export interface FileRouteTypes {
     | "/"
     | "/admin"
     | "/auth"
-    | "/cart"
-    | "/dashboard"
-    | "/my-models"
-    | "/my-sales"
     | "/playground"
     | "/publishing"
     | "/~/artist"
     | "/~/general"
-    | "/assets/$assetId"
-    | "/profile/$username"
-    | "/profile"
     | "/~/artist/dashboard"
     | "/~/artist/lah"
     | "/~/artist/my-models"
@@ -298,17 +228,10 @@ export interface FileRouteTypes {
     | "/"
     | "/admin"
     | "/auth"
-    | "/cart"
-    | "/dashboard"
-    | "/my-models"
-    | "/my-sales"
     | "/playground"
     | "/publishing"
     | "/~/artist"
     | "/~/general"
-    | "/assets/$assetId"
-    | "/profile/$username"
-    | "/profile"
     | "/~/artist/dashboard"
     | "/~/artist/lah"
     | "/~/artist/my-models"
@@ -325,17 +248,10 @@ export interface FileRouteTypes {
     | "/(auth)"
     | "/(admin)/admin"
     | "/(auth)/auth"
-    | "/(main)/cart"
-    | "/(main)/dashboard"
-    | "/(main)/my-models"
-    | "/(main)/my-sales"
     | "/(main)/playground"
     | "/(main)/publishing"
     | "/(main)/~/artist"
     | "/(main)/~/general"
-    | "/(main)/assets/$assetId"
-    | "/(main)/profile/$username"
-    | "/(main)/profile/"
     | "/(main)/~/artist/dashboard/"
     | "/(main)/~/artist/lah/"
     | "/(main)/~/artist/my-models/"
@@ -352,17 +268,10 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
   authRouteRoute: typeof authRouteRouteWithChildren;
   adminAdminRoute: typeof adminAdminRoute;
-  mainCartRoute: typeof mainCartRoute;
-  mainDashboardRoute: typeof mainDashboardRoute;
-  mainMyModelsRoute: typeof mainMyModelsRoute;
-  mainMySalesRoute: typeof mainMySalesRoute;
   mainPlaygroundRoute: typeof mainPlaygroundRoute;
   mainPublishingRoute: typeof mainPublishingRoute;
   mainChar126ArtistRouteRoute: typeof mainChar126ArtistRouteRouteWithChildren;
   mainChar126GeneralRouteRoute: typeof mainChar126GeneralRouteRouteWithChildren;
-  mainAssetsAssetIdRoute: typeof mainAssetsAssetIdRoute;
-  mainProfileUsernameRoute: typeof mainProfileUsernameRoute;
-  mainProfileIndexRoute: typeof mainProfileIndexRoute;
 }
 export interface FileServerRoutesByFullPath {
   "/api/auth/$": typeof ApiAuthSplatServerRoute;
@@ -420,34 +329,6 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof mainPlaygroundRouteImport;
       parentRoute: typeof rootRouteImport;
     };
-    "/(main)/my-sales": {
-      id: "/(main)/my-sales";
-      path: "/my-sales";
-      fullPath: "/my-sales";
-      preLoaderRoute: typeof mainMySalesRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/(main)/my-models": {
-      id: "/(main)/my-models";
-      path: "/my-models";
-      fullPath: "/my-models";
-      preLoaderRoute: typeof mainMyModelsRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/(main)/dashboard": {
-      id: "/(main)/dashboard";
-      path: "/dashboard";
-      fullPath: "/dashboard";
-      preLoaderRoute: typeof mainDashboardRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/(main)/cart": {
-      id: "/(main)/cart";
-      path: "/cart";
-      fullPath: "/cart";
-      preLoaderRoute: typeof mainCartRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
     "/(auth)/auth": {
       id: "/(auth)/auth";
       path: "/auth";
@@ -460,27 +341,6 @@ declare module "@tanstack/react-router" {
       path: "/admin";
       fullPath: "/admin";
       preLoaderRoute: typeof adminAdminRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/(main)/profile/": {
-      id: "/(main)/profile/";
-      path: "/profile";
-      fullPath: "/profile";
-      preLoaderRoute: typeof mainProfileIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/(main)/profile/$username": {
-      id: "/(main)/profile/$username";
-      path: "/profile/$username";
-      fullPath: "/profile/$username";
-      preLoaderRoute: typeof mainProfileUsernameRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/(main)/assets/$assetId": {
-      id: "/(main)/assets/$assetId";
-      path: "/assets/$assetId";
-      fullPath: "/assets/$assetId";
-      preLoaderRoute: typeof mainAssetsAssetIdRouteImport;
       parentRoute: typeof rootRouteImport;
     };
     "/(main)/~/general": {
@@ -651,17 +511,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   authRouteRoute: authRouteRouteWithChildren,
   adminAdminRoute: adminAdminRoute,
-  mainCartRoute: mainCartRoute,
-  mainDashboardRoute: mainDashboardRoute,
-  mainMyModelsRoute: mainMyModelsRoute,
-  mainMySalesRoute: mainMySalesRoute,
   mainPlaygroundRoute: mainPlaygroundRoute,
   mainPublishingRoute: mainPublishingRoute,
   mainChar126ArtistRouteRoute: mainChar126ArtistRouteRouteWithChildren,
   mainChar126GeneralRouteRoute: mainChar126GeneralRouteRouteWithChildren,
-  mainAssetsAssetIdRoute: mainAssetsAssetIdRoute,
-  mainProfileUsernameRoute: mainProfileUsernameRoute,
-  mainProfileIndexRoute: mainProfileIndexRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

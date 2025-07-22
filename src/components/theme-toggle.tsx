@@ -3,14 +3,12 @@ import { useTheme } from "~/components/theme-provider";
 import { Label } from "~/components/ui/label";
 import { cn } from "~/lib/utils";
 import { Switch } from "./animate-ui/base/switch";
-import { useSidebar } from "./animate-ui/radix/sidebar";
 
 interface ThemeToggleProps {
   isSidebarCollapsed?: boolean;
 }
 
 export function ThemeToggle() {
-  const { open: isSidebarCollapsed } = useSidebar();
   const { theme, setTheme } = useTheme();
 
   return (
