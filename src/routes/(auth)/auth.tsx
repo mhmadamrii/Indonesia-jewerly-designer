@@ -18,7 +18,7 @@ function RouteComponent() {
   const [isLoginForm, setIsLoginForm] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const redirectUrl = "/";
+  const redirectUrl = "/auth";
 
   const handleLoginWithGmail = () => {
     setIsLoading(true);

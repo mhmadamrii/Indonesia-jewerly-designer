@@ -152,7 +152,7 @@ export const Route = createFileRoute("/(main)/~/artist")({
   component: MainLayout,
   beforeLoad: async ({ context }) => {
     if (!context.user) {
-      throw redirect({ to: "/auth" });
+      throw redirect({ to: "/" });
     }
   },
 });
@@ -278,7 +278,8 @@ function MainLayout() {
                       onClick={() => {
                         authClient.signOut({
                           fetchOptions: {
-                            onSuccess: () => {
+                            onSuccess: async () => {
+                              await new Promise((resolve) => setTimeout(resolve, 500));
                               window.location.reload();
                             },
                           },

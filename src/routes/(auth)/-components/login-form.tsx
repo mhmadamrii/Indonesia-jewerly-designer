@@ -49,10 +49,8 @@ export function LoginForm({ onClickLoginForm }: IProps) {
           password: values.password,
         },
         {
-          onSuccess: () => {
-            navigate({
-              to: "/~/general/feed",
-            });
+          onSuccess: async () => {
+            window.location.reload();
             toast.success("Sign in successful");
           },
           onError: (error) => {
