@@ -353,7 +353,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
       const Item = (
         <CommandItem
           value={inputValue}
-          className="cursor-pointer"
+          className="bg-muted-foreground cursor-pointer"
           onMouseDown={(e) => {
             e.preventDefault();
             e.stopPropagation();

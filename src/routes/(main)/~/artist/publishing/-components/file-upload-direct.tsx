@@ -104,7 +104,7 @@ export function FileUploadDirect({
     >
       <FileUploadDropzone
         className={cn("flex items-center justify-center", {
-          hidden: imageKitImageList.length === 2,
+          hidden: files.length === 2,
         })}
       >
         <div className="flex flex-col items-center gap-1 text-center">
@@ -135,7 +135,12 @@ export function FileUploadDirect({
               {isUploadingImage && <LoaderIcon className="animate-spin" />}
               {file.type.includes("image") && <Badge>Thumbnail</Badge>}
               <FileUploadItemDelete asChild>
-                <Button variant="ghost" size="icon" className="size-7">
+                <Button
+                  onClick={() => files.splice(index, 1)}
+                  variant="ghost"
+                  size="icon"
+                  className="size-7"
+                >
                   <X />
                 </Button>
               </FileUploadItemDelete>

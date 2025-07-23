@@ -31,6 +31,7 @@ import {
 } from "~/components/ui/form";
 
 import { useNavigate } from "@tanstack/react-router";
+import { LoaderIcon } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -255,7 +256,7 @@ export function AssetPublish() {
               <label className="mb-2 block text-sm font-medium">Tags</label>
               <MultipleSelector
                 defaultOptions={OPTIONS}
-                placeholder="Select frameworks you like..."
+                placeholder="Select tags you like..."
                 emptyIndicator={
                   <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
                     no results found.
@@ -298,7 +299,7 @@ export function AssetPublish() {
                 type="submit"
                 disabled={isPending || isUploadingImage || imageUrl.asset_url === ""}
               >
-                {isPending ? "Submitting..." : "Submit"}
+                {isPending ? <LoaderIcon className="animate-spin" /> : "Submit"}
               </Button>
             </div>
           </form>
