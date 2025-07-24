@@ -2,9 +2,10 @@ import * as z from "zod";
 
 import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
+import { OPTIONS } from "~/constants";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { category, jewerlyAssets } from "~/lib/db/schema";
+import { category, jewerlyAssets, tag } from "~/lib/db/schema";
 
 const JewerlyAssetSchema = z.object({
   name: z.string(),
@@ -42,6 +43,23 @@ export const getJewerlyById = createServerFn({ method: "GET" })
     };
   });
 
+export const getJewerlyTagsAndCategories = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({}) => {
+    const [tags, categories] = await Promise.all([
+      db.select().from(tag),
+      db.select().from(category),
+    ]);
+
+    return {
+      success: true,
+      data: {
+        tags,
+        categories,
+      },
+    };
+  });
+
 export const getMyJewerlyAssets = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
@@ -70,13 +88,31 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
         description,
         categoryId,
         assetUrl: imageUrl,
-        thumbnailUrl: thumbnailUrl,
+        thumbnailUrl,
       })
       .returning({ id: jewerlyAssets.id });
 
     return {
       success: true,
       data: res[0],
+    };
+  });
+
+export const seedJewerlyTags = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    const res = await db
+      .insert(tag)
+      .values(
+        OPTIONS.map((item) => ({
+          name: item.value,
+        })),
+      )
+      .returning({ id: tag.id });
+
+    return {
+      success: true,
+      data: res,
     };
   });
 

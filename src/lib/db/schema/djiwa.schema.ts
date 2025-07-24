@@ -26,6 +26,13 @@ export const category = pgTable("category", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const tag = pgTable("tag", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export const jewerlyAssets = pgTable("jewerly_assets", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
@@ -39,6 +46,21 @@ export const jewerlyAssets = pgTable("jewerly_assets", {
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
+
+export const jewerlyAssetTags = pgTable(
+  "jewerly_asset_tags",
+  {
+    jewerlyAssetId: uuid("jewerly_asset_id")
+      .notNull()
+      .references(() => jewerlyAssets.id, { onDelete: "cascade" }),
+    tagId: uuid("tag_id")
+      .notNull()
+      .references(() => tag.id, { onDelete: "cascade" }),
+  },
+  (t) => ({
+    pk: primaryKey(t.jewerlyAssetId, t.tagId),
+  }),
+);
 
 export const review = pgTable("review", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -71,6 +93,22 @@ export const userRelations = relations(user, ({ many }) => ({
 
 export const jewerlyAssetsRelations = relations(jewerlyAssets, ({ many }) => ({
   reviews: many(review),
+  jewerlyAssetTags: many(jewerlyAssetTags),
+}));
+
+export const tagRelations = relations(tag, ({ many }) => ({
+  jewerlyAssetTags: many(jewerlyAssetTags),
+}));
+
+export const jewerlyAssetTagsRelations = relations(jewerlyAssetTags, ({ one }) => ({
+  jewerlyAsset: one(jewerlyAssets, {
+    fields: [jewerlyAssetTags.jewerlyAssetId],
+    references: [jewerlyAssets.id],
+  }),
+  tag: one(tag, {
+    fields: [jewerlyAssetTags.tagId],
+    references: [tag.id],
+  }),
 }));
 
 export const categoryRelations = relations(category, ({ many }) => ({

@@ -1,14 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
+import { LoaderIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { getAllCategories } from "~/actions/category.action";
-import { createJewerlyAsset } from "~/actions/jewerly.action";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { MultipleSelector, Option } from "~/components/ui/multi-select";
+import { MultipleSelector } from "~/components/ui/multi-select";
 import { Textarea } from "~/components/ui/textarea";
 import { FileUploadDirect } from "./file-upload-direct";
 
@@ -21,6 +21,11 @@ import {
 } from "~/components/ui/card";
 
 import {
+  createJewerlyAsset,
+  getJewerlyTagsAndCategories,
+} from "~/actions/jewerly.action";
+
+import {
   Form,
   FormControl,
   FormDescription,
@@ -30,8 +35,6 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 
-import { useNavigate } from "@tanstack/react-router";
-import { LoaderIcon } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -48,53 +51,21 @@ const formSchema = z.object({
   description: z.string().min(5).max(200),
 });
 
-const OPTIONS: Option[] = [
-  {
-    label: "Arts",
-    value: "arts",
-  },
-  {
-    label: "Music",
-    value: "music",
-  },
-  {
-    label: "Gaming",
-    value: "gaming",
-  },
-  {
-    label: "Education",
-    value: "education",
-  },
-  {
-    label: "Sports",
-    value: "sports",
-  },
-  {
-    label: "Business",
-    value: "business",
-  },
-  {
-    label: "Food",
-    value: "food",
-  },
-  {
-    label: "Travel",
-    value: "travel",
-  },
-];
-
 export function AssetPublish() {
   const navigate = useNavigate();
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [tagsValue, setTagsValue] = useState<{ value: string; label: string }[]>([]);
   const [imageUrl, setImageUrl] = useState({
     asset_url: "",
     thumbnail_url: "",
   });
 
-  const { data: categories } = useQuery({
-    queryKey: ["getAllCategories"],
-    queryFn: () => getAllCategories(),
+  const { data: tagsAndCategories } = useQuery({
+    queryKey: ["tags_and_categories"],
+    queryFn: () => getJewerlyTagsAndCategories(),
   });
+
+  console.log("tagsAndCategories", tagsAndCategories);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -110,7 +81,6 @@ export function AssetPublish() {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: createJewerlyAsset,
     onSuccess: (res) => {
-      console.log("res", res);
       toast.success("Data saved successfully");
       navigate({
         to: "/~/artist/my-models",
@@ -136,6 +106,8 @@ export function AssetPublish() {
       toast.error("Failed to submit the form. Please try again.");
     }
   }
+
+  console.log("tags value", tagsValue);
 
   return (
     <Card className="w-full">
@@ -239,7 +211,7 @@ export function AssetPublish() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {categories?.data.map((item) => (
+                      {tagsAndCategories?.data.categories?.map((item) => (
                         <SelectItem key={item.id} id={item.id} value={item.id}>
                           {item.name}
                         </SelectItem>
@@ -255,7 +227,11 @@ export function AssetPublish() {
             <div>
               <label className="mb-2 block text-sm font-medium">Tags</label>
               <MultipleSelector
-                defaultOptions={OPTIONS}
+                onChange={(e) => setTagsValue(e)}
+                options={tagsAndCategories?.data?.tags?.map((item) => ({
+                  value: item.id,
+                  label: item.name,
+                }))}
                 placeholder="Select tags you like..."
                 emptyIndicator={
                   <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
