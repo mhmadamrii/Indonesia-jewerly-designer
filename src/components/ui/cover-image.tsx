@@ -8,8 +8,8 @@ interface CoverImageProps {
 
 export function CoverImage({ src, alt, className }: CoverImageProps) {
   return (
-    <div className={cn("relative w-full h-48 bg-muted", className)}>
-      <img src={src} alt={alt} className="object-cover w-full h-full" />
+    <div className={cn("bg-muted relative h-48 w-full", className)}>
+      <img src={src} alt={alt} className="h-full w-full object-cover" />
     </div>
   );
 }

@@ -1,5 +1,39 @@
 "use no memo";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { MoreHorizontal, SearchIcon } from "lucide-react";
+import { useId, useMemo, useState } from "react";
+import { toast } from "sonner";
+import { deleteJewerlyAsset } from "~/actions/jewerly.action";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader } from "~/components/ui/card";
+import { Checkbox } from "~/components/ui/checkbox";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { JewerlyAsset } from "~/lib/db/types";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/components/ui/alert-dialog";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+
 import type {
   Column,
   ColumnDef,
@@ -7,15 +41,6 @@ import type {
   RowData,
   SortingState,
 } from "@tanstack/react-table";
-
-import { SearchIcon } from "lucide-react";
-import { useId, useMemo, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Badge } from "~/components/ui/badge";
-import { Checkbox } from "~/components/ui/checkbox";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { cn } from "~/lib/utils";
 
 import {
   flexRender,
@@ -44,7 +69,6 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { JewerlyAsset } from "~/lib/db/types";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -53,17 +77,7 @@ declare module "@tanstack/react-table" {
   }
 }
 
-type Item = {
-  id: string;
-  product: string;
-  productImage: string;
-  fallback: string;
-  price: number;
-  availability: "In Stock" | "Out of Stock" | "Limited";
-  rating: number;
-};
-
-const columns: ColumnDef<Item>[] = [
+const columns: ColumnDef<JewerlyAsset>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -86,14 +100,19 @@ const columns: ColumnDef<Item>[] = [
   },
   {
     header: "Product",
-    accessorKey: "product",
+    accessorKey: "name",
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
         <Avatar className="rounded-sm">
-          <AvatarImage src={row.original.productImage} alt={row.original.fallback} />
-          <AvatarFallback className="text-xs">{row.original.fallback}</AvatarFallback>
+          <AvatarImage
+            src={row.original.thumbnailUrl ?? undefined}
+            alt={row.original.name}
+          />
+          <AvatarFallback className="text-xs">
+            {row.original.name.charAt(0)}
+          </AvatarFallback>
         </Avatar>
-        <div className="font-medium">{row.getValue("product")}</div>
+        <div className="font-medium">{row.getValue("name")}</div>
       </div>
     ),
   },
@@ -107,124 +126,72 @@ const columns: ColumnDef<Item>[] = [
     },
   },
   {
-    header: "Availability",
-    accessorKey: "availability",
-    cell: ({ row }) => {
-      const availability = row.getValue("availability") as string;
-
-      const styles = {
-        "In Stock":
-          "bg-green-600/10 text-green-600 focus-visible:ring-green-600/20 dark:bg-green-400/10 dark:text-green-400 dark:focus-visible:ring-green-400/40 [a&]:hover:bg-green-600/5 dark:[a&]:hover:bg-green-400/5",
-        "Out of Stock":
-          "bg-destructive/10 [a&]:hover:bg-destructive/5 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 text-destructive",
-        Limited:
-          "bg-amber-600/10 text-amber-600 focus-visible:ring-amber-600/20 dark:bg-amber-400/10 dark:text-amber-400 dark:focus-visible:ring-amber-400/40 [a&]:hover:bg-amber-600/5 dark:[a&]:hover:bg-amber-400/5",
-      }[availability];
-
+    id: "actions",
+    cell: function Cell({ row }) {
+      const queryClient = useQueryClient();
+      const { mutate } = useMutation({
+        mutationFn: deleteJewerlyAsset,
+        onSuccess: () => {
+          toast.success("Jewerly has been deleted");
+          queryClient.invalidateQueries({ queryKey: ["my-jewerly"] });
+        },
+        onError: () => {
+          toast.error("Something went wrong");
+        },
+      });
       return (
-        <Badge
-          className={(cn("rounded-full border-none focus-visible:outline-none"), styles)}
-        >
-          {row.getValue("availability")}
-        </Badge>
+        <AlertDialog>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(row.original.id)}
+              >
+                Copy payment ID
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>View customer</DropdownMenuItem>
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem>
+                  <span>Delete</span>
+                </DropdownMenuItem>
+              </AlertDialogTrigger>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete your account
+                and remove your data from our servers.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() =>
+                  mutate({
+                    data: {
+                      id: row.original.id,
+                    },
+                  })
+                }
+              >
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       );
     },
-    enableSorting: false,
-    meta: {
-      filterVariant: "select",
-    },
-  },
-  {
-    header: "Rating",
-    accessorKey: "rating",
-    cell: ({ row }) => <div>{row.getValue("rating")}</div>,
-    meta: {
-      filterVariant: "range",
-    },
   },
 ];
-
-const items: Item[] = [
-  {
-    id: "1",
-    product: "Black Chair",
-    productImage: "https://cdn.shadcnstudio.com/ss-assets/products/product-1.png",
-    fallback: "BC",
-    price: 159,
-    availability: "In Stock",
-    rating: 3.9,
-  },
-  {
-    id: "2",
-    product: "Nike Jordan",
-    productImage: "https://cdn.shadcnstudio.com/ss-assets/products/product-2.png",
-    fallback: "NJ",
-    price: 599,
-    availability: "Limited",
-    rating: 4.4,
-  },
-  {
-    id: "3",
-    product: "OnePlus 7 Pro",
-    productImage: "https://cdn.shadcnstudio.com/ss-assets/products/product-3.png",
-    fallback: "O7P",
-    price: 1299,
-    availability: "Out of Stock",
-    rating: 3.5,
-  },
-  {
-    id: "4",
-    product: "Nintendo Switch",
-    productImage: "https://cdn.shadcnstudio.com/ss-assets/products/product-4.png",
-    fallback: "NS",
-    price: 499,
-    availability: "In Stock",
-    rating: 4.9,
-  },
-  {
-    id: "5",
-    product: "Apple magic mouse",
-    productImage: "https://cdn.shadcnstudio.com/ss-assets/products/product-5.png",
-    fallback: "AMM",
-    price: 970,
-    availability: "Limited",
-    rating: 4.1,
-  },
-  {
-    id: "6",
-    product: "Apple watch",
-    productImage: "https://cdn.shadcnstudio.com/ss-assets/products/product-6.png",
-    fallback: "AW",
-    price: 1500,
-    availability: "Limited",
-    rating: 3.1,
-  },
-  {
-    id: "7",
-    product: "Casio G-Shock",
-    productImage: "https://cdn.shadcnstudio.com/ss-assets/products/product-8.png",
-    fallback: "CGS",
-    price: 194,
-    availability: "Out of Stock",
-    rating: 1.5,
-  },
-  {
-    id: "8",
-    product: "RayBan Sunglasses",
-    productImage: "https://cdn.shadcnstudio.com/ss-assets/products/product-10.png",
-    fallback: "RBS",
-    price: 199,
-    availability: "Out of Stock",
-    rating: 2.4,
-  },
-];
-
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-};
 
 function Filter({ column }: { column: Column<any, unknown> }) {
   const id = useId();
@@ -346,7 +313,7 @@ export function ModelsDataTable({ jewerlies }: { jewerlies: JewerlyAsset[] }) {
   ]);
 
   const table = useReactTable({
-    data: items,
+    data: jewerlies,
     columns,
     state: {
       sorting,
@@ -364,16 +331,13 @@ export function ModelsDataTable({ jewerlies }: { jewerlies: JewerlyAsset[] }) {
   });
 
   return (
-    <div className="bg-card w-full rounded-sm p-3">
-      <div className="rounded-md border">
-        <div className="flex flex-wrap gap-3 px-2 py-6">
-          <div className="w-44">
-            <Filter column={table.getColumn("product")!} />
-          </div>
-          <div className="w-44">
-            <Filter column={table.getColumn("availability")!} />
-          </div>
+    <Card>
+      <CardHeader className="flex flex-wrap gap-3 px-2 py-6">
+        <div className="w-44">
+          <Filter column={table.getColumn("name")!} />
         </div>
+      </CardHeader>
+      <CardContent className="h-[calc(100vh-400px)]">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -413,11 +377,10 @@ export function ModelsDataTable({ jewerlies }: { jewerlies: JewerlyAsset[] }) {
             )}
           </TableBody>
         </Table>
-      </div>
-
+      </CardContent>
       <p className="text-muted-foreground mt-4 text-center text-sm">
         Data table with column filter
       </p>
-    </div>
+    </Card>
   );
 }

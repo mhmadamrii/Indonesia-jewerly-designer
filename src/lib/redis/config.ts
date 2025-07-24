@@ -14,14 +14,14 @@ redisClient.on("error", (err) => {
 });
 
 redisClient.on("connect", () => {
-    console.log("✅ Redis connected");
+  console.log("✅ Redis connected");
 });
 
 async function getClient() {
-    if (!redisClient.isOpen) {
-        await redisClient.connect();
-    }
-    return redisClient;
+  if (!redisClient.isOpen) {
+    await redisClient.connect();
+  }
+  return redisClient;
 }
 
 export { getClient };

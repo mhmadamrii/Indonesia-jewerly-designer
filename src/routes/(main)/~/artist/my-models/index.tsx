@@ -15,7 +15,7 @@ export const Route = createFileRoute("/(main)/~/artist/my-models/")({
 function RouteComponent() {
   const { myJewerlies } = Route.useLoaderData();
   return (
-    <section className="container mx-auto flex h-full w-full flex-col gap-3 px-3 py-3">
+    <section className="flex h-full w-full flex-col gap-3 px-5 py-3">
       <div>
         <h1 className="text-2xl font-bold">My Models</h1>
       </div>
