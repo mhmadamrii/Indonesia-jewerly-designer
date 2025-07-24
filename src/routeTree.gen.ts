@@ -26,7 +26,6 @@ import { Route as mainChar126GeneralExploreIndexRouteImport } from "./routes/(ma
 import { Route as mainChar126GeneralCartIndexRouteImport } from "./routes/(main)/~/general/cart/index";
 import { Route as mainChar126ArtistPublishingIndexRouteImport } from "./routes/(main)/~/artist/publishing/index";
 import { Route as mainChar126ArtistMyModelsIndexRouteImport } from "./routes/(main)/~/artist/my-models/index";
-import { Route as mainChar126ArtistLahIndexRouteImport } from "./routes/(main)/~/artist/lah/index";
 import { Route as mainChar126ArtistDashboardIndexRouteImport } from "./routes/(main)/~/artist/dashboard/index";
 import { ServerRoute as ApiImagekitUploadServerRouteImport } from "./routes/api/imagekit/upload";
 import { ServerRoute as ApiAuthSplatServerRouteImport } from "./routes/api/auth/$";
@@ -115,12 +114,6 @@ const mainChar126ArtistMyModelsIndexRoute =
     path: "/my-models/",
     getParentRoute: () => mainChar126ArtistRouteRoute,
   } as any);
-const mainChar126ArtistLahIndexRoute =
-  mainChar126ArtistLahIndexRouteImport.update({
-    id: "/lah/",
-    path: "/lah/",
-    getParentRoute: () => mainChar126ArtistRouteRoute,
-  } as any);
 const mainChar126ArtistDashboardIndexRoute =
   mainChar126ArtistDashboardIndexRouteImport.update({
     id: "/dashboard/",
@@ -146,7 +139,6 @@ export interface FileRoutesByFullPath {
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/~/artist/dashboard": typeof mainChar126ArtistDashboardIndexRoute;
-  "/~/artist/lah": typeof mainChar126ArtistLahIndexRoute;
   "/~/artist/my-models": typeof mainChar126ArtistMyModelsIndexRoute;
   "/~/artist/publishing": typeof mainChar126ArtistPublishingIndexRoute;
   "/~/general/cart": typeof mainChar126GeneralCartIndexRoute;
@@ -164,7 +156,6 @@ export interface FileRoutesByTo {
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/~/artist/dashboard": typeof mainChar126ArtistDashboardIndexRoute;
-  "/~/artist/lah": typeof mainChar126ArtistLahIndexRoute;
   "/~/artist/my-models": typeof mainChar126ArtistMyModelsIndexRoute;
   "/~/artist/publishing": typeof mainChar126ArtistPublishingIndexRoute;
   "/~/general/cart": typeof mainChar126GeneralCartIndexRoute;
@@ -184,7 +175,6 @@ export interface FileRoutesById {
   "/(main)/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/(main)/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/(main)/~/artist/dashboard/": typeof mainChar126ArtistDashboardIndexRoute;
-  "/(main)/~/artist/lah/": typeof mainChar126ArtistLahIndexRoute;
   "/(main)/~/artist/my-models/": typeof mainChar126ArtistMyModelsIndexRoute;
   "/(main)/~/artist/publishing/": typeof mainChar126ArtistPublishingIndexRoute;
   "/(main)/~/general/cart/": typeof mainChar126GeneralCartIndexRoute;
@@ -204,7 +194,6 @@ export interface FileRouteTypes {
     | "/~/artist"
     | "/~/general"
     | "/~/artist/dashboard"
-    | "/~/artist/lah"
     | "/~/artist/my-models"
     | "/~/artist/publishing"
     | "/~/general/cart"
@@ -222,7 +211,6 @@ export interface FileRouteTypes {
     | "/~/artist"
     | "/~/general"
     | "/~/artist/dashboard"
-    | "/~/artist/lah"
     | "/~/artist/my-models"
     | "/~/artist/publishing"
     | "/~/general/cart"
@@ -241,7 +229,6 @@ export interface FileRouteTypes {
     | "/(main)/~/artist"
     | "/(main)/~/general"
     | "/(main)/~/artist/dashboard/"
-    | "/(main)/~/artist/lah/"
     | "/(main)/~/artist/my-models/"
     | "/(main)/~/artist/publishing/"
     | "/(main)/~/general/cart/"
@@ -393,13 +380,6 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof mainChar126ArtistMyModelsIndexRouteImport;
       parentRoute: typeof mainChar126ArtistRouteRoute;
     };
-    "/(main)/~/artist/lah/": {
-      id: "/(main)/~/artist/lah/";
-      path: "/lah";
-      fullPath: "/~/artist/lah";
-      preLoaderRoute: typeof mainChar126ArtistLahIndexRouteImport;
-      parentRoute: typeof mainChar126ArtistRouteRoute;
-    };
     "/(main)/~/artist/dashboard/": {
       id: "/(main)/~/artist/dashboard/";
       path: "/dashboard";
@@ -442,7 +422,6 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface mainChar126ArtistRouteRouteChildren {
   mainChar126ArtistDashboardIndexRoute: typeof mainChar126ArtistDashboardIndexRoute;
-  mainChar126ArtistLahIndexRoute: typeof mainChar126ArtistLahIndexRoute;
   mainChar126ArtistMyModelsIndexRoute: typeof mainChar126ArtistMyModelsIndexRoute;
   mainChar126ArtistPublishingIndexRoute: typeof mainChar126ArtistPublishingIndexRoute;
 }
@@ -450,7 +429,6 @@ interface mainChar126ArtistRouteRouteChildren {
 const mainChar126ArtistRouteRouteChildren: mainChar126ArtistRouteRouteChildren =
   {
     mainChar126ArtistDashboardIndexRoute: mainChar126ArtistDashboardIndexRoute,
-    mainChar126ArtistLahIndexRoute: mainChar126ArtistLahIndexRoute,
     mainChar126ArtistMyModelsIndexRoute: mainChar126ArtistMyModelsIndexRoute,
     mainChar126ArtistPublishingIndexRoute:
       mainChar126ArtistPublishingIndexRoute,
