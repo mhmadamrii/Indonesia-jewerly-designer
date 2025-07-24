@@ -8,6 +8,9 @@ import {
 export type Category = InferSelectModel<typeof categoryTable>;
 export type JewerlyAsset = InferSelectModel<typeof jewerlyAssetsTable>;
 export type User = InferSelectModel<typeof userTable>;
+export type UserWithRole = User & {
+  role: string;
+};
 
 export type JewerlyWithUser = {
   jewerly_assets: JewerlyAsset;

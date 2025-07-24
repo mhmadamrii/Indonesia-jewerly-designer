@@ -1,9 +1,8 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { FooterLandingPage } from "~/components/landing-page/footer-landing-page";
 import { HeaderLandingPage } from "~/components/landing-page/header-landing-page";
 import { HeroCarousel } from "~/components/landing-page/hero-carousel";
 import { JewelryShowcase } from "~/components/landing-page/jewerly-showcase";
-import { useRoleStore } from "~/lib/store/role.store";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -13,21 +12,6 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const navigate = useNavigate();
-  const { role: currentRole, isRoleChanging } = useRoleStore();
-
-  // useEffect(() => {
-  //   if (currentRole === "artist") {
-  //     navigate({
-  //       to: "/~/artist/dashboard",
-  //     });
-  //   } else {
-  //     navigate({
-  //       to: "/~/general/feed",
-  //     });
-  //   }
-  // }, [currentRole]);
-
   return (
     <main className="min-h-screen">
       <HeaderLandingPage />

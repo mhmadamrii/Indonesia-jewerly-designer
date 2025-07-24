@@ -13,7 +13,6 @@ import { createServerRootRoute } from "@tanstack/react-start/server";
 import { Route as rootRouteImport } from "./routes/__root";
 import { Route as authRouteRouteImport } from "./routes/(auth)/route";
 import { Route as IndexRouteImport } from "./routes/index";
-import { Route as mainPublishingRouteImport } from "./routes/(main)/publishing";
 import { Route as mainPlaygroundRouteImport } from "./routes/(main)/playground";
 import { Route as authAuthRouteImport } from "./routes/(auth)/auth";
 import { Route as adminAdminRouteImport } from "./routes/(admin)/admin";
@@ -41,11 +40,6 @@ const authRouteRoute = authRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
-  getParentRoute: () => rootRouteImport,
-} as any);
-const mainPublishingRoute = mainPublishingRouteImport.update({
-  id: "/(main)/publishing",
-  path: "/publishing",
   getParentRoute: () => rootRouteImport,
 } as any);
 const mainPlaygroundRoute = mainPlaygroundRouteImport.update({
@@ -149,7 +143,6 @@ export interface FileRoutesByFullPath {
   "/admin": typeof adminAdminRoute;
   "/auth": typeof authAuthRoute;
   "/playground": typeof mainPlaygroundRoute;
-  "/publishing": typeof mainPublishingRoute;
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/~/artist/dashboard": typeof mainChar126ArtistDashboardIndexRoute;
@@ -168,7 +161,6 @@ export interface FileRoutesByTo {
   "/admin": typeof adminAdminRoute;
   "/auth": typeof authAuthRoute;
   "/playground": typeof mainPlaygroundRoute;
-  "/publishing": typeof mainPublishingRoute;
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/~/artist/dashboard": typeof mainChar126ArtistDashboardIndexRoute;
@@ -189,7 +181,6 @@ export interface FileRoutesById {
   "/(admin)/admin": typeof adminAdminRoute;
   "/(auth)/auth": typeof authAuthRoute;
   "/(main)/playground": typeof mainPlaygroundRoute;
-  "/(main)/publishing": typeof mainPublishingRoute;
   "/(main)/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/(main)/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/(main)/~/artist/dashboard/": typeof mainChar126ArtistDashboardIndexRoute;
@@ -210,7 +201,6 @@ export interface FileRouteTypes {
     | "/admin"
     | "/auth"
     | "/playground"
-    | "/publishing"
     | "/~/artist"
     | "/~/general"
     | "/~/artist/dashboard"
@@ -229,7 +219,6 @@ export interface FileRouteTypes {
     | "/admin"
     | "/auth"
     | "/playground"
-    | "/publishing"
     | "/~/artist"
     | "/~/general"
     | "/~/artist/dashboard"
@@ -249,7 +238,6 @@ export interface FileRouteTypes {
     | "/(admin)/admin"
     | "/(auth)/auth"
     | "/(main)/playground"
-    | "/(main)/publishing"
     | "/(main)/~/artist"
     | "/(main)/~/general"
     | "/(main)/~/artist/dashboard/"
@@ -269,7 +257,6 @@ export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren;
   adminAdminRoute: typeof adminAdminRoute;
   mainPlaygroundRoute: typeof mainPlaygroundRoute;
-  mainPublishingRoute: typeof mainPublishingRoute;
   mainChar126ArtistRouteRoute: typeof mainChar126ArtistRouteRouteWithChildren;
   mainChar126GeneralRouteRoute: typeof mainChar126GeneralRouteRouteWithChildren;
 }
@@ -313,13 +300,6 @@ declare module "@tanstack/react-router" {
       path: "/";
       fullPath: "/";
       preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/(main)/publishing": {
-      id: "/(main)/publishing";
-      path: "/publishing";
-      fullPath: "/publishing";
-      preLoaderRoute: typeof mainPublishingRouteImport;
       parentRoute: typeof rootRouteImport;
     };
     "/(main)/playground": {
@@ -512,7 +492,6 @@ const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   adminAdminRoute: adminAdminRoute,
   mainPlaygroundRoute: mainPlaygroundRoute,
-  mainPublishingRoute: mainPublishingRoute,
   mainChar126ArtistRouteRoute: mainChar126ArtistRouteRouteWithChildren,
   mainChar126GeneralRouteRoute: mainChar126GeneralRouteRouteWithChildren,
 };
