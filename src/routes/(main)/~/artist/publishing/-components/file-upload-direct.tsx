@@ -117,7 +117,7 @@ export function FileUploadDirect({
           </p>
         </div>
         <FileUploadTrigger asChild>
-          <Button variant="outline" size="sm" className="mt-2 w-fit">
+          <Button variant="outline" size="sm" className="mt-2 w-fit cursor-pointer">
             Browse files
           </Button>
         </FileUploadTrigger>

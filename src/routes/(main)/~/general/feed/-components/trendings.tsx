@@ -2,15 +2,16 @@ import { IKImage } from "imagekitio-react";
 import { Download, Eye, Heart, ShoppingCart, Star } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
+import { JewerlyWithMeta } from "~/actions/dashboard.action";
 import { ModelViewer } from "~/components/3D/model-viewer";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { JewerlyWithUser } from "~/lib/db/types";
 
 type TrendingsProps = {
-  jewerlies: JewerlyWithUser[];
+  jewerlies: JewerlyWithMeta[];
 };
 
 export function Trendings({ jewerlies }: TrendingsProps) {
+  console.log("jewerlies", jewerlies);
   const [selected3D, setSelected3D] = useState("");
   const [selectedId, setSelectedId] = useState<number | null>(null);
   class Person {
@@ -23,12 +24,12 @@ export function Trendings({ jewerlies }: TrendingsProps) {
         <motion.div
           layoutId={`card-${idx + 1}`}
           className="group bg-card overflow-hidden rounded-md border shadow-md transition-all duration-300 hover:shadow-xl"
-          key={item.jewerly_assets.id}
+          key={item?.id}
         >
           <div className="relative overflow-hidden">
-            {item.jewerly_assets.thumbnailUrl && (
+            {item.thumbnail_url && (
               <IKImage
-                src={item.jewerly_assets.thumbnailUrl ?? ""}
+                src={item.thumbnail_url ?? ""}
                 className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 alt="Asset Image"
               />
@@ -37,7 +38,7 @@ export function Trendings({ jewerlies }: TrendingsProps) {
             <div className="absolute inset-0 flex items-center justify-center space-x-2 bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
               <button
                 onClick={() => {
-                  setSelected3D(item.jewerly_assets.assetUrl);
+                  setSelected3D(item.asset_url);
                   setSelectedId(idx + 1);
                 }}
                 className="cursor-pointer rounded-full bg-white/20 p-2 text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/30"
@@ -51,34 +52,35 @@ export function Trendings({ jewerlies }: TrendingsProps) {
 
             <div className="absolute top-3 left-3">
               <span className="rounded-full bg-white/90 px-2 py-1 text-xs font-medium text-gray-700 backdrop-blur-sm">
-                {item.category?.name}
+                {item.category_name}
               </span>
             </div>
 
             <div className="absolute top-3 right-3">
               <span className="rounded-full bg-indigo-600 px-2 py-1 text-sm font-bold text-white">
-                ${item.jewerly_assets.price}
+                ${item.price}
               </span>
             </div>
           </div>
 
           <div className="p-4">
-            <h3 className="mb-2 line-clamp-1 font-semibold">
-              {item.jewerly_assets.name}
-            </h3>
+            <h3 className="mb-2 line-clamp-1 font-semibold">{item.name}</h3>
             <p className="text-muted-foreground mb-3 line-clamp-2 text-sm">
-              {item.jewerly_assets.description}
+              {item.description}
             </p>
 
             <div className="mb-3 flex flex-wrap gap-1">
-              {Array.from({ length: 3 }).map((tag, idx) => (
-                <span
-                  key={idx}
-                  className="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600"
-                >
-                  Asset
-                </span>
-              ))}
+              {item.tags
+                .split(",")
+                .map((tag) => tag.trim())
+                .map((tag, idx) => (
+                  <span
+                    key={idx}
+                    className="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600"
+                  >
+                    {tag}
+                  </span>
+                ))}
               <span className="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600">
                 +30
               </span>
@@ -88,11 +90,11 @@ export function Trendings({ jewerlies }: TrendingsProps) {
               <div className="flex items-center gap-2">
                 <Avatar className="h-8 w-8">
                   <AvatarImage
-                    src={item.user?.image ?? "https://github.com/shadcn.png"}
+                    src={item.creator_image ?? "https://github.com/shadcn.png"}
                   />
-                  <AvatarFallback>{item.user?.name.charAt(0)}</AvatarFallback>
+                  <AvatarFallback>{item.creator_name.charAt(0)}</AvatarFallback>
                 </Avatar>
-                <span className="text-muted-foreground text-sm">{item.user?.name}</span>
+                <span className="text-muted-foreground text-sm">{item.creator_name}</span>
               </div>
 
               <div className="ml-auto flex items-center">

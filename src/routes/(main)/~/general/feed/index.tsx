@@ -31,7 +31,7 @@ function RouteComponent() {
           <div className="relative w-full">
             <img src="/banner.svg" className="w-full" alt="Banner" />
             <Link
-              to="/publishing"
+              to="/~/artist/publishing"
               className="absolute top-[58%] left-[28%] cursor-pointer bg-transparent text-transparent hover:bg-transparent hover:text-transparent"
             >
               Create

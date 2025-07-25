@@ -99,6 +99,7 @@ export function AssetPublish() {
           thumbnailUrl: imageUrl.thumbnail_url,
           categoryId: values.category,
           typeAsset: "image",
+          tags: tagsValue.map((item) => item.value),
         },
       });
     } catch (error) {
@@ -273,7 +274,12 @@ export function AssetPublish() {
               <Button
                 className="w-[100px] cursor-pointer"
                 type="submit"
-                disabled={isPending || isUploadingImage || imageUrl.asset_url === ""}
+                disabled={
+                  isPending ||
+                  isUploadingImage ||
+                  imageUrl.asset_url === "" ||
+                  tagsValue.length === 0
+                }
               >
                 {isPending ? <LoaderIcon className="animate-spin" /> : "Submit"}
               </Button>

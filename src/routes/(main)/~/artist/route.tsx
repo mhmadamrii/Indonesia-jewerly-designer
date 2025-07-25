@@ -194,7 +194,10 @@ function MainLayout() {
                   {item.items.map((item, idx) => (
                     <Link to={item.link} key={idx}>
                       <SidebarMenuItem className="cursor-pointer">
-                        <SidebarMenuButton tooltip={item.label}>
+                        <SidebarMenuButton
+                          className="cursor-pointer"
+                          tooltip={item.label}
+                        >
                           <item.icon />
                           {item.label}
                         </SidebarMenuButton>

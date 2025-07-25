@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import { OPTIONS } from "~/constants";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { category, jewerlyAssets, tag } from "~/lib/db/schema";
+import { category, jewerlyAssets, jewerlyAssetTags, tag } from "~/lib/db/schema";
 
 const JewerlyAssetSchema = z.object({
   name: z.string(),
@@ -15,6 +15,7 @@ const JewerlyAssetSchema = z.object({
   categoryId: z.string(),
   typeAsset: z.string(),
   thumbnailUrl: z.string(),
+  tags: z.array(z.string()).optional(),
 });
 
 export const getAllCategories = createServerFn({ method: "GET" }).handler(async () => {
@@ -77,8 +78,18 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
   .validator(JewerlyAssetSchema)
   .middleware([authMiddleware])
   .handler(async ({ data, context }) => {
-    const { name, description, categoryId, imageUrl, price, typeAsset, thumbnailUrl } = data; // prettier-ignore
-    const res = await db
+    const {
+      name,
+      description,
+      categoryId,
+      imageUrl,
+      price,
+      typeAsset,
+      thumbnailUrl,
+      tags,
+    } = data;
+
+    const [insertedAsset] = await db
       .insert(jewerlyAssets)
       .values({
         userId: context.user.id,
@@ -92,9 +103,20 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
       })
       .returning({ id: jewerlyAssets.id });
 
+    const jewerlyAssetId = insertedAsset.id;
+
+    if (tags && tags.length > 0) {
+      await db.insert(jewerlyAssetTags).values(
+        tags.map((tagId: string) => ({
+          jewerlyAssetId,
+          tagId,
+        })),
+      );
+    }
+
     return {
       success: true,
-      data: res[0],
+      data: insertedAsset,
     };
   });
 
