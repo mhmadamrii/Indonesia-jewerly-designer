@@ -139,7 +139,8 @@ export function CartDrawer() {
               <div>
                 <DrawerTitle>3D Asset Cart</DrawerTitle>
                 <DrawerDescription>
-                  {totalItems} {totalItems === 1 ? "item" : "items"} in your cart
+                  {cartItemsData?.data?.length}{" "}
+                  {cartItemsData?.data?.length === 1 ? "item" : "items"} in your cart
                 </DrawerDescription>
               </div>
               <DrawerClose asChild>

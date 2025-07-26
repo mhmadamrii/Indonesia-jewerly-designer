@@ -1,4 +1,8 @@
-import { Download, Eye, Heart, ShoppingCart, Star } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Download, Eye, Heart, LoaderIcon, ShoppingCart, Star } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { createCartItem } from "~/actions/cart.action";
 import { JewerlyWithMeta } from "~/lib/db/types";
 import { Asset } from "./types";
 
@@ -15,7 +19,26 @@ export function AssetCard({
   onViewDetails,
   isInCart,
 }: AssetCardProps) {
-  console.log(asset.thumbnail_url);
+  const [selected3D, setSelected3D] = useState("");
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: createCartItem,
+    onSuccess: () => {
+      toast.success("Item added to cart successfully");
+      queryClient.invalidateQueries();
+    },
+  });
+
+  const handleAddToCart = (id: string) => {
+    setSelected3D(id);
+    mutate({
+      data: {
+        jewerlyAssetId: id,
+        quantity: 1,
+      },
+    });
+  };
   return (
     <div className="group bg-card overflow-hidden rounded-md border shadow-md transition-all duration-300 hover:shadow-xl">
       <div className="relative overflow-hidden">
@@ -96,16 +119,18 @@ export function AssetCard({
         </div>
 
         <button
-          // onClick={() => onAddToCart(asset)}
-          disabled={isInCart}
-          className={`flex w-full items-center justify-center space-x-2 rounded-lg px-4 py-2 font-medium transition-all duration-200 ${
-            isInCart
-              ? "cursor-not-allowed bg-gray-100 text-gray-500"
-              : "bg-indigo-600 text-white hover:scale-105 hover:bg-indigo-700"
-          }`}
+          onClick={() => handleAddToCart(asset.id)}
+          disabled={isPending && selected3D === asset.id}
+          className="flex w-full cursor-pointer items-center justify-center space-x-2 rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white transition-all duration-200 hover:scale-105 hover:bg-indigo-700"
         >
-          <ShoppingCart className="h-4 w-4" />
-          <span>{isInCart ? "In Cart" : "Add to Cart"}</span>
+          {isPending && selected3D === asset.id ? (
+            <LoaderIcon className="animate-spin" />
+          ) : (
+            <>
+              <ShoppingCart className="h-4 w-4" />
+              <span>{"Add to Cart"}</span>
+            </>
+          )}
         </button>
       </div>
     </div>
