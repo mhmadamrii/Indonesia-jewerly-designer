@@ -1,6 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "@tanstack/react-router";
 import { Minus, Plus, ShoppingCart, Trash2, X } from "lucide-react";
 import * as React from "react";
+import { getCartItems } from "~/actions/cart.action";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
@@ -51,6 +53,15 @@ const initialCartItems: CartItem[] = [
 export function CartDrawer() {
   const location = useLocation();
   const [cartItems, setCartItems] = React.useState<CartItem[]>(initialCartItems);
+  const [isOpenDrawer, setIsOpenDrawer] = React.useState(false);
+
+  const { data: cartItemsData, refetch } = useQuery({
+    queryKey: ["cart_items"],
+    queryFn: () => getCartItems(),
+    enabled: !isOpenDrawer,
+  });
+
+  console.log("cartItemsData", cartItemsData);
 
   const updateQuantity = (id: string, newQuantity: number) => {
     if (newQuantity === 0) {
@@ -80,6 +91,12 @@ export function CartDrawer() {
           variant="outline"
           size="lg"
           className="relative cursor-pointer bg-transparent"
+          onClick={() => {
+            setIsOpenDrawer(!isOpenDrawer);
+            if (!isOpenDrawer) {
+              refetch();
+            }
+          }}
         >
           <ShoppingCart className="h-5 w-5" />
           {totalItems > 0 && (

@@ -1,6 +1,7 @@
 import { Await, createFileRoute } from "@tanstack/react-router";
 import { getExploreAssetDatas } from "~/actions/explore.action";
 import { AssetGrid } from "./-components/asset-grid";
+import { AssetGridSkeleton } from "./-components/asset-grid-skeleton";
 
 export const Route = createFileRoute("/(main)/~/general/explore/")({
   loader: async () => {
@@ -14,7 +15,7 @@ function RouteComponent() {
   const { explores } = Route.useLoaderData();
   return (
     <section className="container mx-auto p-4">
-      <Await promise={explores} fallback={<div>Loading...</div>}>
+      <Await promise={explores} fallback={<AssetGridSkeleton />}>
         {({ data }) => (
           <AssetGrid
             assets={data?.jewerlies}

@@ -88,13 +88,28 @@ export const notification = pgTable("notification", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const cartItem = pgTable("cart_item", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  jewerlyAssetId: uuid("jewerly_asset_id")
+    .notNull()
+    .references(() => jewerlyAssets.id, { onDelete: "cascade" }),
+  quantity: integer("quantity").notNull().default(1),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export const userRelations = relations(user, ({ many }) => ({
   jewerlyAssets: many(jewerlyAssets),
+  cartItems: many(cartItem),
 }));
 
 export const jewerlyAssetsRelations = relations(jewerlyAssets, ({ many }) => ({
   reviews: many(review),
   jewerlyAssetTags: many(jewerlyAssetTags),
+  cartItems: many(cartItem),
 }));
 
 export const tagRelations = relations(tag, ({ many }) => ({
@@ -133,3 +148,14 @@ export const follow = pgTable(
     pk: primaryKey({ columns: [table.followerId, table.followingId] }),
   }),
 );
+
+export const cartItemRelations = relations(cartItem, ({ one }) => ({
+  user: one(user, {
+    fields: [cartItem.userId],
+    references: [user.id],
+  }),
+  jewerlyAsset: one(jewerlyAssets, {
+    fields: [cartItem.jewerlyAssetId],
+    references: [jewerlyAssets.id],
+  }),
+}));
