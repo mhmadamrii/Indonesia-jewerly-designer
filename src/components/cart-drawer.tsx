@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import { ShoppingCart, Trash2, X } from "lucide-react";
+import { LoaderIcon, ShoppingCart, Trash2, X } from "lucide-react";
 import * as React from "react";
 import { toast } from "sonner";
 import { deleteCartItem, getCartItems } from "~/actions/cart.action";
@@ -8,6 +8,7 @@ import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { cn } from "~/lib/utils";
+import { PaymentButton } from "./payment-button";
 
 import {
   Drawer,
@@ -20,47 +21,24 @@ import {
   DrawerTrigger,
 } from "~/components/ui/drawer";
 
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
+declare global {
+  interface Window {
+    snap: any;
+  }
 }
-
-const initialCartItems: CartItem[] = [
-  {
-    id: "1",
-    name: "Wireless Headphones",
-    price: 99.99,
-    quantity: 1,
-    image: "/placeholder.svg?height=80&width=80",
-  },
-  {
-    id: "2",
-    name: "Smart Watch",
-    price: 249.99,
-    quantity: 2,
-    image: "/placeholder.svg?height=80&width=80",
-  },
-  {
-    id: "3",
-    name: "Bluetooth Speaker",
-    price: 79.99,
-    quantity: 1,
-    image: "/placeholder.svg?height=80&width=80",
-  },
-];
 
 export function CartDrawer() {
   const navigate = useNavigate();
   const location = useLocation();
 
   const [currentId, setCurrentId] = React.useState<string | null>(null);
-  const [cartItems, setCartItems] = React.useState<CartItem[]>(initialCartItems);
   const [isOpenDrawer, setIsOpenDrawer] = React.useState(false);
 
-  const { data: cartItemsData, refetch } = useQuery({
+  const {
+    data: cartItemsData,
+    isLoading: isLoadingCart,
+    refetch,
+  } = useQuery({
     queryKey: ["cart_items"],
     queryFn: () => getCartItems(),
     enabled: !isOpenDrawer,
@@ -69,7 +47,9 @@ export function CartDrawer() {
   const { mutate: deleteItem, isPending: isDeletingItem } = useMutation({
     mutationFn: deleteCartItem,
     onSuccess: (res) => {
-      toast.success("Item removed from cart successfully");
+      toast.success("Successfully", {
+        description: "Item removed from cart successfully",
+      });
       refetch();
     },
   });
@@ -83,31 +63,17 @@ export function CartDrawer() {
     });
   };
 
-  console.log("cartItemsData", cartItemsData);
-
-  const updateQuantity = (id: string, newQuantity: number) => {
-    if (newQuantity === 0) {
-      removeItem(id);
-      return;
-    }
-    setCartItems((items) =>
-      items.map((item) => (item.id === id ? { ...item, quantity: newQuantity } : item)),
-    );
-  };
-
-  const removeItem = (id: string) => {
-    setCartItems((items) => items.filter((item) => item.id !== id));
-  };
-
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalPrice = cartItemsData?.data?.reduce(
+    (sum, item) => sum + item.jewerly_assets?.price!,
+    0,
+  );
 
   if (location.pathname.includes("artist")) {
     return;
   }
 
   return (
-    <Drawer direction="right">
+    <Drawer onOpenChange={setIsOpenDrawer} open={isOpenDrawer} direction="right">
       <DrawerTrigger asChild>
         <Button
           variant="outline"
@@ -144,7 +110,11 @@ export function CartDrawer() {
                 </DrawerDescription>
               </div>
               <DrawerClose asChild>
-                <Button variant="ghost" size="icon">
+                <Button
+                  onClick={() => setIsOpenDrawer(false)}
+                  variant="ghost"
+                  size="icon"
+                >
                   <X className="h-4 w-4" />
                 </Button>
               </DrawerClose>
@@ -152,7 +122,10 @@ export function CartDrawer() {
           </DrawerHeader>
 
           <div className="flex-1 overflow-auto p-4">
-            {cartItems.length === 0 ? (
+            {isLoadingCart && (
+              <LoaderIcon className="text-muted-foreground mb-4 h-12 w-12 animate-spin" />
+            )}
+            {cartItemsData?.data?.length === 0 ? (
               <div className="flex h-full flex-col items-center justify-center text-center">
                 <ShoppingCart className="text-muted-foreground mb-4 h-12 w-12" />
                 <p className="text-muted-foreground">Your cart is empty</p>
@@ -199,12 +172,12 @@ export function CartDrawer() {
             )}
           </div>
 
-          {cartItems.length > 0 && (
+          {cartItemsData?.data!?.length > 0 && (
             <div className="space-y-4 border-t p-4">
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Subtotal</span>
-                  <span>${totalPrice.toFixed(2)}</span>
+                  <span>${totalPrice!.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Shipping</span>
@@ -213,13 +186,11 @@ export function CartDrawer() {
                 <Separator />
                 <div className="flex justify-between font-medium">
                   <span>Total</span>
-                  <span>${totalPrice.toFixed(2)}</span>
+                  <span>${totalPrice!.toFixed(2)}</span>
                 </div>
               </div>
               <DrawerFooter className="px-0 pb-0">
-                <Button className="w-full cursor-pointer" size="lg">
-                  Checkout
-                </Button>
+                <PaymentButton setIsOpenDrawer={setIsOpenDrawer} />
                 <DrawerClose asChild>
                   <Button
                     variant="outline"
