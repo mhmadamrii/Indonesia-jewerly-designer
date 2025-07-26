@@ -1,17 +1,17 @@
 import { IKImage } from "imagekitio-react";
-import { Download, Eye, Heart, ShoppingCart, Star } from "lucide-react";
+import { Eye, Heart, ShoppingCart, Star } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
-import { JewerlyWithMeta } from "~/actions/dashboard.action";
 import { ModelViewer } from "~/components/3D/model-viewer";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Badge } from "~/components/ui/badge";
+import { JewerlyWithMeta } from "~/lib/db/types";
 
 type TrendingsProps = {
   jewerlies: JewerlyWithMeta[];
 };
 
 export function Trendings({ jewerlies }: TrendingsProps) {
-  console.log("jewerlies", jewerlies);
   const [selected3D, setSelected3D] = useState("");
   const [selectedId, setSelectedId] = useState<number | null>(null);
   class Person {
@@ -105,8 +105,22 @@ export function Trendings({ jewerlies }: TrendingsProps) {
 
             <div className="mb-4 flex items-center justify-between text-sm text-gray-500">
               <div className="flex items-center">
-                <Download className="mr-1 h-4 w-4" />
-                <span>300</span>
+                <Badge className="bg-blue-600">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlSpace="preserve"
+                    width="256"
+                    height="256"
+                    viewBox="0 0 256 256"
+                  >
+                    <path
+                      fill="#000"
+                      strokeMiterlimit="10"
+                      strokeWidth="0"
+                      d="M203.136 98.672a4.15 4.15 0 0 0-4.251-1.77l-51.454 9.913L157.88 6.001a4.16 4.16 0 0 0-2.751-4.356 4.16 4.16 0 0 0-4.884 1.644l-97.69 149.144a4.155 4.155 0 0 0 .023 4.605 4.18 4.18 0 0 0 4.251 1.776l51.457-9.916-10.448 100.811a4.155 4.155 0 0 0 2.751 4.359 4.164 4.164 0 0 0 4.881-1.644l97.69-149.144a4.165 4.165 0 0 0-.023-4.608"
+                    ></path>
+                  </svg>
+                </Badge>
               </div>
               <div className="flex items-center">
                 <Star className="mr-1 h-4 w-4 fill-current text-yellow-400" />

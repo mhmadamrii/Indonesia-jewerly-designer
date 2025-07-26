@@ -1,8 +1,9 @@
+import { JewerlyWithMeta } from "~/lib/db/types";
 import { AssetCard } from "./asset-card";
 import { Asset } from "./types";
 
 interface AssetGridProps {
-  assets: Asset[];
+  assets: JewerlyWithMeta[];
   onAddToCart: (asset: Asset) => void;
   onViewDetails: (asset: Asset) => void;
   cartItems: Set<string>;
