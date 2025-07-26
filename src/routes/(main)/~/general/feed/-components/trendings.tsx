@@ -1,7 +1,10 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { IKImage } from "imagekitio-react";
-import { Eye, Heart, ShoppingCart, Star } from "lucide-react";
+import { Eye, Heart, LoaderIcon, ShoppingCart, Star } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
+import { toast } from "sonner";
+import { createCartItem } from "~/actions/cart.action";
 import { ModelViewer } from "~/components/3D/model-viewer";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
@@ -12,8 +15,28 @@ type TrendingsProps = {
 };
 
 export function Trendings({ jewerlies }: TrendingsProps) {
+  const queryClient = useQueryClient();
   const [selected3D, setSelected3D] = useState("");
   const [selectedId, setSelectedId] = useState<number | null>(null);
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: createCartItem,
+    onSuccess: () => {
+      toast.success("Item added to cart successfully");
+      queryClient.invalidateQueries();
+    },
+  });
+
+  const handleAddToCart = (id: string) => {
+    setSelected3D(id);
+    mutate({
+      data: {
+        jewerlyAssetId: id,
+        quantity: 1,
+      },
+    });
+  };
+
   class Person {
     constructor() {}
   }
@@ -130,11 +153,18 @@ export function Trendings({ jewerlies }: TrendingsProps) {
             </div>
 
             <button
-              onClick={() => console.log("jfkla;d")}
-              className={`flex w-full items-center justify-center space-x-2 rounded-lg px-4 py-2 font-medium transition-all duration-200 ${"bg-indigo-600 text-white hover:scale-105 hover:bg-indigo-700"}`}
+              disabled={isPending && selected3D === item.id}
+              className="flex w-full cursor-pointer items-center justify-center space-x-2 rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white transition-all duration-200 hover:scale-105 hover:bg-indigo-700"
+              onClick={() => handleAddToCart(item.id)}
             >
-              <ShoppingCart className="h-4 w-4" />
-              <span>{"Add to Cart"}</span>
+              {isPending && selected3D === item.id ? (
+                <LoaderIcon className="animate-spin" />
+              ) : (
+                <>
+                  <ShoppingCart className="h-4 w-4" />
+                  <span>{"Add to Cart"}</span>
+                </>
+              )}
             </button>
           </div>
         </motion.div>

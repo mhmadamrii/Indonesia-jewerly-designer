@@ -1,11 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
-import { useLocation } from "@tanstack/react-router";
-import { Minus, Plus, ShoppingCart, Trash2, X } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useLocation, useNavigate } from "@tanstack/react-router";
+import { ShoppingCart, Trash2, X } from "lucide-react";
 import * as React from "react";
-import { getCartItems } from "~/actions/cart.action";
+import { toast } from "sonner";
+import { deleteCartItem, getCartItems } from "~/actions/cart.action";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
+import { cn } from "~/lib/utils";
 
 import {
   Drawer,
@@ -51,7 +53,10 @@ const initialCartItems: CartItem[] = [
 ];
 
 export function CartDrawer() {
+  const navigate = useNavigate();
   const location = useLocation();
+
+  const [currentId, setCurrentId] = React.useState<string | null>(null);
   const [cartItems, setCartItems] = React.useState<CartItem[]>(initialCartItems);
   const [isOpenDrawer, setIsOpenDrawer] = React.useState(false);
 
@@ -60,6 +65,23 @@ export function CartDrawer() {
     queryFn: () => getCartItems(),
     enabled: !isOpenDrawer,
   });
+
+  const { mutate: deleteItem, isPending: isDeletingItem } = useMutation({
+    mutationFn: deleteCartItem,
+    onSuccess: (res) => {
+      toast.success("Item removed from cart successfully");
+      refetch();
+    },
+  });
+
+  const handleRemoveItem = (id: string) => {
+    setCurrentId(id);
+    deleteItem({
+      data: {
+        id,
+      },
+    });
+  };
 
   console.log("cartItemsData", cartItemsData);
 
@@ -99,12 +121,12 @@ export function CartDrawer() {
           }}
         >
           <ShoppingCart className="h-5 w-5" />
-          {totalItems > 0 && (
+          {cartItemsData?.data?.length! > 0 && (
             <Badge
               variant="destructive"
               className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full p-0 text-xs"
             >
-              {totalItems}
+              {cartItemsData?.data?.length}
             </Badge>
           )}
           <span className="ml-2">Cart</span>
@@ -135,48 +157,37 @@ export function CartDrawer() {
                 <p className="text-muted-foreground">Your cart is empty</p>
               </div>
             ) : (
-              <div className="space-y-4">
-                {cartItems.map((item) => (
-                  <div key={item.id} className="flex items-center space-x-3">
+              <div className="space-y-4 overflow-auto">
+                {cartItemsData?.data?.map((item) => (
+                  <div
+                    key={item.cart_item.id}
+                    className={cn("flex items-center space-x-3", {
+                      "bg-accent opacity-20":
+                        isDeletingItem && currentId === item.cart_item.id,
+                    })}
+                  >
                     <img
-                      src={item.image || "/placeholder.svg"}
-                      alt={item.name}
+                      src={item.jewerly_assets?.thumbnailUrl || "/placeholder-img.jpg"}
+                      alt="Asset Image"
                       className="h-16 w-16 rounded-md object-cover"
                     />
                     <div className="min-w-0 flex-1">
-                      <h3 className="truncate text-sm font-medium">{item.name}</h3>
+                      <h3 className="truncate text-sm font-medium">
+                        {item.jewerly_assets?.name}
+                      </h3>
                       <p className="text-muted-foreground text-sm">
-                        ${item.price.toFixed(2)}
+                        ${item.jewerly_assets?.price.toFixed(2)}
                       </p>
-                      <div className="mt-2 flex items-center space-x-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8 bg-transparent"
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        >
-                          <Minus className="h-3 w-3" />
-                        </Button>
-                        <span className="w-8 text-center text-sm">{item.quantity}</span>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8 bg-transparent"
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        >
-                          <Plus className="h-3 w-3" />
-                        </Button>
-                      </div>
                     </div>
                     <div className="flex flex-col items-end space-y-2">
                       <p className="text-sm font-medium">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        ${(item.jewerly_assets?.price ?? 0 * 1).toFixed(2)}
                       </p>
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-destructive hover:text-destructive h-8 w-8"
-                        onClick={() => removeItem(item.id)}
+                        className="text-destructive hover:text-destructive h-8 w-8 cursor-pointer"
+                        onClick={() => handleRemoveItem(item.cart_item.id)}
                       >
                         <Trash2 className="h-3 w-3" />
                       </Button>
@@ -205,11 +216,19 @@ export function CartDrawer() {
                 </div>
               </div>
               <DrawerFooter className="px-0 pb-0">
-                <Button className="w-full" size="lg">
+                <Button className="w-full cursor-pointer" size="lg">
                   Checkout
                 </Button>
                 <DrawerClose asChild>
-                  <Button variant="outline" className="w-full bg-transparent">
+                  <Button
+                    variant="outline"
+                    className="w-full cursor-pointer bg-transparent"
+                    onClick={() =>
+                      navigate({
+                        to: "/~/general/explore",
+                      })
+                    }
+                  >
                     Continue Shopping
                   </Button>
                 </DrawerClose>
