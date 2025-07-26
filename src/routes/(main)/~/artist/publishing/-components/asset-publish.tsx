@@ -1,15 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import {
-  ChevronDown,
-  Coins,
-  DollarSign,
-  LoaderIcon,
-  Package,
-  Tag,
-  Zap,
-} from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -23,6 +14,16 @@ import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Textarea } from "~/components/ui/textarea";
 import { cn } from "~/lib/utils";
 import { FileUploadDirect } from "./file-upload-direct";
+
+import {
+  ChevronDown,
+  Coins,
+  DollarSign,
+  LoaderIcon,
+  Package,
+  Tag,
+  Zap,
+} from "lucide-react";
 
 import {
   Card,
@@ -53,6 +54,7 @@ import {
   CollapsibleTrigger,
 } from "~/components/animate-ui/radix/collapsible";
 
+import { getUserBoostCredits } from "~/actions/user.action";
 import {
   Select,
   SelectContent,
@@ -114,16 +116,9 @@ export function AssetPublish() {
     queryFn: () => getJewerlyTagsAndCategories(),
   });
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      price: 0,
-      currency: "m@example.com",
-      category: "arts",
-      description: "",
-      boost: "10",
-    },
+  const { data: currentCredit } = useQuery({
+    queryKey: ["current_credit"],
+    queryFn: () => getUserBoostCredits(),
   });
 
   const { mutateAsync, isPending } = useMutation({
@@ -136,11 +131,28 @@ export function AssetPublish() {
     },
   });
 
+  const getTotalBoostToUpdate = (val: number): number => {
+    if (!isUsingBoost) return 0;
+    return currentCredit?.data?.boostCredit! - val;
+  };
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      price: 0,
+      currency: "m@example.com",
+      category: "arts",
+      description: "",
+      boost: "10",
+    },
+  });
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const currentCredits = 20;
+    if (currentCredit?.data?.boostCredit! < parseInt(values.boost) && isUsingBoost) {
+      return toast.error("You don't have enough credits to boost this product.");
+    }
     console.log("values", values);
-    const totalBoost = (Number.parseFloat(values.boost) / 100) * currentCredits;
-    console.log("totalBoost", totalBoost);
 
     try {
       await mutateAsync({
@@ -153,9 +165,8 @@ export function AssetPublish() {
           categoryId: values.category,
           typeAsset: "image",
           tags: tagsValue.map((item) => item.value),
-          boost: isUsingBoost
-            ? (Number.parseFloat(values.boost) / 100) * currentCredits
-            : 0,
+          totalBoostToUpdate: getTotalBoostToUpdate(parseInt(values.boost)),
+          boost: isUsingBoost ? Number.parseFloat(values.boost) : 0,
         },
       });
     } catch (error) {
@@ -217,7 +228,6 @@ export function AssetPublish() {
                     <FormControl>
                       <Input
                         type="number"
-                        step="0.01"
                         min="0"
                         placeholder="0.00"
                         className="h-12 text-base"
@@ -338,7 +348,7 @@ export function AssetPublish() {
                   </Label>
                 </div>
               </div>
-              <CollapsibleContent className="flex flex-col justify-between gap-3 rounded-lg border">
+              <CollapsibleContent className="flex flex-col justify-between gap-3 rounded-lg">
                 <div>
                   <div className="bg-accent rounded-lg p-4">
                     <div className="flex items-center justify-between">
@@ -346,7 +356,9 @@ export function AssetPublish() {
                         <Coins className="h-5 w-5" />
                         <span className="font-semibold">Current Boost Credits</span>
                       </div>
-                      <span className="text-2xl font-bold text-green-600">{0}</span>
+                      <span className="text-2xl font-bold text-green-600">
+                        {currentCredit?.data?.boostCredit ?? 0}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -365,27 +377,29 @@ export function AssetPublish() {
                             {[
                               {
                                 value: "10",
-                                label: "10% Boost",
+                                label: "10 Boost",
                                 description: "Basic",
                               },
                               {
                                 value: "50",
-                                label: "50% Boost",
+                                label: "50 Boost",
                                 description: "Enhanced",
                               },
                               {
                                 value: "100",
-                                label: "100% Boost",
-                                description: "Maximum",
+                                label: "100 Boost",
+                                description: "Featured",
                               },
                             ].map((option) => {
-                              const optionCreditCost = 0;
                               return (
                                 <div
                                   key={option.value}
-                                  className="flex items-center space-x-2"
+                                  className={cn("flex items-center space-x-2", {
+                                    "opacity-20": !isUsingBoost,
+                                  })}
                                 >
                                   <RadioGroupItem
+                                    disabled={!isUsingBoost}
                                     value={option.value}
                                     id={option.value}
                                   />
@@ -449,12 +463,12 @@ export function AssetPublish() {
               <Button
                 className="w-[100px] cursor-pointer"
                 type="submit"
-                // disabled={
-                //   isPending ||
-                //   isUploadingImage ||
-                //   imageUrl.asset_url === "" ||
-                //   tagsValue.length === 0
-                // }
+                disabled={
+                  isPending ||
+                  isUploadingImage ||
+                  imageUrl.asset_url === "" ||
+                  tagsValue.length === 0
+                }
               >
                 {isPending ? <LoaderIcon className="animate-spin" /> : "Submit"}
               </Button>

@@ -26,13 +26,11 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
         JOIN "user" u ON ja.user_id = u.id
         LEFT JOIN jewerly_asset_tags jat ON ja.id = jat.jewerly_asset_id
         LEFT JOIN tag t ON jat.tag_id = t.id
-        WHERE ja.boost != 0
+        WHERE ja.boost = 100
         GROUP BY ja.id, c.name, u.name, u.image
       `),
       db.select().from(user),
     ]);
-
-    console.log("jewerlies", jewerlies);
 
     // await redis.set("dashboard_data", JSON.stringify({ categories, jewerlies, users }));
 

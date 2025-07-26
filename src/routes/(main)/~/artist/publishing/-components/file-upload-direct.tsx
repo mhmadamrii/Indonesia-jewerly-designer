@@ -3,10 +3,10 @@ import { LoaderIcon, Upload, X } from "lucide-react";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import { ModelViewer } from "~/components/3D/model-viewer";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
-import { Badge } from "~/components/ui/badge";
 import {
   FileUpload,
   FileUploadDropzone,
@@ -44,8 +44,8 @@ export function FileUploadDirect({
   const [files, setFiles] = useState<File[]>([]);
   const { upload } = useImageKit();
 
-  console.log("imageKitImageList", imageKitImageList);
-  console.log("files", files);
+  // console.log("imageKitImageList", imageKitImageList);
+  // console.log("files", files);
 
   const onUpload: NonNullable<FileUploadProps["onUpload"]> = useCallback(
     async (files, { onProgress, onSuccess, onError }) => {

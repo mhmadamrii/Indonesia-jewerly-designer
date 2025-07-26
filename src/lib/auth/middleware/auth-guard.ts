@@ -21,7 +21,7 @@ export const authMiddleware = createMiddleware({ type: "function" }).server(
       },
     });
 
-    console.log("my session", session);
+    // console.log("my session", session);
 
     if (!session) {
       setResponseStatus(401);

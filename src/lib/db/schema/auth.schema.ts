@@ -5,7 +5,7 @@ export const user = pgTable("user", {
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   role: text("role").notNull().default("user"),
-  boostCredit: integer("boost_credit").default(0),
+  boostCredit: integer("boost_credit").default(120),
   emailVerified: boolean("email_verified")
     .$defaultFn(() => false)
     .notNull(),

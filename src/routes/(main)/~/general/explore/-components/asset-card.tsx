@@ -15,11 +15,12 @@ export function AssetCard({
   onViewDetails,
   isInCart,
 }: AssetCardProps) {
+  console.log(asset.thumbnail_url);
   return (
     <div className="group bg-card overflow-hidden rounded-md border shadow-md transition-all duration-300 hover:shadow-xl">
       <div className="relative overflow-hidden">
         <img
-          src={asset.thumbnail_url}
+          src={asset.thumbnail_url !== "" ? asset.thumbnail_url : "/placeholder-img.jpg"}
           alt={asset.name}
           className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />

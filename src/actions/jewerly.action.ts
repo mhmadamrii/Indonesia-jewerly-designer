@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import { OPTIONS } from "~/constants";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { category, jewerlyAssets, jewerlyAssetTags, tag } from "~/lib/db/schema";
+import { category, jewerlyAssets, jewerlyAssetTags, tag, user } from "~/lib/db/schema";
 
 const JewerlyAssetSchema = z.object({
   name: z.string(),
@@ -17,6 +17,7 @@ const JewerlyAssetSchema = z.object({
   thumbnailUrl: z.string(),
   tags: z.array(z.string()).optional(),
   boost: z.number(),
+  totalBoostToUpdate: z.number(),
 });
 
 export const getAllCategories = createServerFn({ method: "GET" }).handler(async () => {
@@ -89,24 +90,32 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
       thumbnailUrl,
       tags,
       boost,
+      totalBoostToUpdate,
     } = data;
 
-    const [insertedAsset] = await db
-      .insert(jewerlyAssets)
-      .values({
-        userId: context.user.id,
-        name,
-        typeAsset,
-        price,
-        description,
-        categoryId,
-        assetUrl: imageUrl,
-        thumbnailUrl,
-        boost,
-      })
-      .returning({ id: jewerlyAssets.id });
+    const [insertedAsset, updateBoostCredit] = await Promise.all([
+      await db
+        .insert(jewerlyAssets)
+        .values({
+          userId: context.user.id,
+          name,
+          typeAsset,
+          price,
+          description,
+          categoryId,
+          assetUrl: imageUrl,
+          thumbnailUrl,
+          boost,
+        })
+        .returning({ id: jewerlyAssets.id }),
+      await db
+        .update(user)
+        .set({ boostCredit: totalBoostToUpdate })
+        .where(eq(user.id, context.user.id))
+        .returning({ id: user.id }),
+    ]);
 
-    const jewerlyAssetId = insertedAsset.id;
+    const jewerlyAssetId = insertedAsset[0].id;
 
     if (tags && tags.length > 0) {
       await db.insert(jewerlyAssetTags).values(

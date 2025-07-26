@@ -20,7 +20,7 @@ export const Route = createFileRoute("/(main)/~/general/feed/")({
 });
 
 function RouteComponent() {
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session } = authClient.useSession();
   const { dashboard } = Route.useLoaderData();
   const [selectedCategory, setSelectedCategory] = useState("");
 
