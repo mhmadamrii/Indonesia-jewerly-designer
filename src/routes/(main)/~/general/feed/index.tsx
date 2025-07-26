@@ -39,7 +39,7 @@ function RouteComponent() {
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row sm:gap-0">
-              <h1 className="text-xl font-semibold">Trending Collections</h1>
+              <h1 className="text-xl font-semibold">Featured Collections</h1>
               <div className="flex gap-3">
                 <Await promise={dashboard} fallback={<CategoryFilterSkeleton />}>
                   {({ data }) => (

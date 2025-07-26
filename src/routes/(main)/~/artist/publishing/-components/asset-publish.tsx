@@ -1,15 +1,27 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { LoaderIcon } from "lucide-react";
+import {
+  ChevronDown,
+  Coins,
+  DollarSign,
+  LoaderIcon,
+  Package,
+  Tag,
+  Zap,
+} from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import { MultipleSelector } from "~/components/ui/multi-select";
+import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Textarea } from "~/components/ui/textarea";
+import { cn } from "~/lib/utils";
 import { FileUploadDirect } from "./file-upload-direct";
 
 import {
@@ -36,6 +48,12 @@ import {
 } from "~/components/ui/form";
 
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "~/components/animate-ui/radix/collapsible";
+
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -49,10 +67,41 @@ const formSchema = z.object({
   currency: z.string(),
   category: z.string().min(3).max(500),
   description: z.string().min(5).max(200),
+  boost: z.enum(["10", "50", "100"], {
+    required_error: "Please select a boost percentage.",
+  }),
 });
+
+const currencies = [
+  {
+    value: "USD",
+    label: "USD ($)",
+  },
+  {
+    value: "EUR",
+    label: "EUR (€)",
+  },
+  {
+    value: "GBP",
+    label: "GBP (£)",
+  },
+  {
+    value: "JPY",
+    label: "JPY (¥)",
+  },
+  {
+    value: "CAD",
+    label: "CAD (C$)",
+  },
+  {
+    value: "AUD",
+    label: "AUD (A$)",
+  },
+];
 
 export function AssetPublish() {
   const navigate = useNavigate();
+  const [isUsingBoost, setIsUsingBoost] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [tagsValue, setTagsValue] = useState<{ value: string; label: string }[]>([]);
   const [imageUrl, setImageUrl] = useState({
@@ -65,8 +114,6 @@ export function AssetPublish() {
     queryFn: () => getJewerlyTagsAndCategories(),
   });
 
-  console.log("tagsAndCategories", tagsAndCategories);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -75,6 +122,7 @@ export function AssetPublish() {
       currency: "m@example.com",
       category: "arts",
       description: "",
+      boost: "10",
     },
   });
 
@@ -89,6 +137,11 @@ export function AssetPublish() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    const currentCredits = 20;
+    console.log("values", values);
+    const totalBoost = (Number.parseFloat(values.boost) / 100) * currentCredits;
+    console.log("totalBoost", totalBoost);
+
     try {
       await mutateAsync({
         data: {
@@ -100,6 +153,9 @@ export function AssetPublish() {
           categoryId: values.category,
           typeAsset: "image",
           tags: tagsValue.map((item) => item.value),
+          boost: isUsingBoost
+            ? (Number.parseFloat(values.boost) / 100) * currentCredits
+            : 0,
         },
       });
     } catch (error) {
@@ -107,8 +163,6 @@ export function AssetPublish() {
       toast.error("Failed to submit the form. Please try again.");
     }
   }
-
-  console.log("tags value", tagsValue);
 
   return (
     <Card className="w-full">
@@ -129,17 +183,21 @@ export function AssetPublish() {
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Title</FormLabel>
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2 text-base font-semibold">
+                      <Package className="h-4 w-4" />
+                      Product Name
+                    </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Miniatur"
-                        type="text"
+                        placeholder="Enter product name"
+                        className="h-12 text-base"
                         {...field}
-                        disabled={isPending || isUploadingImage}
                       />
                     </FormControl>
-                    <FormDescription>Your models title</FormDescription>
+                    <FormDescription>
+                      Choose a clear, descriptive name for your product.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -152,16 +210,23 @@ export function AssetPublish() {
                 name="price"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Price</FormLabel>
+                    <FormLabel className="flex items-center gap-2 text-base font-semibold">
+                      <DollarSign className="h-4 w-4" />
+                      Price
+                    </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="200"
                         type="number"
+                        step="0.01"
+                        min="0"
+                        placeholder="0.00"
+                        className="h-12 text-base"
                         {...field}
-                        disabled={isPending || isUploadingImage}
+                        onChange={(e) =>
+                          field.onChange(Number.parseFloat(e.target.value) || 0)
+                        }
                       />
                     </FormControl>
-                    <FormDescription>Your models price</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -172,23 +237,21 @@ export function AssetPublish() {
                 name="currency"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Currency</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      disabled={isPending || isUploadingImage}
-                    >
+                    <FormLabel className="text-base font-semibold">Currency</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select listed currency" />
+                        <SelectTrigger className="min-h-12 w-full text-base">
+                          <SelectValue placeholder="Select currency" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="idr">IDR</SelectItem>
-                        <SelectItem value="usd">USD</SelectItem>
+                        {currencies.map((currency) => (
+                          <SelectItem key={currency.value} value={currency.value}>
+                            {currency.label}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
-                    <FormDescription>Your currency model</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -207,7 +270,7 @@ export function AssetPublish() {
                     disabled={isPending || isUploadingImage}
                   >
                     <FormControl>
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger className="min-h-12 w-full">
                         <SelectValue placeholder="Arts" />
                       </SelectTrigger>
                     </FormControl>
@@ -225,9 +288,13 @@ export function AssetPublish() {
               )}
             />
 
-            <div>
-              <label className="mb-2 block text-sm font-medium">Tags</label>
+            <div className="flex flex-col gap-2">
+              <FormLabel className="flex items-center gap-2 text-base font-semibold">
+                <Tag className="h-4 w-4" />
+                Tags
+              </FormLabel>
               <MultipleSelector
+                className="bg-accent flex h-12 items-center"
                 onChange={(e) => setTagsValue(e)}
                 options={tagsAndCategories?.data?.tags?.map((item) => ({
                   value: item.id,
@@ -242,6 +309,114 @@ export function AssetPublish() {
               />
             </div>
 
+            <Collapsible className="w-full">
+              <div className="mb-2 space-y-2">
+                <div className="flex items-center justify-between space-x-4">
+                  <FormLabel className="flex items-center gap-2 text-base font-semibold">
+                    <Zap className="h-4 w-4" />
+                    Boost Product
+                  </FormLabel>
+                  <CollapsibleTrigger asChild>
+                    <Button className="cursor-pointer" variant="ghost" size="icon">
+                      <ChevronDown />
+                    </Button>
+                  </CollapsibleTrigger>
+                </div>
+                <div className="flex items-center gap-2 rounded-md px-4 py-3 text-sm">
+                  <Checkbox
+                    id="isUsingBoost"
+                    onCheckedChange={(e: boolean) => setIsUsingBoost(e)}
+                    checked={isUsingBoost}
+                  />
+                  <Label
+                    htmlFor="isUsingBoost"
+                    className={cn("", {
+                      "text-muted-foreground cursor-pointer": !isUsingBoost,
+                    })}
+                  >
+                    Increase your visibility by 10% for 10 credits
+                  </Label>
+                </div>
+              </div>
+              <CollapsibleContent className="flex flex-col justify-between gap-3 rounded-lg border">
+                <div>
+                  <div className="bg-accent rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Coins className="h-5 w-5" />
+                        <span className="font-semibold">Current Boost Credits</span>
+                      </div>
+                      <span className="text-2xl font-bold text-green-600">{0}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mb-0 h-[130px] w-full">
+                  <FormField
+                    control={form.control}
+                    name="boost"
+                    render={({ field }) => (
+                      <FormItem className="space-y-3">
+                        <FormControl>
+                          <RadioGroup
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            className="grid grid-cols-1 gap-4 md:grid-cols-3"
+                          >
+                            {[
+                              {
+                                value: "10",
+                                label: "10% Boost",
+                                description: "Basic",
+                              },
+                              {
+                                value: "50",
+                                label: "50% Boost",
+                                description: "Enhanced",
+                              },
+                              {
+                                value: "100",
+                                label: "100% Boost",
+                                description: "Maximum",
+                              },
+                            ].map((option) => {
+                              const optionCreditCost = 0;
+                              return (
+                                <div
+                                  key={option.value}
+                                  className="flex items-center space-x-2"
+                                >
+                                  <RadioGroupItem
+                                    value={option.value}
+                                    id={option.value}
+                                  />
+                                  <Label
+                                    htmlFor={option.value}
+                                    className="hover:bg-muted/50 flex-1 cursor-pointer rounded-lg border p-3 transition-colors"
+                                  >
+                                    <div className="flex items-center justify-between font-medium">
+                                      {option.label}
+                                    </div>
+                                    <div className="text-muted-foreground text-sm">
+                                      {option.description}
+                                    </div>
+                                  </Label>
+                                </div>
+                              );
+                            })}
+                          </RadioGroup>
+                        </FormControl>
+                        <FormDescription>
+                          Choose how much of your credits to use for boosting this
+                          product's visibility.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+
             <FormField
               control={form.control}
               name="description"
@@ -251,7 +426,7 @@ export function AssetPublish() {
                   <FormControl>
                     <Textarea
                       placeholder="Your future asset investment"
-                      className="resize-none"
+                      className="min-h-[80px] resize-none"
                       {...field}
                       disabled={isPending || isUploadingImage}
                     />
@@ -274,12 +449,12 @@ export function AssetPublish() {
               <Button
                 className="w-[100px] cursor-pointer"
                 type="submit"
-                disabled={
-                  isPending ||
-                  isUploadingImage ||
-                  imageUrl.asset_url === "" ||
-                  tagsValue.length === 0
-                }
+                // disabled={
+                //   isPending ||
+                //   isUploadingImage ||
+                //   imageUrl.asset_url === "" ||
+                //   tagsValue.length === 0
+                // }
               >
                 {isPending ? <LoaderIcon className="animate-spin" /> : "Submit"}
               </Button>

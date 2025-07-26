@@ -2,34 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { sql } from "drizzle-orm";
 import { db } from "~/lib/db";
 import { category, user } from "~/lib/db/schema";
-import { Category, User } from "~/lib/db/types";
-
-export type JewerlyWithMeta = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  thumbnail_url: string;
-  asset_url: string;
-  type_asset: string;
-  user_id: string;
-  category_id: string;
-  created_at: Date;
-  updated_at: Date;
-  category_name: string;
-  creator_name: string;
-  creator_image: string;
-  tags: string; // comma-separated string
-};
-
-type DashboardReturnType = {
-  success: boolean;
-  data: {
-    categories: Category[];
-    jewerlies: JewerlyWithMeta[];
-    users: User[];
-  };
-};
+import { DashboardReturnType, JewerlyWithMeta } from "~/lib/db/types";
 
 export const getDashboard = createServerFn({ method: "GET" }).handler(
   async (): Promise<DashboardReturnType> => {
@@ -53,9 +26,9 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
         JOIN "user" u ON ja.user_id = u.id
         LEFT JOIN jewerly_asset_tags jat ON ja.id = jat.jewerly_asset_id
         LEFT JOIN tag t ON jat.tag_id = t.id
+        WHERE ja.boost != 0
         GROUP BY ja.id, c.name, u.name, u.image
       `),
-
       db.select().from(user),
     ]);
 

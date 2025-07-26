@@ -16,6 +16,7 @@ const JewerlyAssetSchema = z.object({
   typeAsset: z.string(),
   thumbnailUrl: z.string(),
   tags: z.array(z.string()).optional(),
+  boost: z.number(),
 });
 
 export const getAllCategories = createServerFn({ method: "GET" }).handler(async () => {
@@ -87,6 +88,7 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
       typeAsset,
       thumbnailUrl,
       tags,
+      boost,
     } = data;
 
     const [insertedAsset] = await db
@@ -100,6 +102,7 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
         categoryId,
         assetUrl: imageUrl,
         thumbnailUrl,
+        boost,
       })
       .returning({ id: jewerlyAssets.id });
 
