@@ -190,7 +190,10 @@ export function CartDrawer() {
                 </div>
               </div>
               <DrawerFooter className="px-0 pb-0">
-                <PaymentButton setIsOpenDrawer={setIsOpenDrawer} />
+                <PaymentButton
+                  totalPrice={totalPrice ?? 0}
+                  setIsOpenDrawer={setIsOpenDrawer}
+                />
                 <DrawerClose asChild>
                   <Button
                     variant="outline"

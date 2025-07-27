@@ -1,10 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
+import z from "zod";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 
 export const payWithMidtrans = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .handler(async ({ context }) => {
-    console.log("MIDTRANS_SERVER_KEY", process.env.MIDTRANS_SERVER_KEY);
+  .validator(z.object({ amount: z.number().min(1) }))
+  .handler(async ({ context, data }) => {
+    // 4411 1111 1111 1118
     try {
       const response = await fetch(
         "https://app.sandbox.midtrans.com/snap/v1/transactions",
@@ -20,16 +22,16 @@ export const payWithMidtrans = createServerFn({ method: "POST" })
           body: JSON.stringify({
             transaction_details: {
               order_id: "order-csb-" + Math.random().toString(36).substr(2, 9),
-              gross_amount: 100000,
+              gross_amount: data.amount,
             },
             credit_card: {
               secure: true,
             },
             customer_details: {
-              first_name: "John",
-              last_name: "Doe",
-              email: "john@doe.com",
-              phone: "08111222333",
+              first_name: context.user.name,
+              last_name: "",
+              email: context.user.email,
+              phone: "",
             },
           }),
         },

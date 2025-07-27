@@ -6,8 +6,10 @@ import { payWithMidtrans } from "~/actions/payment.action";
 import { Button } from "./ui/button";
 
 export function PaymentButton({
+  totalPrice,
   setIsOpenDrawer,
 }: {
+  totalPrice: number;
   setIsOpenDrawer: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { mutate: checkout, isPending: isLoadingCheckout } = useMutation({
@@ -39,6 +41,13 @@ export function PaymentButton({
     },
   });
 
+  const usdToIdr = (usd: number): number => {
+    if (usd === 0) {
+      return 0;
+    }
+    return usd * 16000;
+  };
+
   useEffect(() => {
     const snapSrcUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
     const myMidtransClientKey = process.env.MIDTRANS_CLIENT_KEY;
@@ -54,7 +63,17 @@ export function PaymentButton({
     };
   }, []);
   return (
-    <Button onClick={() => checkout({})} className="w-full cursor-pointer" size="lg">
+    <Button
+      onClick={() =>
+        checkout({
+          data: {
+            amount: usdToIdr(totalPrice),
+          },
+        })
+      }
+      className="w-full cursor-pointer"
+      size="lg"
+    >
       {isLoadingCheckout ? <LoaderIcon className="animate-spin" /> : "Checkout"}
     </Button>
   );

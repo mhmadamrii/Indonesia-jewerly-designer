@@ -155,7 +155,7 @@ const USER_SIDEBAR = [
       },
       {
         label: "Contact Support",
-        link: "/~/general/invoices",
+        link: "/~/general/payments/success",
         icon: Mail,
       },
     ],
