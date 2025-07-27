@@ -25,19 +25,14 @@ export function TopArtists({ users }: TopArtistsProps) {
                     <AvatarFallback>{item.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
-                    <span>{item.name}</span>
-                    <span className="text-muted-foreground">@user</span>
+                    <span className="truncate">{item.name}</span>
+                    <span className="text-muted-foreground">
+                      @{item.email.split("@")[0]}
+                    </span>
                   </div>
                 </div>
                 <div className="">
                   <FlipButton frontText="Follow" backText="😳" />
-                  {/* <Button
-                    className={cn(
-                      "cursor-pointer rounded-full bg-[#EEEAFF] text-[#5429FF] hover:bg-[EEEAFF]/80",
-                    )}
-                  >
-                    Follow
-                  </Button> */}
                 </div>
               </div>
             </div>

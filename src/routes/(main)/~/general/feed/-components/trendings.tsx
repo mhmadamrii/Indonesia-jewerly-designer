@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { IKImage } from "imagekitio-react";
-import { Eye, Heart, LoaderIcon, ShoppingCart, Star } from "lucide-react";
+import { Eye, Heart, LoaderIcon, ShoppingCart, Star, Zap } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -129,21 +129,8 @@ export function Trendings({ jewerlies }: TrendingsProps) {
             <div className="mb-4 flex items-center justify-between text-sm text-gray-500">
               <div className="flex items-center">
                 <Badge className="bg-blue-500">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlSpace="preserve"
-                    width="256"
-                    height="256"
-                    viewBox="0 0 256 256"
-                  >
-                    <path
-                      fill="#193cb8"
-                      strokeMiterlimit="10"
-                      strokeWidth="0"
-                      d="M203.136 98.672a4.15 4.15 0 0 0-4.251-1.77l-51.454 9.913L157.88 6.001a4.16 4.16 0 0 0-2.751-4.356 4.16 4.16 0 0 0-4.884 1.644l-97.69 149.144a4.155 4.155 0 0 0 .023 4.605 4.18 4.18 0 0 0 4.251 1.776l51.457-9.916-10.448 100.811a4.155 4.155 0 0 0 2.751 4.359 4.164 4.164 0 0 0 4.881-1.644l97.69-149.144a4.165 4.165 0 0 0-.023-4.608"
-                    ></path>
-                  </svg>
-                  <span>Featured</span>
+                  <Zap className="h-3 w-3 text-white" />
+                  <span className="text-black dark:text-white">Featured</span>
                 </Badge>
               </div>
               <div className="flex items-center">

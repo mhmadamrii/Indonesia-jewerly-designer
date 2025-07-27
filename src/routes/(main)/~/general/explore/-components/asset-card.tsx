@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { Download, Eye, Heart, LoaderIcon, ShoppingCart, Star } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ export function AssetCard({
   onViewDetails,
   isInCart,
 }: AssetCardProps) {
+  const navigate = useNavigate();
   const [selected3D, setSelected3D] = useState("");
   const queryClient = useQueryClient();
 
@@ -50,8 +52,13 @@ export function AssetCard({
 
         <div className="absolute inset-0 flex items-center justify-center space-x-2 bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           <button
-            // onClick={() => onViewDetails(asset)}
-            className="rounded-full bg-white/20 p-2 text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/30"
+            className="cursor-pointer rounded-full bg-white/20 p-2 text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/30"
+            onClick={() =>
+              navigate({
+                to: `/~/general/assets/$assetId`,
+                params: { assetId: asset.id },
+              })
+            }
           >
             <Eye className="h-4 w-4" />
           </button>

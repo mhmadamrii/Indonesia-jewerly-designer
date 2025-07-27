@@ -38,6 +38,7 @@ export const getJewerlyById = createServerFn({ method: "GET" })
     const res = await db
       .select()
       .from(jewerlyAssets)
+      .leftJoin(user, eq(user.id, jewerlyAssets.userId))
       .where(eq(jewerlyAssets.id, data.id));
 
     return {

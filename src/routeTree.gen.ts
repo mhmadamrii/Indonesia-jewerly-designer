@@ -27,6 +27,7 @@ import { Route as mainChar126GeneralCartIndexRouteImport } from "./routes/(main)
 import { Route as mainChar126ArtistPublishingIndexRouteImport } from "./routes/(main)/~/artist/publishing/index";
 import { Route as mainChar126ArtistMyModelsIndexRouteImport } from "./routes/(main)/~/artist/my-models/index";
 import { Route as mainChar126ArtistDashboardIndexRouteImport } from "./routes/(main)/~/artist/dashboard/index";
+import { Route as mainChar126GeneralAssetsAssetIdRouteImport } from "./routes/(main)/~/general/assets/$assetId";
 import { ServerRoute as ApiImagekitUploadServerRouteImport } from "./routes/api/imagekit/upload";
 import { ServerRoute as ApiAuthSplatServerRouteImport } from "./routes/api/auth/$";
 
@@ -120,6 +121,12 @@ const mainChar126ArtistDashboardIndexRoute =
     path: "/dashboard/",
     getParentRoute: () => mainChar126ArtistRouteRoute,
   } as any);
+const mainChar126GeneralAssetsAssetIdRoute =
+  mainChar126GeneralAssetsAssetIdRouteImport.update({
+    id: "/assets/$assetId",
+    path: "/assets/$assetId",
+    getParentRoute: () => mainChar126GeneralRouteRoute,
+  } as any);
 const ApiImagekitUploadServerRoute = ApiImagekitUploadServerRouteImport.update({
   id: "/api/imagekit/upload",
   path: "/api/imagekit/upload",
@@ -138,6 +145,7 @@ export interface FileRoutesByFullPath {
   "/playground": typeof mainPlaygroundRoute;
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
+  "/~/general/assets/$assetId": typeof mainChar126GeneralAssetsAssetIdRoute;
   "/~/artist/dashboard": typeof mainChar126ArtistDashboardIndexRoute;
   "/~/artist/my-models": typeof mainChar126ArtistMyModelsIndexRoute;
   "/~/artist/publishing": typeof mainChar126ArtistPublishingIndexRoute;
@@ -155,6 +163,7 @@ export interface FileRoutesByTo {
   "/playground": typeof mainPlaygroundRoute;
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
+  "/~/general/assets/$assetId": typeof mainChar126GeneralAssetsAssetIdRoute;
   "/~/artist/dashboard": typeof mainChar126ArtistDashboardIndexRoute;
   "/~/artist/my-models": typeof mainChar126ArtistMyModelsIndexRoute;
   "/~/artist/publishing": typeof mainChar126ArtistPublishingIndexRoute;
@@ -174,6 +183,7 @@ export interface FileRoutesById {
   "/(main)/playground": typeof mainPlaygroundRoute;
   "/(main)/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/(main)/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
+  "/(main)/~/general/assets/$assetId": typeof mainChar126GeneralAssetsAssetIdRoute;
   "/(main)/~/artist/dashboard/": typeof mainChar126ArtistDashboardIndexRoute;
   "/(main)/~/artist/my-models/": typeof mainChar126ArtistMyModelsIndexRoute;
   "/(main)/~/artist/publishing/": typeof mainChar126ArtistPublishingIndexRoute;
@@ -193,6 +203,7 @@ export interface FileRouteTypes {
     | "/playground"
     | "/~/artist"
     | "/~/general"
+    | "/~/general/assets/$assetId"
     | "/~/artist/dashboard"
     | "/~/artist/my-models"
     | "/~/artist/publishing"
@@ -210,6 +221,7 @@ export interface FileRouteTypes {
     | "/playground"
     | "/~/artist"
     | "/~/general"
+    | "/~/general/assets/$assetId"
     | "/~/artist/dashboard"
     | "/~/artist/my-models"
     | "/~/artist/publishing"
@@ -228,6 +240,7 @@ export interface FileRouteTypes {
     | "/(main)/playground"
     | "/(main)/~/artist"
     | "/(main)/~/general"
+    | "/(main)/~/general/assets/$assetId"
     | "/(main)/~/artist/dashboard/"
     | "/(main)/~/artist/my-models/"
     | "/(main)/~/artist/publishing/"
@@ -387,6 +400,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof mainChar126ArtistDashboardIndexRouteImport;
       parentRoute: typeof mainChar126ArtistRouteRoute;
     };
+    "/(main)/~/general/assets/$assetId": {
+      id: "/(main)/~/general/assets/$assetId";
+      path: "/assets/$assetId";
+      fullPath: "/~/general/assets/$assetId";
+      preLoaderRoute: typeof mainChar126GeneralAssetsAssetIdRouteImport;
+      parentRoute: typeof mainChar126GeneralRouteRoute;
+    };
   }
 }
 declare module "@tanstack/react-start/server" {
@@ -440,6 +460,7 @@ const mainChar126ArtistRouteRouteWithChildren =
   );
 
 interface mainChar126GeneralRouteRouteChildren {
+  mainChar126GeneralAssetsAssetIdRoute: typeof mainChar126GeneralAssetsAssetIdRoute;
   mainChar126GeneralCartIndexRoute: typeof mainChar126GeneralCartIndexRoute;
   mainChar126GeneralExploreIndexRoute: typeof mainChar126GeneralExploreIndexRoute;
   mainChar126GeneralFavoritesIndexRoute: typeof mainChar126GeneralFavoritesIndexRoute;
@@ -450,6 +471,7 @@ interface mainChar126GeneralRouteRouteChildren {
 
 const mainChar126GeneralRouteRouteChildren: mainChar126GeneralRouteRouteChildren =
   {
+    mainChar126GeneralAssetsAssetIdRoute: mainChar126GeneralAssetsAssetIdRoute,
     mainChar126GeneralCartIndexRoute: mainChar126GeneralCartIndexRoute,
     mainChar126GeneralExploreIndexRoute: mainChar126GeneralExploreIndexRoute,
     mainChar126GeneralFavoritesIndexRoute:

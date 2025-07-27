@@ -1,5 +1,12 @@
+import { useState } from "react";
+import { ModelViewer } from "~/components/3D/model-viewer";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Separator } from "~/components/ui/separator";
+
 import {
-  ArrowLeft,
   Download,
   Eye,
   Heart,
@@ -10,13 +17,6 @@ import {
   User,
   Zap,
 } from "lucide-react";
-import { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Separator } from "~/components/ui/separator";
-import { ModelViewer } from "./3D/model-viewer";
 
 interface AssetData {
   jewerly_assets: {
@@ -50,7 +50,7 @@ interface AssetDetailPageProps {
   data: AssetData;
 }
 
-export function AssetDetailPage({ data }: AssetDetailPageProps) {
+export function AssetDetail({ data }: AssetDetailPageProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [viewMode, setViewMode] = useState<"image" | "3d">("image");
   const { jewerly_assets: asset, user } = data;
@@ -72,26 +72,6 @@ export function AssetDetailPage({ data }: AssetDetailPageProps) {
 
   return (
     <div className="bg-background min-h-screen">
-      {/* Header */}
-      <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 border-b backdrop-blur">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Gallery
-            </Button>
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm">
-                <Share2 className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           {/* Asset Preview */}
@@ -99,7 +79,7 @@ export function AssetDetailPage({ data }: AssetDetailPageProps) {
             <div className="bg-muted relative aspect-square overflow-hidden rounded-lg">
               {viewMode === "image" ? (
                 <img
-                  src={asset.thumbnailUrl || "/placeholder.svg"}
+                  src={asset.thumbnailUrl || "/placeholder-img.jpg"}
                   alt={asset.name}
                   className="object-cover"
                 />
@@ -110,6 +90,7 @@ export function AssetDetailPage({ data }: AssetDetailPageProps) {
               {/* View Mode Toggle */}
               <div className="absolute top-4 right-4 flex gap-2">
                 <Button
+                  className="cursor-pointer"
                   variant={viewMode === "image" ? "default" : "secondary"}
                   size="sm"
                   onClick={() => setViewMode("image")}
@@ -118,6 +99,7 @@ export function AssetDetailPage({ data }: AssetDetailPageProps) {
                   Image
                 </Button>
                 <Button
+                  className="cursor-pointer"
                   variant={viewMode === "3d" ? "default" : "secondary"}
                   size="sm"
                   onClick={() => setViewMode("3d")}
@@ -155,20 +137,28 @@ export function AssetDetailPage({ data }: AssetDetailPageProps) {
             </div>
           </div>
 
-          {/* Asset Details */}
           <div className="space-y-6">
-            {/* Title and Price */}
-            <div>
-              <h1 className="mb-2 text-3xl font-bold">{asset.name}</h1>
-              <div className="mb-4 flex items-center gap-4">
-                <span className="text-primary text-3xl font-bold">
-                  {formatPrice(asset.price)}
-                </span>
-                <Badge variant="outline" className="capitalize">
-                  {asset.typeAsset}
-                </Badge>
+            <div className="flex justify-between">
+              <div>
+                <h1 className="mb-2 text-3xl font-bold">{asset.name}</h1>
+                <div className="mb-4 flex items-center gap-4">
+                  <span className="text-primary text-3xl font-bold">
+                    {formatPrice(asset.price)}
+                  </span>
+                  <Badge variant="outline" className="capitalize">
+                    {asset.typeAsset}
+                  </Badge>
+                </div>
+                <p className="text-muted-foreground text-lg">{asset.description}</p>
               </div>
-              <p className="text-muted-foreground text-lg">{asset.description}</p>
+              <div className="flex gap-2">
+                <Button variant="ghost" size="sm">
+                  <Share2 className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="sm">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
 
             {/* Creator Info */}
