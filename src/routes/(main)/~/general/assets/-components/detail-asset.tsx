@@ -76,12 +76,11 @@ export function AssetDetail({ data }: AssetDetailPageProps) {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           {/* Asset Preview */}
           <div className="space-y-4">
-            <div className="bg-muted relative aspect-square overflow-hidden rounded-lg">
+            <div className="bg-muted relative overflow-hidden rounded-lg">
               {viewMode === "image" ? (
                 <img
                   src={asset.thumbnailUrl || "/placeholder-img.jpg"}
                   alt={asset.name}
-                  className="object-cover"
                 />
               ) : (
                 <ModelViewer src={asset.assetUrl} />
