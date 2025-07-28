@@ -27,6 +27,7 @@ import { Route as mainChar126GeneralCartIndexRouteImport } from "./routes/(main)
 import { Route as mainChar126ArtistPublishingIndexRouteImport } from "./routes/(main)/~/artist/publishing/index";
 import { Route as mainChar126ArtistMyModelsIndexRouteImport } from "./routes/(main)/~/artist/my-models/index";
 import { Route as mainChar126ArtistDashboardIndexRouteImport } from "./routes/(main)/~/artist/dashboard/index";
+import { Route as mainChar126GeneralUUserIdRouteImport } from "./routes/(main)/~/general/u/$userId";
 import { Route as mainChar126GeneralPaymentsStatusRouteImport } from "./routes/(main)/~/general/payments/$status";
 import { Route as mainChar126GeneralAssetsAssetIdRouteImport } from "./routes/(main)/~/general/assets/$assetId";
 import { ServerRoute as ApiImagekitUploadServerRouteImport } from "./routes/api/imagekit/upload";
@@ -122,6 +123,12 @@ const mainChar126ArtistDashboardIndexRoute =
     path: "/dashboard/",
     getParentRoute: () => mainChar126ArtistRouteRoute,
   } as any);
+const mainChar126GeneralUUserIdRoute =
+  mainChar126GeneralUUserIdRouteImport.update({
+    id: "/u/$userId",
+    path: "/u/$userId",
+    getParentRoute: () => mainChar126GeneralRouteRoute,
+  } as any);
 const mainChar126GeneralPaymentsStatusRoute =
   mainChar126GeneralPaymentsStatusRouteImport.update({
     id: "/payments/$status",
@@ -154,6 +161,7 @@ export interface FileRoutesByFullPath {
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/~/general/assets/$assetId": typeof mainChar126GeneralAssetsAssetIdRoute;
   "/~/general/payments/$status": typeof mainChar126GeneralPaymentsStatusRoute;
+  "/~/general/u/$userId": typeof mainChar126GeneralUUserIdRoute;
   "/~/artist/dashboard": typeof mainChar126ArtistDashboardIndexRoute;
   "/~/artist/my-models": typeof mainChar126ArtistMyModelsIndexRoute;
   "/~/artist/publishing": typeof mainChar126ArtistPublishingIndexRoute;
@@ -173,6 +181,7 @@ export interface FileRoutesByTo {
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/~/general/assets/$assetId": typeof mainChar126GeneralAssetsAssetIdRoute;
   "/~/general/payments/$status": typeof mainChar126GeneralPaymentsStatusRoute;
+  "/~/general/u/$userId": typeof mainChar126GeneralUUserIdRoute;
   "/~/artist/dashboard": typeof mainChar126ArtistDashboardIndexRoute;
   "/~/artist/my-models": typeof mainChar126ArtistMyModelsIndexRoute;
   "/~/artist/publishing": typeof mainChar126ArtistPublishingIndexRoute;
@@ -194,6 +203,7 @@ export interface FileRoutesById {
   "/(main)/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/(main)/~/general/assets/$assetId": typeof mainChar126GeneralAssetsAssetIdRoute;
   "/(main)/~/general/payments/$status": typeof mainChar126GeneralPaymentsStatusRoute;
+  "/(main)/~/general/u/$userId": typeof mainChar126GeneralUUserIdRoute;
   "/(main)/~/artist/dashboard/": typeof mainChar126ArtistDashboardIndexRoute;
   "/(main)/~/artist/my-models/": typeof mainChar126ArtistMyModelsIndexRoute;
   "/(main)/~/artist/publishing/": typeof mainChar126ArtistPublishingIndexRoute;
@@ -215,6 +225,7 @@ export interface FileRouteTypes {
     | "/~/general"
     | "/~/general/assets/$assetId"
     | "/~/general/payments/$status"
+    | "/~/general/u/$userId"
     | "/~/artist/dashboard"
     | "/~/artist/my-models"
     | "/~/artist/publishing"
@@ -234,6 +245,7 @@ export interface FileRouteTypes {
     | "/~/general"
     | "/~/general/assets/$assetId"
     | "/~/general/payments/$status"
+    | "/~/general/u/$userId"
     | "/~/artist/dashboard"
     | "/~/artist/my-models"
     | "/~/artist/publishing"
@@ -254,6 +266,7 @@ export interface FileRouteTypes {
     | "/(main)/~/general"
     | "/(main)/~/general/assets/$assetId"
     | "/(main)/~/general/payments/$status"
+    | "/(main)/~/general/u/$userId"
     | "/(main)/~/artist/dashboard/"
     | "/(main)/~/artist/my-models/"
     | "/(main)/~/artist/publishing/"
@@ -413,6 +426,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof mainChar126ArtistDashboardIndexRouteImport;
       parentRoute: typeof mainChar126ArtistRouteRoute;
     };
+    "/(main)/~/general/u/$userId": {
+      id: "/(main)/~/general/u/$userId";
+      path: "/u/$userId";
+      fullPath: "/~/general/u/$userId";
+      preLoaderRoute: typeof mainChar126GeneralUUserIdRouteImport;
+      parentRoute: typeof mainChar126GeneralRouteRoute;
+    };
     "/(main)/~/general/payments/$status": {
       id: "/(main)/~/general/payments/$status";
       path: "/payments/$status";
@@ -482,6 +502,7 @@ const mainChar126ArtistRouteRouteWithChildren =
 interface mainChar126GeneralRouteRouteChildren {
   mainChar126GeneralAssetsAssetIdRoute: typeof mainChar126GeneralAssetsAssetIdRoute;
   mainChar126GeneralPaymentsStatusRoute: typeof mainChar126GeneralPaymentsStatusRoute;
+  mainChar126GeneralUUserIdRoute: typeof mainChar126GeneralUUserIdRoute;
   mainChar126GeneralCartIndexRoute: typeof mainChar126GeneralCartIndexRoute;
   mainChar126GeneralExploreIndexRoute: typeof mainChar126GeneralExploreIndexRoute;
   mainChar126GeneralFavoritesIndexRoute: typeof mainChar126GeneralFavoritesIndexRoute;
@@ -495,6 +516,7 @@ const mainChar126GeneralRouteRouteChildren: mainChar126GeneralRouteRouteChildren
     mainChar126GeneralAssetsAssetIdRoute: mainChar126GeneralAssetsAssetIdRoute,
     mainChar126GeneralPaymentsStatusRoute:
       mainChar126GeneralPaymentsStatusRoute,
+    mainChar126GeneralUUserIdRoute: mainChar126GeneralUUserIdRoute,
     mainChar126GeneralCartIndexRoute: mainChar126GeneralCartIndexRoute,
     mainChar126GeneralExploreIndexRoute: mainChar126GeneralExploreIndexRoute,
     mainChar126GeneralFavoritesIndexRoute:

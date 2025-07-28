@@ -3,9 +3,10 @@ import { ModelViewer } from "~/components/3D/model-viewer";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 
+import { Link } from "@tanstack/react-router";
 import {
   Download,
   Eye,
@@ -83,7 +84,9 @@ export function AssetDetail({ data }: AssetDetailPageProps) {
                   alt={asset.name}
                 />
               ) : (
-                <ModelViewer src={asset.assetUrl} />
+                <div className="h-[500px]">
+                  <ModelViewer src={asset.assetUrl} />
+                </div>
               )}
 
               {/* View Mode Toggle */}
@@ -162,9 +165,6 @@ export function AssetDetail({ data }: AssetDetailPageProps) {
 
             {/* Creator Info */}
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Creator</CardTitle>
-              </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-4">
                   <Avatar className="h-12 w-12">
@@ -173,7 +173,13 @@ export function AssetDetail({ data }: AssetDetailPageProps) {
                   </Avatar>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-semibold">{user.name}</h3>
+                      <Link
+                        to="/~/general/u/$userId"
+                        params={{ userId: user.id }}
+                        className="font-semibold"
+                      >
+                        {user.name}
+                      </Link>
                       {user.emailVerified && (
                         <Shield className="h-4 w-4 text-green-500" />
                       )}
@@ -189,9 +195,14 @@ export function AssetDetail({ data }: AssetDetailPageProps) {
                       </div>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm">
-                    Follow
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline">
+                      <Mail />
+                    </Button>
+                    <Button variant="outline" size="sm">
+                      Follow
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -236,24 +247,6 @@ export function AssetDetail({ data }: AssetDetailPageProps) {
                 </div>
               </div>
             </div>
-
-            {/* Contact Creator */}
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-semibold">Contact Creator</h4>
-                    <p className="text-muted-foreground text-sm">
-                      Have questions about this asset?
-                    </p>
-                  </div>
-                  <Button variant="outline">
-                    <Mail className="mr-2 h-4 w-4" />
-                    Message
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </div>
