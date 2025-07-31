@@ -1,6 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { LoaderIcon } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { b2GetInfo, b2UploadFile } from "~/actions/backblaze.action";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -19,10 +21,10 @@ function RouteComponent() {
     },
   });
 
-  const { mutate: uploadFile } = useMutation({
+  const { mutate: uploadFile, isPending: uploading } = useMutation({
     mutationFn: b2UploadFile,
     onSuccess: (data) => {
-      console.log(data);
+      toast.success("File uploaded successfully!");
     },
   });
 
@@ -42,7 +44,8 @@ function RouteComponent() {
 
       <div className="flex flex-col gap-2">
         <Button
-          className="cursor-pointer"
+          disabled={uploading}
+          className="flex cursor-pointer gap-2"
           onClick={() => {
             if (!file) {
               console.log("No file selected");
@@ -65,6 +68,7 @@ function RouteComponent() {
               uploadFile({
                 data: {
                   file: base64,
+                  fileName: file.name,
                 },
               });
             };
@@ -76,7 +80,7 @@ function RouteComponent() {
             reader.readAsDataURL(file); // ✅ this triggers base64 encoding
           }}
         >
-          {isPending && "Loading..."}
+          {uploading && <LoaderIcon className="animate-spin" />}
           Trigger backblaze upload
         </Button>
 
