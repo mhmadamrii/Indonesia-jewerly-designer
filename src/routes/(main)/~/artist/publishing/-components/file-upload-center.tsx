@@ -23,12 +23,14 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+
 import {
   Progress,
   ProgressLabel,
   ProgressTrack,
   ProgressValue,
-} from "./animate-ui/base/progress";
+} from "~/components/animate-ui/base/progress";
+
 interface UploadedFile {
   id: string;
   name: string;
@@ -38,7 +40,7 @@ interface UploadedFile {
   uploadedAt: Date;
 }
 
-export function FileUploadAsset() {
+export function FileUploadCenter() {
   const [uploadedFiles, setUploadedFiles] = useState<{
     thumbnail: UploadedFile[];
     preview: UploadedFile[];

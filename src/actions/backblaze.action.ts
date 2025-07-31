@@ -3,6 +3,8 @@ import z from "zod";
 
 import { createServerFn } from "@tanstack/react-start";
 
+// https://www.backblaze.com/docs/cloud-storage-upload-and-manage-objects
+
 export const b2GetInfo = createServerFn({ method: "POST" }).handler(
   async ({ data, context }) => {
     console.log("data", data);

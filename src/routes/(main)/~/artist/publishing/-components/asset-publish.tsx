@@ -62,6 +62,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { FileUploadCenter } from "./file-upload-center";
 
 const formSchema = z.object({
   name: z.string().min(1).min(3).max(20),
@@ -451,12 +452,13 @@ export function AssetPublish() {
               )}
             />
 
-            <div className="flex w-full justify-center">
+            <div className="flex w-full flex-col justify-center">
               <FileUploadDirect
                 isUploadingImage={isUploadingImage}
                 setIsUploadingImage={setIsUploadingImage}
                 onSetImageUrl={setImageUrl}
               />
+              <FileUploadCenter />
             </div>
 
             <div className="flex w-full items-center justify-end">
