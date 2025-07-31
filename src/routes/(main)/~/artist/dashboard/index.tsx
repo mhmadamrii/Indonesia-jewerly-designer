@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ChartAreaInteractive } from "./-components/chart-area-interactive";
+import { data_tables } from "./-components/data";
 import { DataTable } from "./-components/data-table";
 import { SectionCards } from "./-components/section-cards";
-import { data_tables } from "./data";
 
 export const Route = createFileRoute("/(main)/~/artist/dashboard/")({
   ssr: false,

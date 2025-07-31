@@ -13,7 +13,7 @@ import { createServerRootRoute } from "@tanstack/react-start/server";
 import { Route as rootRouteImport } from "./routes/__root";
 import { Route as authRouteRouteImport } from "./routes/(auth)/route";
 import { Route as IndexRouteImport } from "./routes/index";
-import { Route as mainPlaygroundRouteImport } from "./routes/(main)/playground";
+import { Route as publicPlaygroundsRouteImport } from "./routes/(public)/playgrounds";
 import { Route as authAuthRouteImport } from "./routes/(auth)/auth";
 import { Route as adminAdminRouteImport } from "./routes/(admin)/admin";
 import { Route as mainChar126GeneralRouteRouteImport } from "./routes/(main)/~/general/route";
@@ -44,9 +44,9 @@ const IndexRoute = IndexRouteImport.update({
   path: "/",
   getParentRoute: () => rootRouteImport,
 } as any);
-const mainPlaygroundRoute = mainPlaygroundRouteImport.update({
-  id: "/(main)/playground",
-  path: "/playground",
+const publicPlaygroundsRoute = publicPlaygroundsRouteImport.update({
+  id: "/(public)/playgrounds",
+  path: "/playgrounds",
   getParentRoute: () => rootRouteImport,
 } as any);
 const authAuthRoute = authAuthRouteImport.update({
@@ -156,7 +156,7 @@ export interface FileRoutesByFullPath {
   "/": typeof authRouteRouteWithChildren;
   "/admin": typeof adminAdminRoute;
   "/auth": typeof authAuthRoute;
-  "/playground": typeof mainPlaygroundRoute;
+  "/playgrounds": typeof publicPlaygroundsRoute;
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/~/general/assets/$assetId": typeof mainChar126GeneralAssetsAssetIdRoute;
@@ -176,7 +176,7 @@ export interface FileRoutesByTo {
   "/": typeof authRouteRouteWithChildren;
   "/admin": typeof adminAdminRoute;
   "/auth": typeof authAuthRoute;
-  "/playground": typeof mainPlaygroundRoute;
+  "/playgrounds": typeof publicPlaygroundsRoute;
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/~/general/assets/$assetId": typeof mainChar126GeneralAssetsAssetIdRoute;
@@ -198,7 +198,7 @@ export interface FileRoutesById {
   "/(auth)": typeof authRouteRouteWithChildren;
   "/(admin)/admin": typeof adminAdminRoute;
   "/(auth)/auth": typeof authAuthRoute;
-  "/(main)/playground": typeof mainPlaygroundRoute;
+  "/(public)/playgrounds": typeof publicPlaygroundsRoute;
   "/(main)/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/(main)/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/(main)/~/general/assets/$assetId": typeof mainChar126GeneralAssetsAssetIdRoute;
@@ -220,7 +220,7 @@ export interface FileRouteTypes {
     | "/"
     | "/admin"
     | "/auth"
-    | "/playground"
+    | "/playgrounds"
     | "/~/artist"
     | "/~/general"
     | "/~/general/assets/$assetId"
@@ -240,7 +240,7 @@ export interface FileRouteTypes {
     | "/"
     | "/admin"
     | "/auth"
-    | "/playground"
+    | "/playgrounds"
     | "/~/artist"
     | "/~/general"
     | "/~/general/assets/$assetId"
@@ -261,7 +261,7 @@ export interface FileRouteTypes {
     | "/(auth)"
     | "/(admin)/admin"
     | "/(auth)/auth"
-    | "/(main)/playground"
+    | "/(public)/playgrounds"
     | "/(main)/~/artist"
     | "/(main)/~/general"
     | "/(main)/~/general/assets/$assetId"
@@ -282,7 +282,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
   authRouteRoute: typeof authRouteRouteWithChildren;
   adminAdminRoute: typeof adminAdminRoute;
-  mainPlaygroundRoute: typeof mainPlaygroundRoute;
+  publicPlaygroundsRoute: typeof publicPlaygroundsRoute;
   mainChar126ArtistRouteRoute: typeof mainChar126ArtistRouteRouteWithChildren;
   mainChar126GeneralRouteRoute: typeof mainChar126GeneralRouteRouteWithChildren;
 }
@@ -328,11 +328,11 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof IndexRouteImport;
       parentRoute: typeof rootRouteImport;
     };
-    "/(main)/playground": {
-      id: "/(main)/playground";
-      path: "/playground";
-      fullPath: "/playground";
-      preLoaderRoute: typeof mainPlaygroundRouteImport;
+    "/(public)/playgrounds": {
+      id: "/(public)/playgrounds";
+      path: "/playgrounds";
+      fullPath: "/playgrounds";
+      preLoaderRoute: typeof publicPlaygroundsRouteImport;
       parentRoute: typeof rootRouteImport;
     };
     "/(auth)/auth": {
@@ -536,7 +536,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   authRouteRoute: authRouteRouteWithChildren,
   adminAdminRoute: adminAdminRoute,
-  mainPlaygroundRoute: mainPlaygroundRoute,
+  publicPlaygroundsRoute: publicPlaygroundsRoute,
   mainChar126ArtistRouteRoute: mainChar126ArtistRouteRouteWithChildren,
   mainChar126GeneralRouteRoute: mainChar126GeneralRouteRouteWithChildren,
 };
