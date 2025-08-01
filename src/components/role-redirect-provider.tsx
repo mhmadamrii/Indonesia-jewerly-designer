@@ -35,8 +35,8 @@ export function RoleRedirectProvider({
       )}
       <ImageKitProvider
         authenticationEndpoint={`${import.meta.env.VITE_BASE_URL}/api/imagekit/upload`}
-        publicKey="public_L+2o58FFDcS0R36N5glkVvxZt/M="
-        urlEndpoint="https://ik.imagekit.io/mhmadamrii"
+        publicKey={import.meta.env.VITE_IMAGE_KIT_PUBLIC_KEY}
+        urlEndpoint={import.meta.env.VITE_IMAGE_KIT_URL_ENDPOINT}
       >
         {children}
       </ImageKitProvider>

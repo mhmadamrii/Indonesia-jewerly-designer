@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { IKImage } from "imagekitio-react";
 import { Eye, Heart, LoaderIcon, ShoppingCart, Star, Zap } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
@@ -51,8 +50,8 @@ export function Trendings({ jewerlies }: TrendingsProps) {
         >
           <div className="relative overflow-hidden">
             {item.thumbnail_url && (
-              <IKImage
-                src={item.thumbnail_url ?? ""}
+              <img
+                src={item?.thumbnail_url ?? ""}
                 className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 alt="Asset Image"
               />

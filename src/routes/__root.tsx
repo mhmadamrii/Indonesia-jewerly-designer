@@ -9,9 +9,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { IKContext } from "imagekitio-react";
 import { Toaster } from "sonner";
-import { imageKitAuthenticator } from "~/actions/imagekit.action";
 import { ThemeProvider } from "~/components/theme-provider";
 import { getUser } from "~/lib/auth/functions/getUser";
 import appCss from "~/styles.css?url";
@@ -50,19 +48,13 @@ export const Route = createRootRouteWithContext<{
 });
 
 function RootComponent() {
-  const publicKey = "public_L+2o58FFDcS0R36N5glkVvxZt/M=";
-  const urlEndpoint = "https://ik.imagekit.io/mhmadamrii";
+  const publicKey = "public_TiL1AamWyyB0VJAGFZrIDL0MMnY=";
+  const urlEndpoint = "https://ik.imagekit.io/idnijd";
 
   return (
     <RootDocument>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <IKContext
-          publicKey={publicKey}
-          urlEndpoint={urlEndpoint}
-          authenticator={imageKitAuthenticator}
-        >
-          <Outlet />
-        </IKContext>
+        <Outlet />
       </ThemeProvider>
     </RootDocument>
   );

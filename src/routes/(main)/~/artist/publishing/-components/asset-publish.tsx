@@ -13,7 +13,6 @@ import { MultipleSelector } from "~/components/ui/multi-select";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Textarea } from "~/components/ui/textarea";
 import { cn } from "~/lib/utils";
-import { FileUploadDirect } from "./file-upload-direct";
 
 import {
   ChevronDown,
@@ -453,11 +452,11 @@ export function AssetPublish() {
             />
 
             <div className="flex w-full flex-col justify-center">
-              <FileUploadDirect
+              {/* <FileUploadDirect
                 isUploadingImage={isUploadingImage}
                 setIsUploadingImage={setIsUploadingImage}
                 onSetImageUrl={setImageUrl}
-              />
+              /> */}
               <FileUploadCenter />
             </div>
 

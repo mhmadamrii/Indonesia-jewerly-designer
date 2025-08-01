@@ -44,28 +44,19 @@ export function FileUploadDirect({
   const [files, setFiles] = useState<File[]>([]);
   const { upload } = useImageKit();
 
-  // console.log("imageKitImageList", imageKitImageList);
-  // console.log("files", files);
-
   const onUpload: NonNullable<FileUploadProps["onUpload"]> = useCallback(
     async (files, { onProgress, onSuccess, onError }) => {
       const uploadPromises = files.map(async (file) => {
+        console.log("per file", file);
         setIsUploadingImage(true);
-        const totalChunks = 10;
-        let uploadedChunks = 0;
-
-        for (let i = 0; i < totalChunks; i++) {
-          await new Promise((resolve) => setTimeout(resolve, Math.random() * 200 + 100));
-          uploadedChunks++;
-          const progress = (uploadedChunks / totalChunks) * 100;
-          onProgress(file, progress);
-        }
 
         try {
           const res = await upload({
             file,
             fileName: file.name,
+            folder: "thumbnails",
           });
+
           if (res.fileType === "image") {
             setThumbnailId(res.fileId);
             onSetImageUrl((prev) => ({ ...prev, thumbnail_url: res.url }));

@@ -24,12 +24,14 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
+import { useImageKit } from "imagekit-react-hook";
 import {
   Progress,
   ProgressLabel,
   ProgressTrack,
   ProgressValue,
 } from "~/components/animate-ui/base/progress";
+import { cn } from "~/lib/utils";
 
 interface UploadedFile {
   id: string;
@@ -41,6 +43,7 @@ interface UploadedFile {
 }
 
 export function FileUploadCenter() {
+  const { upload } = useImageKit();
   const [uploadedFiles, setUploadedFiles] = useState<{
     thumbnail: UploadedFile[];
     preview: UploadedFile[];
@@ -51,6 +54,8 @@ export function FileUploadCenter() {
     asset: [],
   });
 
+  console.log("uploadedFiles", uploadedFiles);
+
   const [dragOver, setDragOver] = useState<string | null>(null);
   const [uploading, setUploading] = useState<string | null>(null);
 
@@ -59,6 +64,7 @@ export function FileUploadCenter() {
   const usedStorage = Object.values(uploadedFiles)
     .flat()
     .reduce((total, file) => total + file.size, 0);
+
   const storagePercentage = (usedStorage / totalStorage) * 100;
 
   const formatFileSize = (bytes: number) => {
@@ -69,28 +75,47 @@ export function FileUploadCenter() {
     return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
+  const getCategoryFolder = (category: keyof typeof uploadedFiles) => {
+    switch (category) {
+      case "thumbnail":
+        return "thumbnails";
+      case "preview":
+        return "previews";
+      case "asset":
+        return "assets";
+    }
+  };
+
   const handleFileUpload = async (
     files: FileList,
     category: keyof typeof uploadedFiles,
   ) => {
     setUploading(category);
 
-    // Simulate upload delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const res = await upload({
+        file: files[0],
+        fileName: files[0].name,
+        folder: getCategoryFolder(category),
+      });
+      console.log("response upload", res);
 
-    const newFiles: UploadedFile[] = Array.from(files).map((file) => ({
-      id: Math.random().toString(36).substr(2, 9),
-      name: file.name,
-      size: file.size,
-      type: file.type,
-      url: URL.createObjectURL(file),
-      uploadedAt: new Date(),
-    }));
+      const newFiles: UploadedFile[] = Array.from(files).map((file) => ({
+        id: Math.random().toString(36).substr(2, 9),
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        url: res.url ?? "",
+        uploadedAt: new Date(),
+      }));
 
-    setUploadedFiles((prev) => ({
-      ...prev,
-      [category]: [...prev[category], ...newFiles],
-    }));
+      setUploadedFiles((prev) => ({
+        ...prev,
+        [category]: [...prev[category], ...newFiles],
+      }));
+    } catch (error) {
+      console.log(error);
+    }
 
     setUploading(null);
   };
@@ -158,6 +183,7 @@ export function FileUploadCenter() {
           </div>
           <div className="flex flex-col items-center gap-4 sm:flex-row">
             <Button
+              type="button"
               onClick={() => {
                 const input = document.createElement("input");
                 input.type = "file";
@@ -184,7 +210,6 @@ export function FileUploadCenter() {
         </div>
       </div>
 
-      {/* Uploaded Files */}
       {uploadedFiles[category].length > 0 && (
         <div className="space-y-3">
           <h4 className="text-muted-foreground text-sm font-medium">
@@ -332,7 +357,13 @@ export function FileUploadCenter() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{uploadedFiles.thumbnail.length}</div>
+              <div
+                className={cn("text-2xl font-bold text-green-500", {
+                  "text-red-500": uploadedFiles.thumbnail.length === 0,
+                })}
+              >
+                {uploadedFiles.thumbnail.length}
+              </div>
               <p className="text-muted-foreground text-xs">
                 {formatFileSize(
                   uploadedFiles.thumbnail.reduce((sum, file) => sum + file.size, 0),
@@ -348,8 +379,14 @@ export function FileUploadCenter() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{uploadedFiles.preview.length}</div>
-              <p className="text-muted-foreground text-xs">
+              <div
+                className={cn("text-2xl font-bold text-red-500", {
+                  "text-green-500": uploadedFiles.preview.length > 0,
+                })}
+              >
+                {uploadedFiles.preview.length}
+              </div>
+              <p className={cn("text-muted-foreground text-xs", {})}>
                 {formatFileSize(
                   uploadedFiles.preview.reduce((sum, file) => sum + file.size, 0),
                 )}
@@ -364,7 +401,13 @@ export function FileUploadCenter() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{uploadedFiles.asset.length}</div>
+              <div
+                className={cn("text-2xl font-bold text-green-500", {
+                  "text-red-500": uploadedFiles.asset.length === 0,
+                })}
+              >
+                {uploadedFiles.asset.length}
+              </div>
               <p className="text-muted-foreground text-xs">
                 {formatFileSize(
                   uploadedFiles.asset.reduce((sum, file) => sum + file.size, 0),
