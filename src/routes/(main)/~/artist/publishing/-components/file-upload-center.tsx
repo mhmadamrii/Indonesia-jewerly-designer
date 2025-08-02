@@ -1,9 +1,14 @@
 import type React from "react";
 
+import { useMutation } from "@tanstack/react-query";
+import { useImageKit } from "imagekit-react-hook";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { authClient } from "~/lib/auth/auth-client";
+import { cn } from "~/lib/utils";
 
 import {
   Check,
@@ -24,14 +29,12 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
-import { useImageKit } from "imagekit-react-hook";
 import {
   Progress,
   ProgressLabel,
   ProgressTrack,
   ProgressValue,
 } from "~/components/animate-ui/base/progress";
-import { cn } from "~/lib/utils";
 
 interface UploadedFile {
   id: string;
@@ -43,6 +46,7 @@ interface UploadedFile {
 }
 
 export function FileUploadCenter() {
+  const { data: session } = authClient.useSession();
   const { upload } = useImageKit();
   const [uploadedFiles, setUploadedFiles] = useState<{
     thumbnail: UploadedFile[];
@@ -59,13 +63,37 @@ export function FileUploadCenter() {
   const [dragOver, setDragOver] = useState<string | null>(null);
   const [uploading, setUploading] = useState<string | null>(null);
 
-  // Storage management (1GB = 1,073,741,824 bytes)
   const totalStorage = 1073741824; // 1GB in bytes
   const usedStorage = Object.values(uploadedFiles)
     .flat()
     .reduce((total, file) => total + file.size, 0);
 
   const storagePercentage = (usedStorage / totalStorage) * 100;
+
+  const { mutate: deleteImage } = useMutation({
+    mutationFn: async (data: {
+      fileId: string;
+      category: keyof typeof uploadedFiles;
+    }) => {
+      const { fileId, category } = data;
+      try {
+        const res = await fetch(`https://api.imagekit.io/v1/files/${fileId}`, {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            Authorization: `Basic ${import.meta.env.VITE_BASIC_AUTH}`,
+          },
+        });
+
+        if (res.status === 204) {
+          toast.success("File deleted successfully");
+          removeFile(category, fileId);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
 
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return "0 Bytes";
@@ -95,14 +123,16 @@ export function FileUploadCenter() {
     try {
       const res = await upload({
         file: files[0],
-        fileName: files[0].name,
+        fileName: `${files[0].name}-${session?.user?.email.split("@")[0]}-${category}`,
         folder: getCategoryFolder(category),
       });
-      console.log("response upload", res);
+      if (res.url) {
+        toast.success("File uploaded successfully");
+      }
 
       const newFiles: UploadedFile[] = Array.from(files).map((file) => ({
-        id: Math.random().toString(36).substr(2, 9),
-        name: file.name,
+        id: res.fileId,
+        name: `${file.name}-${session?.user?.email.split("@")[0]}`,
         size: file.size,
         type: file.type,
         url: res.url ?? "",
@@ -164,14 +194,19 @@ export function FileUploadCenter() {
   }) => (
     <div className="space-y-6">
       <div
-        className={`rounded-lg border-2 border-dashed p-8 text-center transition-all duration-200 ${
-          dragOver === category
-            ? "border-primary bg-primary/5 scale-105"
-            : "border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/50"
-        } ${uploading === category ? "pointer-events-none opacity-50" : ""}`}
         onDrop={(e) => handleDrop(e, category)}
         onDragOver={(e) => handleDragOver(e, category)}
         onDragLeave={handleDragLeave}
+        className={cn(
+          "rounded-lg border-2 border-dashed p-8 text-center transition-all duration-200",
+          dragOver === category
+            ? "border-primary bg-primary/5 scale-105"
+            : "border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/50",
+          uploading === category && "pointer-events-none opacity-50",
+          {
+            hidden: uploadedFiles[category].length > 0,
+          },
+        )}
       >
         <div className="flex flex-col items-center space-y-4">
           <div className="bg-muted rounded-full p-4">
@@ -196,7 +231,7 @@ export function FileUploadCenter() {
                 input.click();
               }}
               disabled={uploading === category}
-              className="min-w-[120px]"
+              className="min-w-[120px] cursor-pointer"
             >
               {uploading === category ? "Uploading..." : "Choose Files"}
             </Button>
@@ -210,6 +245,15 @@ export function FileUploadCenter() {
         </div>
       </div>
 
+      {uploadedFiles[category].length > 0 && category == "thumbnail" && (
+        <div className="h-[300px] w-full">
+          <img
+            src={uploadedFiles[category][0].url}
+            alt="thumbnail"
+            className="h-full w-full rounded-md"
+          />
+        </div>
+      )}
       {uploadedFiles[category].length > 0 && (
         <div className="space-y-3">
           <h4 className="text-muted-foreground text-sm font-medium">
@@ -236,10 +280,13 @@ export function FileUploadCenter() {
                     Uploaded
                   </Badge>
                   <Button
+                    className="hover:bg-destructive/10 hover:text-destructive h-8 w-8 cursor-pointer p-0"
+                    type="button"
                     variant="ghost"
                     size="sm"
-                    onClick={() => removeFile(category, file.id)}
-                    className="hover:bg-destructive/10 hover:text-destructive h-8 w-8 p-0"
+                    onClick={() => {
+                      deleteImage({ fileId: file.id, category });
+                    }}
                   >
                     <X className="h-4 w-4" />
                   </Button>
