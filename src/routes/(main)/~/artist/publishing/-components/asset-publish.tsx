@@ -106,10 +106,12 @@ export function AssetPublish() {
   const [isUsingBoost, setIsUsingBoost] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [tagsValue, setTagsValue] = useState<{ value: string; label: string }[]>([]);
-  const [imageUrl, setImageUrl] = useState({
-    asset_url: "",
+  const [assetStorageUrl, setAssetStorageUrl] = useState({
     thumbnail_url: "",
+    preview_url: "",
+    asset_url: "",
   });
+  console.log("assetStorageUrl", assetStorageUrl);
 
   const { data: tagsAndCategories } = useQuery({
     queryKey: ["tags_and_categories"],
@@ -160,8 +162,9 @@ export function AssetPublish() {
           name: values.name,
           description: values.description,
           price: values.price,
-          imageUrl: imageUrl.asset_url,
-          thumbnailUrl: imageUrl.thumbnail_url,
+          thumbnailUrl: assetStorageUrl.thumbnail_url,
+          previewUrl: assetStorageUrl.preview_url,
+          assetUrl: assetStorageUrl.asset_url,
           categoryId: values.category,
           typeAsset: "image",
           tags: tagsValue.map((item) => item.value),
@@ -457,7 +460,7 @@ export function AssetPublish() {
                 setIsUploadingImage={setIsUploadingImage}
                 onSetImageUrl={setImageUrl}
               /> */}
-              <FileUploadCenter />
+              <FileUploadCenter onSetAssetStorageUrl={setAssetStorageUrl} />
             </div>
 
             <div className="flex w-full items-center justify-end">
@@ -467,7 +470,7 @@ export function AssetPublish() {
                 disabled={
                   isPending ||
                   isUploadingImage ||
-                  imageUrl.asset_url === "" ||
+                  assetStorageUrl.asset_url === "" ||
                   tagsValue.length === 0
                 }
               >

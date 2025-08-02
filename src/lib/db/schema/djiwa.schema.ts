@@ -38,6 +38,7 @@ export const jewerlyAssets = pgTable("jewerly_assets", {
   name: text("name").notNull(),
   description: text("description").notNull(),
   price: integer("price").notNull(),
+  previewUrl: text("preview_url").notNull(),
   thumbnailUrl: text("thumbnail_url").notNull(),
   assetUrl: text("asset_url").notNull(),
   typeAsset: text("type_asset").notNull(),

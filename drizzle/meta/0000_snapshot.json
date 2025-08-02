@@ -1,5 +1,5 @@
 {
-  "id": "8ec7d7a8-0d2c-4bbf-aec4-50333bf46428",
+  "id": "7b643c1b-5597-4093-bf12-6685fad0a631",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -226,7 +226,7 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
-          "default": 0
+          "default": 120
         },
         "email_verified": {
           "name": "email_verified",

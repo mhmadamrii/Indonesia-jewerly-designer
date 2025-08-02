@@ -29,12 +29,23 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
+import { ModelViewer } from "~/components/3D/model-viewer";
 import {
   Progress,
   ProgressLabel,
   ProgressTrack,
   ProgressValue,
 } from "~/components/animate-ui/base/progress";
+
+interface IProps {
+  onSetAssetStorageUrl: React.Dispatch<
+    React.SetStateAction<{
+      thumbnail_url: string;
+      preview_url: string;
+      asset_url: string;
+    }>
+  >;
+}
 
 interface UploadedFile {
   id: string;
@@ -45,7 +56,7 @@ interface UploadedFile {
   uploadedAt: Date;
 }
 
-export function FileUploadCenter() {
+export function FileUploadCenter({ onSetAssetStorageUrl }: IProps) {
   const { data: session } = authClient.useSession();
   const { upload } = useImageKit();
   const [uploadedFiles, setUploadedFiles] = useState<{
@@ -126,8 +137,23 @@ export function FileUploadCenter() {
         fileName: `${files[0].name}-${session?.user?.email.split("@")[0]}-${category}`,
         folder: getCategoryFolder(category),
       });
-      if (res.url) {
-        toast.success("File uploaded successfully");
+      if (res.url && category == "thumbnail") {
+        onSetAssetStorageUrl((prev) => ({
+          ...prev,
+          thumbnail_url: res.url,
+        }));
+      }
+      if (res.url && category == "preview") {
+        onSetAssetStorageUrl((prev) => ({
+          ...prev,
+          preview_url: res.url,
+        }));
+      }
+      if (res.url && category == "asset") {
+        onSetAssetStorageUrl((prev) => ({
+          ...prev,
+          asset_url: res.url,
+        }));
       }
 
       const newFiles: UploadedFile[] = Array.from(files).map((file) => ({
@@ -178,6 +204,13 @@ export function FileUploadCenter() {
   const getFileIcon = (type: string) => {
     if (type.startsWith("image/")) return <ImageIcon className="h-4 w-4" />;
     if (type.startsWith("video/")) return <Play className="h-4 w-4" />;
+    if (
+      type.includes("glb") ||
+      type.includes("gltf") ||
+      type.includes("obj") ||
+      type.includes("stl")
+    )
+      return <File className="h-4 w-4" />;
     return <File className="h-4 w-4" />;
   };
 
@@ -252,6 +285,11 @@ export function FileUploadCenter() {
             alt="thumbnail"
             className="h-full w-full rounded-md"
           />
+        </div>
+      )}
+      {uploadedFiles[category].length > 0 && category == "preview" && (
+        <div className="h-[300px] w-full">
+          <ModelViewer src={uploadedFiles[category][0].url} />
         </div>
       )}
       {uploadedFiles[category].length > 0 && (
@@ -379,7 +417,7 @@ export function FileUploadCenter() {
                   category="preview"
                   title="Upload Previews"
                   description="High-quality preview media files"
-                  acceptedTypes="image/*,video/*"
+                  acceptedTypes="image/*,video/*,.glb,.gltf,.obj,.stl"
                 />
               </TabsContent>
 

@@ -32,7 +32,7 @@ CREATE TABLE "user" (
 	"name" text NOT NULL,
 	"email" text NOT NULL,
 	"role" text DEFAULT 'user' NOT NULL,
-	"boost_credit" integer DEFAULT 0,
+	"boost_credit" integer DEFAULT 120,
 	"email_verified" boolean NOT NULL,
 	"image" text,
 	"created_at" timestamp NOT NULL,
