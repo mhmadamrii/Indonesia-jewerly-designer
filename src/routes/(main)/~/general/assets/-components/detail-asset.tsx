@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ModelViewer } from "~/components/3D/model-viewer";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
@@ -6,7 +7,6 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 
-import { Link } from "@tanstack/react-router";
 import {
   Download,
   Eye,
@@ -27,6 +27,7 @@ interface AssetData {
     price: number;
     thumbnailUrl: string;
     assetUrl: string;
+    previewUrl: string;
     typeAsset: string;
     userId: string;
     boost: number;
@@ -85,7 +86,7 @@ export function AssetDetail({ data }: AssetDetailPageProps) {
                 />
               ) : (
                 <div className="h-[500px]">
-                  <ModelViewer src={asset.assetUrl} />
+                  <ModelViewer src={asset.previewUrl} />
                 </div>
               )}
 

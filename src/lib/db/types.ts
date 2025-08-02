@@ -27,6 +27,7 @@ export type JewerlyWithMeta = {
   category_name: string;
   creator_name: string;
   creator_image: string;
+  preview_url: string;
   tags: string; // comma-separated string
 };
 

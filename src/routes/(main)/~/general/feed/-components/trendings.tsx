@@ -60,7 +60,7 @@ export function Trendings({ jewerlies }: TrendingsProps) {
             <div className="absolute inset-0 flex items-center justify-center space-x-2 bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
               <button
                 onClick={() => {
-                  setSelected3D(item.asset_url);
+                  setSelected3D(item.preview_url);
                   setSelectedId(idx + 1);
                 }}
                 className="cursor-pointer rounded-full bg-white/20 p-2 text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/30"
