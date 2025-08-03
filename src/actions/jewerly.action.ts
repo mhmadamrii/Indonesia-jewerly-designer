@@ -19,6 +19,7 @@ const JewerlyAssetSchema = z.object({
   tags: z.array(z.string()).optional(),
   boost: z.number(),
   totalBoostToUpdate: z.number(),
+  totalStorageLimitToUpdate: z.number(),
 });
 
 export const getAllCategories = createServerFn({ method: "GET" }).handler(async () => {
@@ -50,10 +51,17 @@ export const getJewerlyById = createServerFn({ method: "GET" })
 
 export const getJewerlyTagsAndCategories = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
-  .handler(async ({}) => {
-    const [tags, categories] = await Promise.all([
+  .handler(async ({ context }) => {
+    const [tags, categories, currentStorageLimit] = await Promise.all([
       db.select().from(tag),
       db.select().from(category),
+      db
+        .select({
+          userStorageLimit: user.userStorageLimit,
+          userStorageUsage: user.userStorageUsage,
+        })
+        .from(user)
+        .where(eq(user.id, context.user.id)),
     ]);
 
     return {
@@ -61,6 +69,7 @@ export const getJewerlyTagsAndCategories = createServerFn({ method: "GET" })
       data: {
         tags,
         categories,
+        storage: currentStorageLimit,
       },
     };
   });
@@ -94,6 +103,7 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
       tags,
       boost,
       totalBoostToUpdate,
+      totalStorageLimitToUpdate,
     } = data;
 
     const [insertedAsset, updateBoostCredit] = await Promise.all([

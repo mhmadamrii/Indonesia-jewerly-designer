@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useImageKit } from "imagekit-react-hook";
 import { useState } from "react";
 import { toast } from "sonner";
+import { ModelViewer } from "~/components/3D/model-viewer";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -29,7 +30,6 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
-import { ModelViewer } from "~/components/3D/model-viewer";
 import {
   Progress,
   ProgressLabel,
@@ -38,6 +38,8 @@ import {
 } from "~/components/animate-ui/base/progress";
 
 interface IProps {
+  userStorageUsage: number;
+  userStorageLimit: number;
   onSetAssetStorageUrl: React.Dispatch<
     React.SetStateAction<{
       thumbnail_url: string;
@@ -56,9 +58,14 @@ interface UploadedFile {
   uploadedAt: Date;
 }
 
-export function FileUploadCenter({ onSetAssetStorageUrl }: IProps) {
+export function FileUploadCenter({
+  userStorageUsage,
+  userStorageLimit,
+  onSetAssetStorageUrl,
+}: IProps) {
   const { data: session } = authClient.useSession();
   const { upload } = useImageKit();
+
   const [uploadedFiles, setUploadedFiles] = useState<{
     thumbnail: UploadedFile[];
     preview: UploadedFile[];
@@ -69,15 +76,15 @@ export function FileUploadCenter({ onSetAssetStorageUrl }: IProps) {
     asset: [],
   });
 
-  console.log("uploadedFiles", uploadedFiles);
-
   const [dragOver, setDragOver] = useState<string | null>(null);
   const [uploading, setUploading] = useState<string | null>(null);
 
-  const totalStorage = 1073741824; // 1GB in bytes
-  const usedStorage = Object.values(uploadedFiles)
-    .flat()
-    .reduce((total, file) => total + file.size, 0);
+  // const totalStorage = 1073741824; // 1GB in bytes
+  const totalStorage = userStorageLimit;
+  const usedStorage =
+    Object.values(uploadedFiles)
+      .flat()
+      .reduce((total, file) => total + file.size, 0) + userStorageUsage;
 
   const storagePercentage = (usedStorage / totalStorage) * 100;
 
@@ -377,7 +384,6 @@ export function FileUploadCenter({ onSetAssetStorageUrl }: IProps) {
           </CardContent>
         </Card>
 
-        {/* Upload Tabs */}
         <Card>
           <CardHeader>
             <CardTitle>Upload Files</CardTitle>

@@ -1,5 +1,5 @@
 {
-  "id": "7b643c1b-5597-4093-bf12-6685fad0a631",
+  "id": "0d8bc803-c4bf-4d41-ac45-dabc611d0673",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -227,6 +227,13 @@
           "primaryKey": false,
           "notNull": false,
           "default": 120
+        },
+        "user_storage_limit": {
+          "name": "user_storage_limit",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 104857600
         },
         "email_verified": {
           "name": "email_verified",
@@ -596,6 +603,12 @@
         "price": {
           "name": "price",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "preview_url": {
+          "name": "preview_url",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },

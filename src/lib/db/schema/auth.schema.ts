@@ -6,6 +6,8 @@ export const user = pgTable("user", {
   email: text("email").notNull().unique(),
   role: text("role").notNull().default("user"),
   boostCredit: integer("boost_credit").default(120),
+  userStorageLimit: integer("user_storage_limit").notNull().default(41943040),
+  userStorageUsage: integer("user_storage_usage").notNull().default(0),
   emailVerified: boolean("email_verified")
     .$defaultFn(() => false)
     .notNull(),

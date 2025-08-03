@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { getUserBoostCredits } from "~/actions/user.action";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
@@ -13,6 +14,7 @@ import { MultipleSelector } from "~/components/ui/multi-select";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Textarea } from "~/components/ui/textarea";
 import { cn } from "~/lib/utils";
+import { FileUploadCenter } from "./file-upload-center";
 
 import {
   ChevronDown,
@@ -53,7 +55,6 @@ import {
   CollapsibleTrigger,
 } from "~/components/animate-ui/radix/collapsible";
 
-import { getUserBoostCredits } from "~/actions/user.action";
 import {
   Select,
   SelectContent,
@@ -61,7 +62,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { FileUploadCenter } from "./file-upload-center";
 
 const formSchema = z.object({
   name: z.string().min(1).min(3).max(20),
@@ -78,6 +78,10 @@ const currencies = [
   {
     value: "USD",
     label: "USD ($)",
+  },
+  {
+    value: "IDR",
+    label: "IDR (Rp)",
   },
   {
     value: "EUR",
@@ -111,12 +115,12 @@ export function AssetPublish() {
     preview_url: "",
     asset_url: "",
   });
-  console.log("assetStorageUrl", assetStorageUrl);
 
   const { data: tagsAndCategories } = useQuery({
     queryKey: ["tags_and_categories"],
     queryFn: () => getJewerlyTagsAndCategories(),
   });
+  console.log("tagsAndCategories", tagsAndCategories);
 
   const { data: currentCredit } = useQuery({
     queryKey: ["current_credit"],
@@ -170,6 +174,7 @@ export function AssetPublish() {
           tags: tagsValue.map((item) => item.value),
           totalBoostToUpdate: getTotalBoostToUpdate(parseInt(values.boost)),
           boost: isUsingBoost ? Number.parseFloat(values.boost) : 0,
+          totalStorageLimitToUpdate: 0,
         },
       });
     } catch (error) {
@@ -460,7 +465,15 @@ export function AssetPublish() {
                 setIsUploadingImage={setIsUploadingImage}
                 onSetImageUrl={setImageUrl}
               /> */}
-              <FileUploadCenter onSetAssetStorageUrl={setAssetStorageUrl} />
+              <FileUploadCenter
+                userStorageLimit={
+                  tagsAndCategories?.data?.storage[0]?.userStorageLimit ?? 0
+                }
+                userStorageUsage={
+                  tagsAndCategories?.data?.storage[0]?.userStorageUsage ?? 0
+                }
+                onSetAssetStorageUrl={setAssetStorageUrl}
+              />
             </div>
 
             <div className="flex w-full items-center justify-end">
