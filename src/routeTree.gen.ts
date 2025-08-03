@@ -30,6 +30,7 @@ import { Route as mainChar126ArtistDashboardIndexRouteImport } from "./routes/(m
 import { Route as mainChar126GeneralUUserIdRouteImport } from "./routes/(main)/~/general/u/$userId";
 import { Route as mainChar126GeneralPaymentsStatusRouteImport } from "./routes/(main)/~/general/payments/$status";
 import { Route as mainChar126GeneralAssetsAssetIdRouteImport } from "./routes/(main)/~/general/assets/$assetId";
+import { Route as mainChar126GeneralPaymentsReceiptIndexRouteImport } from "./routes/(main)/~/general/payments/receipt/index";
 import { ServerRoute as ApiImagekitUploadServerRouteImport } from "./routes/api/imagekit/upload";
 import { ServerRoute as ApiAuthSplatServerRouteImport } from "./routes/api/auth/$";
 
@@ -141,6 +142,12 @@ const mainChar126GeneralAssetsAssetIdRoute =
     path: "/assets/$assetId",
     getParentRoute: () => mainChar126GeneralRouteRoute,
   } as any);
+const mainChar126GeneralPaymentsReceiptIndexRoute =
+  mainChar126GeneralPaymentsReceiptIndexRouteImport.update({
+    id: "/payments/receipt/",
+    path: "/payments/receipt/",
+    getParentRoute: () => mainChar126GeneralRouteRoute,
+  } as any);
 const ApiImagekitUploadServerRoute = ApiImagekitUploadServerRouteImport.update({
   id: "/api/imagekit/upload",
   path: "/api/imagekit/upload",
@@ -171,6 +178,7 @@ export interface FileRoutesByFullPath {
   "/~/general/feed": typeof mainChar126GeneralFeedIndexRoute;
   "/~/general/invoices": typeof mainChar126GeneralInvoicesIndexRoute;
   "/~/general/purchased-models": typeof mainChar126GeneralPurchasedModelsIndexRoute;
+  "/~/general/payments/receipt": typeof mainChar126GeneralPaymentsReceiptIndexRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof authRouteRouteWithChildren;
@@ -191,6 +199,7 @@ export interface FileRoutesByTo {
   "/~/general/feed": typeof mainChar126GeneralFeedIndexRoute;
   "/~/general/invoices": typeof mainChar126GeneralInvoicesIndexRoute;
   "/~/general/purchased-models": typeof mainChar126GeneralPurchasedModelsIndexRoute;
+  "/~/general/payments/receipt": typeof mainChar126GeneralPaymentsReceiptIndexRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
@@ -213,6 +222,7 @@ export interface FileRoutesById {
   "/(main)/~/general/feed/": typeof mainChar126GeneralFeedIndexRoute;
   "/(main)/~/general/invoices/": typeof mainChar126GeneralInvoicesIndexRoute;
   "/(main)/~/general/purchased-models/": typeof mainChar126GeneralPurchasedModelsIndexRoute;
+  "/(main)/~/general/payments/receipt/": typeof mainChar126GeneralPaymentsReceiptIndexRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
@@ -234,7 +244,8 @@ export interface FileRouteTypes {
     | "/~/general/favorites"
     | "/~/general/feed"
     | "/~/general/invoices"
-    | "/~/general/purchased-models";
+    | "/~/general/purchased-models"
+    | "/~/general/payments/receipt";
   fileRoutesByTo: FileRoutesByTo;
   to:
     | "/"
@@ -254,7 +265,8 @@ export interface FileRouteTypes {
     | "/~/general/favorites"
     | "/~/general/feed"
     | "/~/general/invoices"
-    | "/~/general/purchased-models";
+    | "/~/general/purchased-models"
+    | "/~/general/payments/receipt";
   id:
     | "__root__"
     | "/"
@@ -275,7 +287,8 @@ export interface FileRouteTypes {
     | "/(main)/~/general/favorites/"
     | "/(main)/~/general/feed/"
     | "/(main)/~/general/invoices/"
-    | "/(main)/~/general/purchased-models/";
+    | "/(main)/~/general/purchased-models/"
+    | "/(main)/~/general/payments/receipt/";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
@@ -447,6 +460,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof mainChar126GeneralAssetsAssetIdRouteImport;
       parentRoute: typeof mainChar126GeneralRouteRoute;
     };
+    "/(main)/~/general/payments/receipt/": {
+      id: "/(main)/~/general/payments/receipt/";
+      path: "/payments/receipt";
+      fullPath: "/~/general/payments/receipt";
+      preLoaderRoute: typeof mainChar126GeneralPaymentsReceiptIndexRouteImport;
+      parentRoute: typeof mainChar126GeneralRouteRoute;
+    };
   }
 }
 declare module "@tanstack/react-start/server" {
@@ -509,6 +529,7 @@ interface mainChar126GeneralRouteRouteChildren {
   mainChar126GeneralFeedIndexRoute: typeof mainChar126GeneralFeedIndexRoute;
   mainChar126GeneralInvoicesIndexRoute: typeof mainChar126GeneralInvoicesIndexRoute;
   mainChar126GeneralPurchasedModelsIndexRoute: typeof mainChar126GeneralPurchasedModelsIndexRoute;
+  mainChar126GeneralPaymentsReceiptIndexRoute: typeof mainChar126GeneralPaymentsReceiptIndexRoute;
 }
 
 const mainChar126GeneralRouteRouteChildren: mainChar126GeneralRouteRouteChildren =
@@ -525,6 +546,8 @@ const mainChar126GeneralRouteRouteChildren: mainChar126GeneralRouteRouteChildren
     mainChar126GeneralInvoicesIndexRoute: mainChar126GeneralInvoicesIndexRoute,
     mainChar126GeneralPurchasedModelsIndexRoute:
       mainChar126GeneralPurchasedModelsIndexRoute,
+    mainChar126GeneralPaymentsReceiptIndexRoute:
+      mainChar126GeneralPaymentsReceiptIndexRoute,
   };
 
 const mainChar126GeneralRouteRouteWithChildren =
