@@ -100,7 +100,7 @@ const USER_SIDEBAR = [
       // },
       {
         label: "Favorites / Wishlist",
-        link: "/~/general/favorites",
+        link: "/~/general/wishlists",
         icon: Heart,
       },
     ],

@@ -102,9 +102,20 @@ export const cartItem = pgTable("cart_item", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const wishlistItem = pgTable("wishlist_item", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  imageUrl: text("image_url").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export const userRelations = relations(user, ({ many }) => ({
   jewerlyAssets: many(jewerlyAssets),
   cartItems: many(cartItem),
+  wishlistItems: many(wishlistItem),
 }));
 
 export const jewerlyAssetsRelations = relations(jewerlyAssets, ({ many }) => ({

@@ -1,10 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Eye, Heart, LoaderIcon, ShoppingCart, Star, Zap } from "lucide-react";
+import { Eye, LoaderIcon, ShoppingCart, Star, Zap } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { createCartItem } from "~/actions/cart.action";
 import { ModelViewer } from "~/components/3D/model-viewer";
+import { AddWishlist } from "~/components/add-wishlist";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
 import { JewerlyWithMeta } from "~/lib/db/types";
@@ -67,9 +68,7 @@ export function Trendings({ jewerlies }: TrendingsProps) {
               >
                 <Eye className="h-4 w-4" />
               </button>
-              <button className="rounded-full bg-white/20 p-2 text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/30">
-                <Heart className="h-4 w-4" />
-              </button>
+              <AddWishlist imageUrl={item.thumbnail_url} />
             </div>
 
             <div className="absolute top-3 left-3">

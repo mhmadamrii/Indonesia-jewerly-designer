@@ -18,6 +18,7 @@ import { Route as authAuthRouteImport } from "./routes/(auth)/auth";
 import { Route as adminAdminRouteImport } from "./routes/(admin)/admin";
 import { Route as mainChar126GeneralRouteRouteImport } from "./routes/(main)/~/general/route";
 import { Route as mainChar126ArtistRouteRouteImport } from "./routes/(main)/~/artist/route";
+import { Route as mainChar126GeneralWishlistsIndexRouteImport } from "./routes/(main)/~/general/wishlists/index";
 import { Route as mainChar126GeneralPurchasedModelsIndexRouteImport } from "./routes/(main)/~/general/purchased-models/index";
 import { Route as mainChar126GeneralInvoicesIndexRouteImport } from "./routes/(main)/~/general/invoices/index";
 import { Route as mainChar126GeneralFeedIndexRouteImport } from "./routes/(main)/~/general/feed/index";
@@ -70,6 +71,12 @@ const mainChar126ArtistRouteRoute = mainChar126ArtistRouteRouteImport.update({
   path: "/~/artist",
   getParentRoute: () => rootRouteImport,
 } as any);
+const mainChar126GeneralWishlistsIndexRoute =
+  mainChar126GeneralWishlistsIndexRouteImport.update({
+    id: "/wishlists/",
+    path: "/wishlists/",
+    getParentRoute: () => mainChar126GeneralRouteRoute,
+  } as any);
 const mainChar126GeneralPurchasedModelsIndexRoute =
   mainChar126GeneralPurchasedModelsIndexRouteImport.update({
     id: "/purchased-models/",
@@ -178,6 +185,7 @@ export interface FileRoutesByFullPath {
   "/~/general/feed": typeof mainChar126GeneralFeedIndexRoute;
   "/~/general/invoices": typeof mainChar126GeneralInvoicesIndexRoute;
   "/~/general/purchased-models": typeof mainChar126GeneralPurchasedModelsIndexRoute;
+  "/~/general/wishlists": typeof mainChar126GeneralWishlistsIndexRoute;
   "/~/general/payments/receipt": typeof mainChar126GeneralPaymentsReceiptIndexRoute;
 }
 export interface FileRoutesByTo {
@@ -199,6 +207,7 @@ export interface FileRoutesByTo {
   "/~/general/feed": typeof mainChar126GeneralFeedIndexRoute;
   "/~/general/invoices": typeof mainChar126GeneralInvoicesIndexRoute;
   "/~/general/purchased-models": typeof mainChar126GeneralPurchasedModelsIndexRoute;
+  "/~/general/wishlists": typeof mainChar126GeneralWishlistsIndexRoute;
   "/~/general/payments/receipt": typeof mainChar126GeneralPaymentsReceiptIndexRoute;
 }
 export interface FileRoutesById {
@@ -222,6 +231,7 @@ export interface FileRoutesById {
   "/(main)/~/general/feed/": typeof mainChar126GeneralFeedIndexRoute;
   "/(main)/~/general/invoices/": typeof mainChar126GeneralInvoicesIndexRoute;
   "/(main)/~/general/purchased-models/": typeof mainChar126GeneralPurchasedModelsIndexRoute;
+  "/(main)/~/general/wishlists/": typeof mainChar126GeneralWishlistsIndexRoute;
   "/(main)/~/general/payments/receipt/": typeof mainChar126GeneralPaymentsReceiptIndexRoute;
 }
 export interface FileRouteTypes {
@@ -245,6 +255,7 @@ export interface FileRouteTypes {
     | "/~/general/feed"
     | "/~/general/invoices"
     | "/~/general/purchased-models"
+    | "/~/general/wishlists"
     | "/~/general/payments/receipt";
   fileRoutesByTo: FileRoutesByTo;
   to:
@@ -266,6 +277,7 @@ export interface FileRouteTypes {
     | "/~/general/feed"
     | "/~/general/invoices"
     | "/~/general/purchased-models"
+    | "/~/general/wishlists"
     | "/~/general/payments/receipt";
   id:
     | "__root__"
@@ -288,6 +300,7 @@ export interface FileRouteTypes {
     | "/(main)/~/general/feed/"
     | "/(main)/~/general/invoices/"
     | "/(main)/~/general/purchased-models/"
+    | "/(main)/~/general/wishlists/"
     | "/(main)/~/general/payments/receipt/";
   fileRoutesById: FileRoutesById;
 }
@@ -375,6 +388,13 @@ declare module "@tanstack/react-router" {
       fullPath: "/~/artist";
       preLoaderRoute: typeof mainChar126ArtistRouteRouteImport;
       parentRoute: typeof rootRouteImport;
+    };
+    "/(main)/~/general/wishlists/": {
+      id: "/(main)/~/general/wishlists/";
+      path: "/wishlists";
+      fullPath: "/~/general/wishlists";
+      preLoaderRoute: typeof mainChar126GeneralWishlistsIndexRouteImport;
+      parentRoute: typeof mainChar126GeneralRouteRoute;
     };
     "/(main)/~/general/purchased-models/": {
       id: "/(main)/~/general/purchased-models/";
@@ -529,6 +549,7 @@ interface mainChar126GeneralRouteRouteChildren {
   mainChar126GeneralFeedIndexRoute: typeof mainChar126GeneralFeedIndexRoute;
   mainChar126GeneralInvoicesIndexRoute: typeof mainChar126GeneralInvoicesIndexRoute;
   mainChar126GeneralPurchasedModelsIndexRoute: typeof mainChar126GeneralPurchasedModelsIndexRoute;
+  mainChar126GeneralWishlistsIndexRoute: typeof mainChar126GeneralWishlistsIndexRoute;
   mainChar126GeneralPaymentsReceiptIndexRoute: typeof mainChar126GeneralPaymentsReceiptIndexRoute;
 }
 
@@ -546,6 +567,8 @@ const mainChar126GeneralRouteRouteChildren: mainChar126GeneralRouteRouteChildren
     mainChar126GeneralInvoicesIndexRoute: mainChar126GeneralInvoicesIndexRoute,
     mainChar126GeneralPurchasedModelsIndexRoute:
       mainChar126GeneralPurchasedModelsIndexRoute,
+    mainChar126GeneralWishlistsIndexRoute:
+      mainChar126GeneralWishlistsIndexRoute,
     mainChar126GeneralPaymentsReceiptIndexRoute:
       mainChar126GeneralPaymentsReceiptIndexRoute,
   };
