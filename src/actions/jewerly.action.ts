@@ -124,7 +124,10 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
         .returning({ id: jewerlyAssets.id }),
       await db
         .update(user)
-        .set({ boostCredit: totalBoostToUpdate })
+        .set({
+          boostCredit: totalBoostToUpdate,
+          userStorageLimit: totalStorageLimitToUpdate,
+        })
         .where(eq(user.id, context.user.id))
         .returning({ id: user.id }),
     ]);

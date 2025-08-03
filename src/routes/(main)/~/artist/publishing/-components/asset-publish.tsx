@@ -115,6 +115,7 @@ export function AssetPublish() {
     preview_url: "",
     asset_url: "",
   });
+  const [totalStorageLimitToUpdate, setTotalStorageLimitToUpdate] = useState(0);
 
   const { data: tagsAndCategories } = useQuery({
     queryKey: ["tags_and_categories"],
@@ -174,7 +175,7 @@ export function AssetPublish() {
           tags: tagsValue.map((item) => item.value),
           totalBoostToUpdate: getTotalBoostToUpdate(parseInt(values.boost)),
           boost: isUsingBoost ? Number.parseFloat(values.boost) : 0,
-          totalStorageLimitToUpdate: 0,
+          totalStorageLimitToUpdate: totalStorageLimitToUpdate,
         },
       });
     } catch (error) {
@@ -473,6 +474,7 @@ export function AssetPublish() {
                   tagsAndCategories?.data?.storage[0]?.userStorageUsage ?? 0
                 }
                 onSetAssetStorageUrl={setAssetStorageUrl}
+                onSetUsedStorage={setTotalStorageLimitToUpdate}
               />
             </div>
 

@@ -2,7 +2,7 @@ import type React from "react";
 
 import { useMutation } from "@tanstack/react-query";
 import { useImageKit } from "imagekit-react-hook";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ModelViewer } from "~/components/3D/model-viewer";
 import { Badge } from "~/components/ui/badge";
@@ -47,6 +47,7 @@ interface IProps {
       asset_url: string;
     }>
   >;
+  onSetUsedStorage: (size: number) => void;
 }
 
 interface UploadedFile {
@@ -62,6 +63,7 @@ export function FileUploadCenter({
   userStorageUsage,
   userStorageLimit,
   onSetAssetStorageUrl,
+  onSetUsedStorage,
 }: IProps) {
   const { data: session } = authClient.useSession();
   const { upload } = useImageKit();
@@ -85,6 +87,10 @@ export function FileUploadCenter({
     Object.values(uploadedFiles)
       .flat()
       .reduce((total, file) => total + file.size, 0) + userStorageUsage;
+
+  useEffect(() => {
+    onSetUsedStorage(usedStorage);
+  }, [usedStorage, onSetUsedStorage]);
 
   const storagePercentage = (usedStorage / totalStorage) * 100;
 
@@ -136,6 +142,19 @@ export function FileUploadCenter({
     files: FileList,
     category: keyof typeof uploadedFiles,
   ) => {
+    const file = files[0];
+    if (!file) return;
+
+    const remainingStorage = totalStorage - usedStorage;
+    if (file.size > remainingStorage) {
+      toast.error(
+        `File size (${formatFileSize(
+          file.size,
+        )}) exceeds remaining storage (${formatFileSize(remainingStorage)}).`,
+      );
+      return;
+    }
+
     setUploading(category);
 
     try {
