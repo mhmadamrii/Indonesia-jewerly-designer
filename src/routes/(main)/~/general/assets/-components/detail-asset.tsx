@@ -18,6 +18,7 @@ import {
   User,
   Zap,
 } from "lucide-react";
+import { PaymentButton } from "~/components/payment-button";
 
 interface AssetData {
   jewerly_assets: {
@@ -111,7 +112,6 @@ export function AssetDetail({ data }: AssetDetailPageProps) {
                 </Button>
               </div>
 
-              {/* Boost Badge */}
               {asset.boost > 0 && (
                 <div className="absolute top-4 left-4">
                   <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
@@ -210,9 +210,10 @@ export function AssetDetail({ data }: AssetDetailPageProps) {
 
             {/* Purchase Actions */}
             <div className="space-y-3">
-              <Button size="lg" className="w-full">
-                Purchase for {formatPrice(asset.price)}
-              </Button>
+              <PaymentButton
+                totalPrice={asset.price}
+                purchaseLabel={`Purchase for ${formatPrice(asset.price)}`}
+              />
               <div className="grid grid-cols-2 gap-3">
                 <Button variant="outline" size="lg">
                   <Zap className="mr-2 h-4 w-4" />

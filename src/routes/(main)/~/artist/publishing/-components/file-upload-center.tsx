@@ -134,7 +134,7 @@ export function FileUploadCenter({ onSetAssetStorageUrl }: IProps) {
     try {
       const res = await upload({
         file: files[0],
-        fileName: `${files[0].name}-${session?.user?.email.split("@")[0]}-${category}`,
+        fileName: `${session?.user?.email.split("@")[0]}c=${category}f=${files[0].name}`,
         folder: getCategoryFolder(category),
       });
       if (res.url && category == "thumbnail") {
@@ -417,7 +417,7 @@ export function FileUploadCenter({ onSetAssetStorageUrl }: IProps) {
                   category="preview"
                   title="Upload Previews"
                   description="High-quality preview media files"
-                  acceptedTypes="image/*,video/*,.glb,.gltf,.obj,.stl"
+                  acceptedTypes=".glb"
                 />
               </TabsContent>
 

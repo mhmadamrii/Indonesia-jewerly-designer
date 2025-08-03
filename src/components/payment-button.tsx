@@ -6,16 +6,21 @@ import { payWithMidtrans } from "~/actions/payment.action";
 import { Button } from "./ui/button";
 
 export function PaymentButton({
+  purchaseLabel,
   totalPrice,
   setIsOpenDrawer,
 }: {
+  purchaseLabel: string;
   totalPrice: number;
-  setIsOpenDrawer: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpenDrawer?: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { mutate: checkout, isPending: isLoadingCheckout } = useMutation({
     mutationFn: payWithMidtrans,
     onSuccess: (res) => {
-      setIsOpenDrawer(false);
+      if (setIsOpenDrawer) {
+        setIsOpenDrawer(false);
+      }
+
       window.snap.pay(res?.data.token, {
         onSuccess: () => {
           toast.success("Successfully", {
@@ -62,6 +67,7 @@ export function PaymentButton({
       document.body.removeChild(script);
     };
   }, []);
+
   return (
     <Button
       onClick={() =>
@@ -74,7 +80,7 @@ export function PaymentButton({
       className="w-full cursor-pointer"
       size="lg"
     >
-      {isLoadingCheckout ? <LoaderIcon className="animate-spin" /> : "Checkout"}
+      {isLoadingCheckout ? <LoaderIcon className="animate-spin" /> : purchaseLabel}
     </Button>
   );
 }

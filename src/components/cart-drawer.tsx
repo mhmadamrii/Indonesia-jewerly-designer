@@ -191,6 +191,7 @@ export function CartDrawer() {
               </div>
               <DrawerFooter className="px-0 pb-0">
                 <PaymentButton
+                  purchaseLabel="Checkout"
                   totalPrice={totalPrice ?? 0}
                   setIsOpenDrawer={setIsOpenDrawer}
                 />
