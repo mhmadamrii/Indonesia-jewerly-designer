@@ -3,7 +3,13 @@ import { Heart, LoaderIcon } from "lucide-react";
 import { toast } from "sonner";
 import { addWishlistItem } from "~/actions/wishlist.action";
 
-export function AddWishlist({ imageUrl }: { imageUrl: string }) {
+export function AddWishlist({
+  imageUrl,
+  jewerlyAssetId,
+}: {
+  imageUrl: string;
+  jewerlyAssetId: string;
+}) {
   const { mutate, isPending } = useMutation({
     mutationFn: addWishlistItem,
     onSuccess: () => {
@@ -14,7 +20,7 @@ export function AddWishlist({ imageUrl }: { imageUrl: string }) {
   return (
     <button
       disabled={isPending}
-      onClick={() => mutate({ data: { imageUrl } })}
+      onClick={() => mutate({ data: { imageUrl, jewerlyAssetId } })}
       className="cursor-pointer rounded-full bg-white/20 p-2 text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/30"
     >
       {isPending ? (

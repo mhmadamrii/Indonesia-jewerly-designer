@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "@tanstack/react-router";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import { gsap } from "gsap";
 import { Trash } from "lucide-react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -91,6 +91,7 @@ export function WishlistMasonry({
   colorShiftOnHover = false,
 }: MasonryProps) {
   const router = useRouter();
+  const navigate = useNavigate();
   const { mutate: deleteItem, isPending: isDeletingItem } = useMutation({
     mutationFn: deleteWishlistItem,
     onSuccess: () => {
@@ -245,12 +246,17 @@ export function WishlistMasonry({
           className="group absolute box-content cursor-pointer"
           data-key={item.id}
           style={{ willChange: "transform, width, height, opacity" }}
-          // onClick={() => window.open(item.url, "_blank", "noopener")}
+          onClick={() => {
+            navigate({
+              to: `/~/general/assets/$assetId`,
+              params: { assetId: item.url },
+            });
+          }}
           onMouseEnter={(e) => handleMouseEnter(item.id, e.currentTarget)}
           onMouseLeave={(e) => handleMouseLeave(item.id, e.currentTarget)}
         >
           <div
-            className="relative h-full w-full rounded-[10px] bg-cover bg-center text-[10px] leading-[10px] uppercase shadow-[0px_10px_50px_-10px_rgba(0,0,0,0.2)]"
+            className="relative z-10 h-full w-full rounded-[10px] bg-cover bg-center text-[10px] leading-[10px] uppercase shadow-[0px_10px_50px_-10px_rgba(0,0,0,0.2)]"
             style={{ backgroundImage: `url(${item.img})` }}
           >
             {colorShiftOnHover && (
@@ -259,7 +265,7 @@ export function WishlistMasonry({
             <Button
               onClick={() => deleteItem({ data: { id: item.id } })}
               variant="destructive"
-              className="absolute top-3 right-3 cursor-pointer opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+              className="absolute top-3 right-3 z-20 cursor-pointer opacity-0 transition-opacity duration-200 group-hover:opacity-100"
               size="icon"
             >
               <Trash className="h-4 w-4" />

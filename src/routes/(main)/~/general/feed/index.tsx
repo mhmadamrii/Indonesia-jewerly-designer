@@ -29,7 +29,7 @@ function RouteComponent() {
       <section className="flex h-full w-full flex-col gap-4 sm:flex-row">
         <div className="flex w-full flex-col gap-4 sm:w-[70%]">
           <div className="relative w-full">
-            <img src="/banner.svg" className="w-full" alt="Banner" />
+            <img src="/banner.svg" className="w-full" alt="Banner" loading="lazy" />
             <Link
               to="/~/artist/publishing"
               className="absolute top-[58%] left-[28%] cursor-pointer bg-transparent text-transparent hover:bg-transparent hover:text-transparent"

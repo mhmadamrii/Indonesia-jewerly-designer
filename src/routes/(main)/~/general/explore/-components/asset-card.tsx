@@ -1,9 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { Download, Eye, Heart, LoaderIcon, ShoppingCart, Star } from "lucide-react";
+import { Download, Eye, LoaderIcon, ShoppingCart, Star } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { createCartItem } from "~/actions/cart.action";
+import { AddWishlist } from "~/components/add-wishlist";
 import { JewerlyWithMeta } from "~/lib/db/types";
 import { Asset } from "./types";
 
@@ -62,9 +63,7 @@ export function AssetCard({
           >
             <Eye className="h-4 w-4" />
           </button>
-          <button className="rounded-full bg-white/20 p-2 text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/30">
-            <Heart className="h-4 w-4" />
-          </button>
+          <AddWishlist imageUrl={asset.thumbnail_url} jewerlyAssetId={asset.id} />
         </div>
 
         <div className="absolute top-3 left-3">

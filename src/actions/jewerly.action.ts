@@ -6,6 +6,7 @@ import { OPTIONS } from "~/constants";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
 import { category, jewerlyAssets, jewerlyAssetTags, tag, user } from "~/lib/db/schema";
+import { getClient } from "~/lib/redis/config";
 
 const JewerlyAssetSchema = z.object({
   name: z.string(),
@@ -91,6 +92,9 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
   .validator(JewerlyAssetSchema)
   .middleware([authMiddleware])
   .handler(async ({ data, context }) => {
+    const redis = await getClient();
+    const cachedKey = `dashboard_data:${context.user.id}`;
+
     const {
       name,
       description,
@@ -142,6 +146,11 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
         })),
       );
     }
+
+    await Promise.all([
+      redis.del(cachedKey),
+      redis.del(`explore_data:${context.user.id}`),
+    ]);
 
     return {
       success: true,

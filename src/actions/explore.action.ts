@@ -1,11 +1,25 @@
 import { createServerFn } from "@tanstack/react-start";
 import { sql } from "drizzle-orm";
+import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
 import { category, user } from "~/lib/db/schema";
 import { DashboardReturnType, JewerlyWithMeta } from "~/lib/db/types";
+import { getClient } from "~/lib/redis/config";
 
-export const getExploreAssetDatas = createServerFn({ method: "GET" }).handler(
-  async (): Promise<DashboardReturnType> => {
+export const getExploreAssetDatas = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }): Promise<DashboardReturnType> => {
+    const redis = await getClient();
+    const cachedKey = `explore_data:${context.user.id}`;
+    const cached = await redis.get(cachedKey);
+
+    if (cached) {
+      return {
+        success: true,
+        data: JSON.parse(cached),
+      };
+    }
+
     const [categories, jewerlies, users] = await Promise.all([
       db.select().from(category),
       db.execute(sql`
@@ -22,7 +36,7 @@ export const getExploreAssetDatas = createServerFn({ method: "GET" }).handler(
       db.select().from(user),
     ]);
 
-    console.log("jewerlies", jewerlies);
+    await redis.set(cachedKey, JSON.stringify({ categories, jewerlies, users }));
 
     return {
       success: true,
@@ -32,5 +46,4 @@ export const getExploreAssetDatas = createServerFn({ method: "GET" }).handler(
         users,
       },
     };
-  },
-);
+  });

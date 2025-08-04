@@ -108,6 +108,9 @@ export const wishlistItem = pgTable("wishlist_item", {
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   imageUrl: text("image_url").notNull(),
+  jewerlyAssetId: uuid("jewerly_asset_id")
+    .notNull()
+    .references(() => jewerlyAssets.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

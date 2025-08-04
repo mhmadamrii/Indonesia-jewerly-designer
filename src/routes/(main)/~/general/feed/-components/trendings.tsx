@@ -68,7 +68,7 @@ export function Trendings({ jewerlies }: TrendingsProps) {
               >
                 <Eye className="h-4 w-4" />
               </button>
-              <AddWishlist imageUrl={item.thumbnail_url} />
+              <AddWishlist imageUrl={item.thumbnail_url} jewerlyAssetId={item.id} />
             </div>
 
             <div className="absolute top-3 left-3">
