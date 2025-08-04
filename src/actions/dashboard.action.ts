@@ -3,18 +3,19 @@ import { sql } from "drizzle-orm";
 import { db } from "~/lib/db";
 import { category, user } from "~/lib/db/schema";
 import { DashboardReturnType, JewerlyWithMeta } from "~/lib/db/types";
+import { getClient } from "~/lib/redis/config";
 
 export const getDashboard = createServerFn({ method: "GET" }).handler(
   async (): Promise<DashboardReturnType> => {
-    // const redis = await getClient();
-    // const cached = await redis.get("dashboard_data");
+    const redis = await getClient();
+    const cached = await redis.get("dashboard_data");
 
-    // if (cached) {
-    //   return {
-    //     success: true,
-    //     data: JSON.parse(cached),
-    //   };
-    // }
+    if (cached) {
+      return {
+        success: true,
+        data: JSON.parse(cached),
+      };
+    }
 
     const [categories, jewerlies, users] = await Promise.all([
       db.select().from(category),
@@ -32,7 +33,7 @@ export const getDashboard = createServerFn({ method: "GET" }).handler(
       db.select().from(user),
     ]);
 
-    // await redis.set("dashboard_data", JSON.stringify({ categories, jewerlies, users }));
+    await redis.set("dashboard_data", JSON.stringify({ categories, jewerlies, users }));
 
     return {
       success: true,
