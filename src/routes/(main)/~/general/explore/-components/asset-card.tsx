@@ -81,7 +81,9 @@ export function AssetCard({
 
       <div className="p-4">
         <h3 className="mb-2 line-clamp-1 font-semibold">{asset.name}</h3>
-        <p className="mb-3 line-clamp-2 text-sm text-gray-600">{asset.description}</p>
+        <p className="mb-3 line-clamp-2 truncate text-sm text-gray-600">
+          {asset.description}
+        </p>
 
         <div className="mb-3 flex flex-wrap gap-1">
           {asset.tags

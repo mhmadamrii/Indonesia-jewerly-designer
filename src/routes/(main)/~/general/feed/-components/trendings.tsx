@@ -86,7 +86,7 @@ export function Trendings({ jewerlies }: TrendingsProps) {
 
           <div className="p-4">
             <h3 className="mb-2 line-clamp-1 font-semibold">{item.name}</h3>
-            <p className="text-muted-foreground mb-3 line-clamp-2 text-sm">
+            <p className="text-muted-foreground mb-3 line-clamp-2 truncate text-sm">
               {item.description}
             </p>
 
