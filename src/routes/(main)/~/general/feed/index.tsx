@@ -78,7 +78,7 @@ function RouteComponent() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="borer flex h-full flex-col items-center justify-center">
-                  <h1 className="text-5xl font-semibold">0</h1>
+                  {/* <h1 className="text-5xl font-semibold">0</h1> */}
                 </CardContent>
               </Card>
 
@@ -92,7 +92,7 @@ function RouteComponent() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="flex h-full flex-col items-center justify-center">
-                  <h1 className="text-5xl font-semibold">0</h1>
+                  {/* <h1 className="text-5xl font-semibold">0</h1> */}
                 </CardContent>
               </Card>
 
@@ -106,7 +106,7 @@ function RouteComponent() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="flex h-full flex-col items-center justify-center">
-                  <h1 className="text-5xl font-semibold">0</h1>
+                  {/* <h1 className="text-5xl font-semibold">0</h1> */}
                 </CardContent>
               </Card>
 
@@ -120,7 +120,7 @@ function RouteComponent() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="flex h-full flex-col items-center justify-center">
-                  <h1 className="text-5xl font-semibold">0</h1>
+                  {/* <h1 className="text-5xl font-semibold">0</h1> */}
                 </CardContent>
               </Card>
             </div>

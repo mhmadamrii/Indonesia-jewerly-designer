@@ -14,6 +14,7 @@ import { Route as rootRouteImport } from "./routes/__root";
 import { Route as authRouteRouteImport } from "./routes/(auth)/route";
 import { Route as IndexRouteImport } from "./routes/index";
 import { Route as publicPlaygroundsRouteImport } from "./routes/(public)/playgrounds";
+import { Route as publicHelloRouteImport } from "./routes/(public)/hello";
 import { Route as authAuthRouteImport } from "./routes/(auth)/auth";
 import { Route as adminAdminRouteImport } from "./routes/(admin)/admin";
 import { Route as mainChar126GeneralRouteRouteImport } from "./routes/(main)/~/general/route";
@@ -50,6 +51,11 @@ const IndexRoute = IndexRouteImport.update({
 const publicPlaygroundsRoute = publicPlaygroundsRouteImport.update({
   id: "/(public)/playgrounds",
   path: "/playgrounds",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const publicHelloRoute = publicHelloRouteImport.update({
+  id: "/(public)/hello",
+  path: "/hello",
   getParentRoute: () => rootRouteImport,
 } as any);
 const authAuthRoute = authAuthRouteImport.update({
@@ -177,6 +183,7 @@ export interface FileRoutesByFullPath {
   "/": typeof authRouteRouteWithChildren;
   "/admin": typeof adminAdminRoute;
   "/auth": typeof authAuthRoute;
+  "/hello": typeof publicHelloRoute;
   "/playgrounds": typeof publicPlaygroundsRoute;
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
@@ -200,6 +207,7 @@ export interface FileRoutesByTo {
   "/": typeof authRouteRouteWithChildren;
   "/admin": typeof adminAdminRoute;
   "/auth": typeof authAuthRoute;
+  "/hello": typeof publicHelloRoute;
   "/playgrounds": typeof publicPlaygroundsRoute;
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
@@ -225,6 +233,7 @@ export interface FileRoutesById {
   "/(auth)": typeof authRouteRouteWithChildren;
   "/(admin)/admin": typeof adminAdminRoute;
   "/(auth)/auth": typeof authAuthRoute;
+  "/(public)/hello": typeof publicHelloRoute;
   "/(public)/playgrounds": typeof publicPlaygroundsRoute;
   "/(main)/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/(main)/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
@@ -250,6 +259,7 @@ export interface FileRouteTypes {
     | "/"
     | "/admin"
     | "/auth"
+    | "/hello"
     | "/playgrounds"
     | "/~/artist"
     | "/~/general"
@@ -273,6 +283,7 @@ export interface FileRouteTypes {
     | "/"
     | "/admin"
     | "/auth"
+    | "/hello"
     | "/playgrounds"
     | "/~/artist"
     | "/~/general"
@@ -297,6 +308,7 @@ export interface FileRouteTypes {
     | "/(auth)"
     | "/(admin)/admin"
     | "/(auth)/auth"
+    | "/(public)/hello"
     | "/(public)/playgrounds"
     | "/(main)/~/artist"
     | "/(main)/~/general"
@@ -321,6 +333,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
   authRouteRoute: typeof authRouteRouteWithChildren;
   adminAdminRoute: typeof adminAdminRoute;
+  publicHelloRoute: typeof publicHelloRoute;
   publicPlaygroundsRoute: typeof publicPlaygroundsRoute;
   mainChar126ArtistRouteRoute: typeof mainChar126ArtistRouteRouteWithChildren;
   mainChar126GeneralRouteRoute: typeof mainChar126GeneralRouteRouteWithChildren;
@@ -372,6 +385,13 @@ declare module "@tanstack/react-router" {
       path: "/playgrounds";
       fullPath: "/playgrounds";
       preLoaderRoute: typeof publicPlaygroundsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/(public)/hello": {
+      id: "/(public)/hello";
+      path: "/hello";
+      fullPath: "/hello";
+      preLoaderRoute: typeof publicHelloRouteImport;
       parentRoute: typeof rootRouteImport;
     };
     "/(auth)/auth": {
@@ -605,6 +625,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   authRouteRoute: authRouteRouteWithChildren,
   adminAdminRoute: adminAdminRoute,
+  publicHelloRoute: publicHelloRoute,
   publicPlaygroundsRoute: publicPlaygroundsRoute,
   mainChar126ArtistRouteRoute: mainChar126ArtistRouteRouteWithChildren,
   mainChar126GeneralRouteRoute: mainChar126GeneralRouteRouteWithChildren,
