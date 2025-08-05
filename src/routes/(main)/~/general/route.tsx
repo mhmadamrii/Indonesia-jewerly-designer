@@ -3,6 +3,7 @@ import { Header } from "~/components/header";
 import { RoleRedirectProvider } from "~/components/role-redirect-provider";
 import { useTheme } from "~/components/theme-provider";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { ScrollArea } from "~/components/ui/scroll-area";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { authClient } from "~/lib/auth/auth-client";
 import { useRoleStore } from "~/lib/store/role.store";
@@ -125,22 +126,23 @@ const USER_SIDEBAR = [
     items: [
       {
         label: "Settings",
-        link: "/~/general/invoices",
+        link: "/~/general/settings",
         icon: UserCog,
       },
       {
         label: "Payment Methods",
-        link: "/~/general/invoices",
+        link: "/~/general/payment-methods",
         icon: CreditCard,
       },
       {
         label: "Notifications",
-        link: "/~/general/invoices",
+        link: "/~/general/notifications",
         icon: Bell,
       },
       {
         label: "Billing History",
-        link: "/~/general/invoices",
+        // link: "/~/general/billing-history",
+        link: "/~/general/payments/receipt",
         icon: Clock,
       },
     ],
@@ -150,12 +152,12 @@ const USER_SIDEBAR = [
     items: [
       {
         label: "FAQ",
-        link: "/~/general/invoices",
+        link: "/~/general/faq",
         icon: HelpCircle,
       },
       {
         label: "Contact Support",
-        link: "/~/general/payments/success",
+        link: "/~/general/contact-support",
         icon: Mail,
       },
     ],
@@ -334,29 +336,31 @@ function MainLayout() {
               </Link>
             </ClientOnly>
           </SidebarHeader>
-          <SidebarContent>
-            {USER_SIDEBAR.map((item) => (
-              <SidebarGroup key={item.labelGroup}>
-                <SidebarGroupLabel>{item.labelGroup}</SidebarGroupLabel>
-                <SidebarMenu>
-                  {item.items.map((item, idx) => (
-                    <Link className="cursor-pointer" to={item.link} key={idx}>
-                      <SidebarMenuItem>
-                        <SidebarMenuButton
-                          className="cursor-pointer"
-                          tooltip={item.label}
-                        >
-                          <item.icon />
-                          {item.label}
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    </Link>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroup>
-            ))}
-          </SidebarContent>
-          <SidebarFooter>
+          <ScrollArea className="h-[calc(100vh-190px)] w-full">
+            <SidebarContent>
+              {USER_SIDEBAR.map((item) => (
+                <SidebarGroup key={item.labelGroup}>
+                  <SidebarGroupLabel>{item.labelGroup}</SidebarGroupLabel>
+                  <SidebarMenu>
+                    {item.items.map((item, idx) => (
+                      <Link className="cursor-pointer" to={item.link} key={idx}>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton
+                            className="cursor-pointer"
+                            tooltip={item.label}
+                          >
+                            <item.icon />
+                            {item.label}
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      </Link>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroup>
+              ))}
+            </SidebarContent>
+          </ScrollArea>
+          <SidebarFooter className="bottom-0 border">
             <SidebarMenu>
               <SidebarMenuItem>
                 <DropdownMenu>

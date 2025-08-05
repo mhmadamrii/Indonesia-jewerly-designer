@@ -3,6 +3,7 @@ import { Header } from "~/components/header";
 import { RoleRedirectProvider } from "~/components/role-redirect-provider";
 import { useTheme } from "~/components/theme-provider";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { ScrollArea } from "~/components/ui/scroll-area";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { authClient } from "~/lib/auth/auth-client";
 import { useRoleStore } from "~/lib/store/role.store";
@@ -186,28 +187,30 @@ function MainLayout() {
               </Link>
             </ClientOnly>
           </SidebarHeader>
-          <SidebarContent>
-            {ARTIST_SIDEBAR.map((item) => (
-              <SidebarGroup key={item.labelGroup}>
-                <SidebarGroupLabel>{item.labelGroup}</SidebarGroupLabel>
-                <SidebarMenu>
-                  {item.items.map((item, idx) => (
-                    <Link to={item.link} key={idx}>
-                      <SidebarMenuItem className="cursor-pointer">
-                        <SidebarMenuButton
-                          className="cursor-pointer"
-                          tooltip={item.label}
-                        >
-                          <item.icon />
-                          {item.label}
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    </Link>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroup>
-            ))}
-          </SidebarContent>
+          <ScrollArea className="h-[calc(100vh-190px)] w-full">
+            <SidebarContent>
+              {ARTIST_SIDEBAR.map((item) => (
+                <SidebarGroup key={item.labelGroup}>
+                  <SidebarGroupLabel>{item.labelGroup}</SidebarGroupLabel>
+                  <SidebarMenu>
+                    {item.items.map((item, idx) => (
+                      <Link to={item.link} key={idx}>
+                        <SidebarMenuItem className="cursor-pointer">
+                          <SidebarMenuButton
+                            className="cursor-pointer"
+                            tooltip={item.label}
+                          >
+                            <item.icon />
+                            {item.label}
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      </Link>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroup>
+              ))}
+            </SidebarContent>
+          </ScrollArea>
           <SidebarFooter>
             <SidebarMenu>
               <SidebarMenuItem>
