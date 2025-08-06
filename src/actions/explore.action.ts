@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { sql } from "drizzle-orm";
+import { z } from "zod";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
 import { category, user } from "~/lib/db/schema";
@@ -8,7 +9,13 @@ import { getClient } from "~/lib/redis/config";
 
 export const getExploreAssetDatas = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
-  .handler(async ({ context }): Promise<DashboardReturnType> => {
+  .validator(
+    z.object({
+      theme: z.enum(["light", "dark", "system"]).optional(),
+    }),
+  )
+  .handler(async ({ context, data }): Promise<DashboardReturnType> => {
+    console.log("data", data.theme);
     const redis = await getClient();
     const cachedKey = `explore_data:${context.user.id}`;
     const cached = await redis.get(cachedKey);

@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { CartDrawer } from "./cart-drawer";
 import { SwitchRole } from "./switch-role";
@@ -33,6 +34,7 @@ function InputCommandDialog({
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const navigate = useNavigate();
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
       <CommandInput placeholder="Type a command or search..." />

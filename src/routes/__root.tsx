@@ -1,6 +1,11 @@
 /// <reference types="vite/client" />
 import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { Toaster } from "sonner";
+import { ThemeProvider } from "~/components/theme-provider";
+import { getUser } from "~/lib/auth/functions/getUser";
+
 import {
   createRootRouteWithContext,
   HeadContent,
@@ -8,10 +13,7 @@ import {
   ScriptOnce,
   Scripts,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { Toaster } from "sonner";
-import { ThemeProvider } from "~/components/theme-provider";
-import { getUser } from "~/lib/auth/functions/getUser";
+
 import appCss from "~/styles.css?url";
 
 export const Route = createRootRouteWithContext<{

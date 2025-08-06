@@ -14,7 +14,6 @@ import {
 } from "~/components/animate-ui/radix/dropdown-menu";
 
 export function UserAvatar({ user }: { user: UserWithRole }) {
-  console.log("userl", user);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -23,7 +22,7 @@ export function UserAvatar({ user }: { user: UserWithRole }) {
           <AvatarFallback>{user.name?.charAt(0).toUpperCase()}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>

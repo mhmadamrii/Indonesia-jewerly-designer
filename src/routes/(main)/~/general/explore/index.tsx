@@ -2,10 +2,18 @@ import { Await, createFileRoute } from "@tanstack/react-router";
 import { getExploreAssetDatas } from "~/actions/explore.action";
 import { AssetGrid } from "./-components/asset-grid";
 import { AssetGridSkeleton } from "./-components/asset-grid-skeleton";
+import { FilterAssets } from "./-components/filter-assets";
 
 export const Route = createFileRoute("/(main)/~/general/explore/")({
-  loader: async () => {
-    const explores = getExploreAssetDatas();
+  validateSearch: (search: Record<string, unknown>) => {
+    console.log("search", search);
+    return {
+      theme: search.theme as "light" | "dark" | "system",
+    };
+  },
+  loaderDeps: ({ search: { theme } }) => ({ theme }),
+  loader: async ({ deps: { theme } }) => {
+    const explores = getExploreAssetDatas({ data: { theme } });
     return { explores };
   },
   component: RouteComponent,
@@ -14,7 +22,8 @@ export const Route = createFileRoute("/(main)/~/general/explore/")({
 function RouteComponent() {
   const { explores } = Route.useLoaderData();
   return (
-    <section className="container mx-auto p-4">
+    <section className="container mx-auto flex flex-col gap-5 p-4">
+      <FilterAssets />
       <Await promise={explores} fallback={<AssetGridSkeleton />}>
         {({ data }) => (
           <AssetGrid

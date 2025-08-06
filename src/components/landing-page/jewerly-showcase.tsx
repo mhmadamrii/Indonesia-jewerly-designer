@@ -86,6 +86,7 @@ export function JewelryShowcase() {
                 className="relative cursor-pointer overflow-hidden"
               >
                 <img
+                  loading="lazy"
                   src={item.src || "/placeholder.svg"}
                   alt={item.title}
                   width={400}
