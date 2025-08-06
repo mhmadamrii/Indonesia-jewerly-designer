@@ -1,5 +1,4 @@
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
 import { LoaderIcon } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -15,7 +14,6 @@ export function PaymentButton({
   totalPrice: number;
   setIsOpenDrawer?: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const navigate = useNavigate();
   const { mutate: checkout, isPending: isLoadingCheckout } = useMutation({
     mutationFn: payWithMidtrans,
     onSuccess: (res) => {
@@ -27,9 +25,6 @@ export function PaymentButton({
         onSuccess: () => {
           toast.success("Successfully", {
             description: "Payment successful",
-          });
-          navigate({
-            to: "/~/general/payments/receipt",
           });
         },
         onPending: (result: any) => {
@@ -62,6 +57,7 @@ export function PaymentButton({
     const snapSrcUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
     const myMidtransClientKey = process.env.MIDTRANS_CLIENT_KEY;
     const script = document.createElement("script");
+
     script.src = snapSrcUrl;
     script.setAttribute("data-client-key", myMidtransClientKey!);
     script.async = true;

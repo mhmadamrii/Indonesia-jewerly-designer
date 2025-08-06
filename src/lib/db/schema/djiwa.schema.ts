@@ -1,4 +1,6 @@
 import { relations } from "drizzle-orm";
+import { user } from "./auth.schema";
+
 import {
   boolean,
   integer,
@@ -8,8 +10,8 @@ import {
   text,
   timestamp,
   uuid,
+  varchar,
 } from "drizzle-orm/pg-core";
-import { user } from "./auth.schema";
 
 export const notificationTypeEnum = pgEnum("notification_type", [
   "new_review",
@@ -115,6 +117,22 @@ export const wishlistItem = pgTable("wishlist_item", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const payments = pgTable("payments", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  amount: integer("amount").notNull(),
+  status: text("status").notNull(),
+  currency: varchar("currency", { length: 3 }).notNull(),
+  provider: varchar("provider", { length: 50 }).notNull(),
+  providerId: varchar("provider_id", { length: 100 }).notNull(),
+  description: varchar("description", { length: 255 }),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  deletedAt: timestamp("deleted_at"), // Soft delete column
+});
+
 export const userRelations = relations(user, ({ many }) => ({
   jewerlyAssets: many(jewerlyAssets),
   cartItems: many(cartItem),
@@ -129,6 +147,13 @@ export const jewerlyAssetsRelations = relations(jewerlyAssets, ({ many }) => ({
 
 export const tagRelations = relations(tag, ({ many }) => ({
   jewerlyAssetTags: many(jewerlyAssetTags),
+}));
+
+export const paymentsRelations = relations(payments, ({ one }) => ({
+  user: one(user, {
+    fields: [payments.userId],
+    references: [user.id],
+  }),
 }));
 
 export const jewerlyAssetTagsRelations = relations(jewerlyAssetTags, ({ one }) => ({
