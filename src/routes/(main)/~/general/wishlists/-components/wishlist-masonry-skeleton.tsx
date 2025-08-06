@@ -15,7 +15,7 @@ export function WishlistMasonrySkeleton() {
             key={index}
             className="group relative box-content rounded-[10px] shadow-[0px_10px_50px_-10px_rgba(0,0,0,0.2)]"
             style={{
-              height: 300,
+              height: generateRandomHeight(),
               width: 240, // or whatever width you're using in grid
             }}
           >

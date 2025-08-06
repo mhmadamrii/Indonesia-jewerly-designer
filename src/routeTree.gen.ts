@@ -24,7 +24,9 @@ import { Route as mainChar126GeneralPurchasedModelsIndexRouteImport } from "./ro
 import { Route as mainChar126GeneralInvoicesIndexRouteImport } from "./routes/(main)/~/general/invoices/index";
 import { Route as mainChar126GeneralFeedIndexRouteImport } from "./routes/(main)/~/general/feed/index";
 import { Route as mainChar126GeneralFavoritesIndexRouteImport } from "./routes/(main)/~/general/favorites/index";
+import { Route as mainChar126GeneralFaqIndexRouteImport } from "./routes/(main)/~/general/faq/index";
 import { Route as mainChar126GeneralExploreIndexRouteImport } from "./routes/(main)/~/general/explore/index";
+import { Route as mainChar126GeneralContactSupportIndexRouteImport } from "./routes/(main)/~/general/contact-support/index";
 import { Route as mainChar126GeneralCartIndexRouteImport } from "./routes/(main)/~/general/cart/index";
 import { Route as mainChar126ArtistPublishingIndexRouteImport } from "./routes/(main)/~/artist/publishing/index";
 import { Route as mainChar126ArtistMyModelsIndexRouteImport } from "./routes/(main)/~/artist/my-models/index";
@@ -108,10 +110,22 @@ const mainChar126GeneralFavoritesIndexRoute =
     path: "/favorites/",
     getParentRoute: () => mainChar126GeneralRouteRoute,
   } as any);
+const mainChar126GeneralFaqIndexRoute =
+  mainChar126GeneralFaqIndexRouteImport.update({
+    id: "/faq/",
+    path: "/faq/",
+    getParentRoute: () => mainChar126GeneralRouteRoute,
+  } as any);
 const mainChar126GeneralExploreIndexRoute =
   mainChar126GeneralExploreIndexRouteImport.update({
     id: "/explore/",
     path: "/explore/",
+    getParentRoute: () => mainChar126GeneralRouteRoute,
+  } as any);
+const mainChar126GeneralContactSupportIndexRoute =
+  mainChar126GeneralContactSupportIndexRouteImport.update({
+    id: "/contact-support/",
+    path: "/contact-support/",
     getParentRoute: () => mainChar126GeneralRouteRoute,
   } as any);
 const mainChar126GeneralCartIndexRoute =
@@ -194,7 +208,9 @@ export interface FileRoutesByFullPath {
   "/~/artist/my-models": typeof mainChar126ArtistMyModelsIndexRoute;
   "/~/artist/publishing": typeof mainChar126ArtistPublishingIndexRoute;
   "/~/general/cart": typeof mainChar126GeneralCartIndexRoute;
+  "/~/general/contact-support": typeof mainChar126GeneralContactSupportIndexRoute;
   "/~/general/explore": typeof mainChar126GeneralExploreIndexRoute;
+  "/~/general/faq": typeof mainChar126GeneralFaqIndexRoute;
   "/~/general/favorites": typeof mainChar126GeneralFavoritesIndexRoute;
   "/~/general/feed": typeof mainChar126GeneralFeedIndexRoute;
   "/~/general/invoices": typeof mainChar126GeneralInvoicesIndexRoute;
@@ -218,7 +234,9 @@ export interface FileRoutesByTo {
   "/~/artist/my-models": typeof mainChar126ArtistMyModelsIndexRoute;
   "/~/artist/publishing": typeof mainChar126ArtistPublishingIndexRoute;
   "/~/general/cart": typeof mainChar126GeneralCartIndexRoute;
+  "/~/general/contact-support": typeof mainChar126GeneralContactSupportIndexRoute;
   "/~/general/explore": typeof mainChar126GeneralExploreIndexRoute;
+  "/~/general/faq": typeof mainChar126GeneralFaqIndexRoute;
   "/~/general/favorites": typeof mainChar126GeneralFavoritesIndexRoute;
   "/~/general/feed": typeof mainChar126GeneralFeedIndexRoute;
   "/~/general/invoices": typeof mainChar126GeneralInvoicesIndexRoute;
@@ -244,7 +262,9 @@ export interface FileRoutesById {
   "/(main)/~/artist/my-models/": typeof mainChar126ArtistMyModelsIndexRoute;
   "/(main)/~/artist/publishing/": typeof mainChar126ArtistPublishingIndexRoute;
   "/(main)/~/general/cart/": typeof mainChar126GeneralCartIndexRoute;
+  "/(main)/~/general/contact-support/": typeof mainChar126GeneralContactSupportIndexRoute;
   "/(main)/~/general/explore/": typeof mainChar126GeneralExploreIndexRoute;
+  "/(main)/~/general/faq/": typeof mainChar126GeneralFaqIndexRoute;
   "/(main)/~/general/favorites/": typeof mainChar126GeneralFavoritesIndexRoute;
   "/(main)/~/general/feed/": typeof mainChar126GeneralFeedIndexRoute;
   "/(main)/~/general/invoices/": typeof mainChar126GeneralInvoicesIndexRoute;
@@ -270,7 +290,9 @@ export interface FileRouteTypes {
     | "/~/artist/my-models"
     | "/~/artist/publishing"
     | "/~/general/cart"
+    | "/~/general/contact-support"
     | "/~/general/explore"
+    | "/~/general/faq"
     | "/~/general/favorites"
     | "/~/general/feed"
     | "/~/general/invoices"
@@ -294,7 +316,9 @@ export interface FileRouteTypes {
     | "/~/artist/my-models"
     | "/~/artist/publishing"
     | "/~/general/cart"
+    | "/~/general/contact-support"
     | "/~/general/explore"
+    | "/~/general/faq"
     | "/~/general/favorites"
     | "/~/general/feed"
     | "/~/general/invoices"
@@ -319,7 +343,9 @@ export interface FileRouteTypes {
     | "/(main)/~/artist/my-models/"
     | "/(main)/~/artist/publishing/"
     | "/(main)/~/general/cart/"
+    | "/(main)/~/general/contact-support/"
     | "/(main)/~/general/explore/"
+    | "/(main)/~/general/faq/"
     | "/(main)/~/general/favorites/"
     | "/(main)/~/general/feed/"
     | "/(main)/~/general/invoices/"
@@ -457,11 +483,25 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof mainChar126GeneralFavoritesIndexRouteImport;
       parentRoute: typeof mainChar126GeneralRouteRoute;
     };
+    "/(main)/~/general/faq/": {
+      id: "/(main)/~/general/faq/";
+      path: "/faq";
+      fullPath: "/~/general/faq";
+      preLoaderRoute: typeof mainChar126GeneralFaqIndexRouteImport;
+      parentRoute: typeof mainChar126GeneralRouteRoute;
+    };
     "/(main)/~/general/explore/": {
       id: "/(main)/~/general/explore/";
       path: "/explore";
       fullPath: "/~/general/explore";
       preLoaderRoute: typeof mainChar126GeneralExploreIndexRouteImport;
+      parentRoute: typeof mainChar126GeneralRouteRoute;
+    };
+    "/(main)/~/general/contact-support/": {
+      id: "/(main)/~/general/contact-support/";
+      path: "/contact-support";
+      fullPath: "/~/general/contact-support";
+      preLoaderRoute: typeof mainChar126GeneralContactSupportIndexRouteImport;
       parentRoute: typeof mainChar126GeneralRouteRoute;
     };
     "/(main)/~/general/cart/": {
@@ -584,7 +624,9 @@ interface mainChar126GeneralRouteRouteChildren {
   mainChar126GeneralPaymentsStatusRoute: typeof mainChar126GeneralPaymentsStatusRoute;
   mainChar126GeneralUUserIdRoute: typeof mainChar126GeneralUUserIdRoute;
   mainChar126GeneralCartIndexRoute: typeof mainChar126GeneralCartIndexRoute;
+  mainChar126GeneralContactSupportIndexRoute: typeof mainChar126GeneralContactSupportIndexRoute;
   mainChar126GeneralExploreIndexRoute: typeof mainChar126GeneralExploreIndexRoute;
+  mainChar126GeneralFaqIndexRoute: typeof mainChar126GeneralFaqIndexRoute;
   mainChar126GeneralFavoritesIndexRoute: typeof mainChar126GeneralFavoritesIndexRoute;
   mainChar126GeneralFeedIndexRoute: typeof mainChar126GeneralFeedIndexRoute;
   mainChar126GeneralInvoicesIndexRoute: typeof mainChar126GeneralInvoicesIndexRoute;
@@ -601,7 +643,10 @@ const mainChar126GeneralRouteRouteChildren: mainChar126GeneralRouteRouteChildren
       mainChar126GeneralPaymentsStatusRoute,
     mainChar126GeneralUUserIdRoute: mainChar126GeneralUUserIdRoute,
     mainChar126GeneralCartIndexRoute: mainChar126GeneralCartIndexRoute,
+    mainChar126GeneralContactSupportIndexRoute:
+      mainChar126GeneralContactSupportIndexRoute,
     mainChar126GeneralExploreIndexRoute: mainChar126GeneralExploreIndexRoute,
+    mainChar126GeneralFaqIndexRoute: mainChar126GeneralFaqIndexRoute,
     mainChar126GeneralFavoritesIndexRoute:
       mainChar126GeneralFavoritesIndexRoute,
     mainChar126GeneralFeedIndexRoute: mainChar126GeneralFeedIndexRoute,

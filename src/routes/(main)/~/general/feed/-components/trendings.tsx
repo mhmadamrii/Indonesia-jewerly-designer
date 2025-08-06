@@ -128,7 +128,7 @@ export function Trendings({ jewerlies }: TrendingsProps) {
               <div className="flex items-center">
                 <Badge className="bg-blue-500">
                   <Zap className="h-3 w-3 text-white" />
-                  <span className="text-black dark:text-white">Featured</span>
+                  <span className="dark:text-white">Featured</span>
                 </Badge>
               </div>
               <div className="flex items-center">

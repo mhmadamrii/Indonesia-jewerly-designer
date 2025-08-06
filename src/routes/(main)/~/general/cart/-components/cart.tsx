@@ -90,7 +90,7 @@ export function MyCart() {
 
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen p-4">
+      <div className="flex h-[80vh] items-center justify-center p-4">
         <div className="mx-auto max-w-4xl">
           <div className="py-16 text-center">
             <ShoppingBag className="mx-auto mb-6 h-24 w-24 text-slate-300" />

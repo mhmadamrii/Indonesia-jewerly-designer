@@ -1,5 +1,6 @@
 import { Await, createFileRoute } from "@tanstack/react-router";
 import { getWishlistItems } from "~/actions/wishlist.action";
+import { NoData } from "~/components/NoData";
 import { WishlistMasonry } from "./-components/wishlist-masonry";
 import { WishlistMasonrySkeleton } from "./-components/wishlist-masonry-skeleton";
 
@@ -17,10 +18,13 @@ function RouteComponent() {
   return (
     <section className="flex min-h-screen justify-center gap-3 px-4 py-2">
       <Await promise={wishlistItems} fallback={<WishlistMasonrySkeleton />}>
-        {({ data }) => (
-          <>
+        {({ data }) => {
+          if (!data || data.length === 0) {
+            return <NoData />;
+          }
+          return (
             <WishlistMasonry
-              items={data?.map((item) => ({
+              items={data.map((item) => ({
                 id: item.id,
                 img: item.imageUrl,
                 url: item.jewerlyAssetId,
@@ -35,8 +39,8 @@ function RouteComponent() {
               blurToFocus={true}
               colorShiftOnHover={false}
             />
-          </>
-        )}
+          );
+        }}
       </Await>
     </section>
   );

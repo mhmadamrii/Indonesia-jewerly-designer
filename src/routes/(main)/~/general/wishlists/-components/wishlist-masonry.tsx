@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { gsap } from "gsap";
-import { Trash } from "lucide-react";
+import { Loader, Trash } from "lucide-react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { deleteWishlistItem } from "~/actions/wishlist.action";
@@ -92,6 +92,8 @@ export function WishlistMasonry({
 }: MasonryProps) {
   const router = useRouter();
   const navigate = useNavigate();
+  const [currentSelectedItem, setCurrentSelectedItem] = useState<string>();
+
   const { mutate: deleteItem, isPending: isDeletingItem } = useMutation({
     mutationFn: deleteWishlistItem,
     onSuccess: () => {
@@ -263,12 +265,21 @@ export function WishlistMasonry({
               <div className="color-overlay pointer-events-none absolute inset-0 rounded-[10px] bg-gradient-to-tr from-pink-500/50 to-sky-500/50 opacity-0" />
             )}
             <Button
-              onClick={() => deleteItem({ data: { id: item.id } })}
+              onClick={(e) => {
+                setCurrentSelectedItem(item.id);
+                e.stopPropagation();
+                deleteItem({ data: { id: item.id } });
+              }}
               variant="destructive"
               className="absolute top-3 right-3 z-20 cursor-pointer opacity-0 transition-opacity duration-200 group-hover:opacity-100"
               size="icon"
+              disabled={isDeletingItem && currentSelectedItem === item.id}
             >
-              <Trash className="h-4 w-4" />
+              {isDeletingItem && currentSelectedItem === item.id ? (
+                <Loader className="h-4 w-4 animate-spin" />
+              ) : (
+                <Trash className="h-4 w-4" />
+              )}
             </Button>
           </div>
         </div>
