@@ -1,39 +1,48 @@
-import { Await, createFileRoute } from "@tanstack/react-router";
-import { getExploreAssetDatas } from "~/actions/explore.action";
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
+import { getExploreAssetDatas, searchParamSchema } from "~/actions/explore.action";
+import { WishlistMasonrySkeleton } from "../wishlists/-components/wishlist-masonry-skeleton";
 import { AssetGrid } from "./-components/asset-grid";
-import { AssetGridSkeleton } from "./-components/asset-grid-skeleton";
 import { FilterAssets } from "./-components/filter-assets";
 
 export const Route = createFileRoute("/(main)/~/general/explore/")({
-  validateSearch: (search: Record<string, unknown>) => {
-    console.log("search", search);
-    return {
-      theme: search.theme as "light" | "dark" | "system",
-    };
-  },
-  loaderDeps: ({ search: { theme } }) => ({ theme }),
-  loader: async ({ deps: { theme } }) => {
-    const explores = getExploreAssetDatas({ data: { theme } });
-    return { explores };
-  },
+  validateSearch: (search: Record<string, unknown>) => searchParamSchema.parse(search),
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { explores } = Route.useLoaderData();
+  const { artist, category } = Route.useSearch();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["explore_data", artist, category],
+    queryFn: () =>
+      getExploreAssetDatas({
+        data: {
+          artist,
+          category,
+        },
+      }),
+  });
+
+  console.log("data", data);
+
   return (
-    <section className="container mx-10 flex flex-col gap-5 p-4">
+    <section className="mx-10 flex flex-col gap-5 p-4">
       <FilterAssets />
-      <Await promise={explores} fallback={<AssetGridSkeleton />}>
-        {({ data }) => (
-          <AssetGrid
-            assets={data?.jewerlies}
-            onAddToCart={() => console.log("add to cart")}
-            onViewDetails={() => console.log("view details")}
-            cartItems={new Set()}
-          />
-        )}
-      </Await>
+      {isLoading ? (
+        <WishlistMasonrySkeleton />
+      ) : (
+        <>
+          {data?.data?.jewerlies?.map((item, idx) => (
+            <AssetGrid
+              key={idx}
+              category={item.category}
+              user={item.user}
+              jewerly_assets={item.jewerly_assets}
+            />
+          ))}
+        </>
+      )}
     </section>
   );
 }

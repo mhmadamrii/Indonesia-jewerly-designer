@@ -16,7 +16,6 @@ export function NoData() {
           <Button
             onClick={() =>
               navigate({
-                search: { theme: "dark" },
                 to: "/~/general/explore",
               })
             }

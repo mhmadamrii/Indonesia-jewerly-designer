@@ -5,11 +5,10 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { createCartItem } from "~/actions/cart.action";
 import { AddWishlist } from "~/components/add-wishlist";
-import { JewerlyWithMeta } from "~/lib/db/types";
 import { Asset } from "./types";
 
 interface AssetCardProps {
-  asset: JewerlyWithMeta;
+  asset: any;
   onAddToCart: (asset: Asset) => void;
   onViewDetails: (asset: Asset) => void;
   isInCart?: boolean;
@@ -21,6 +20,7 @@ export function AssetCard({
   onViewDetails,
   isInCart,
 }: AssetCardProps) {
+  console.log("asset", asset);
   const navigate = useNavigate();
   const [selected3D, setSelected3D] = useState("");
   const queryClient = useQueryClient();
@@ -80,12 +80,12 @@ export function AssetCard({
       </div>
 
       <div className="p-4">
-        <h3 className="mb-2 line-clamp-1 font-semibold">{asset.name}</h3>
+        <h3 className="mb-2 line-clamp-1 font-semibold">{asset.jewerly_assets.name}</h3>
         <p className="mb-3 line-clamp-2 truncate text-sm text-gray-600">
           {asset.description}
         </p>
 
-        <div className="mb-3 flex flex-wrap gap-1">
+        {/* <div className="mb-3 flex flex-wrap gap-1">
           {asset.tags
             .split(",")
             .map((tag) => tag.trim())
@@ -100,7 +100,7 @@ export function AssetCard({
           <span className="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600">
             +30
           </span>
-        </div>
+        </div> */}
 
         <div className="mb-3 flex items-center">
           <img

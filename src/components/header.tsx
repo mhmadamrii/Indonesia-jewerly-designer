@@ -34,7 +34,6 @@ function InputCommandDialog({
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const navigate = useNavigate();
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
       <CommandInput placeholder="Type a command or search..." />
@@ -78,6 +77,7 @@ function InputCommandDialog({
 }
 
 export function Header() {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -105,7 +105,16 @@ export function Header() {
         <div className="flex items-center gap-4">
           <SwitchRole />
           <ThemeToggle />
-          <Button size="icon" variant="ghost" className="rounded-full border">
+          <Button
+            onClick={() =>
+              navigate({
+                to: "/~/general/notifications",
+              })
+            }
+            size="icon"
+            variant="ghost"
+            className="cursor-pointer rounded-full border"
+          >
             <Bell />
           </Button>
           <CartDrawer />

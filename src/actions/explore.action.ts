@@ -1,56 +1,69 @@
 import { createServerFn } from "@tanstack/react-start";
-import { sql } from "drizzle-orm";
+import { eq, InferSelectModel } from "drizzle-orm";
 import { z } from "zod";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { category, user } from "~/lib/db/schema";
-import { DashboardReturnType, JewerlyWithMeta } from "~/lib/db/types";
-import { getClient } from "~/lib/redis/config";
+import { category, jewerlyAssets, user } from "~/lib/db/schema";
+
+export const searchParamSchema = z.object({
+  artist: z.string().optional(),
+  category: z.string().optional(),
+});
+
+export type JewerlyWithJoins = {
+  jewerly_assets: InferSelectModel<typeof jewerlyAssets>;
+  category: InferSelectModel<typeof category>;
+  user: InferSelectModel<typeof user>;
+};
+
+export interface IExploreProps {
+  assets: InferSelectModel<typeof jewerlyAssets>[];
+}
 
 export const getExploreAssetDatas = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
-  .validator(
-    z.object({
-      theme: z.enum(["light", "dark", "system"]).optional(),
-    }),
-  )
-  .handler(async ({ context, data }): Promise<DashboardReturnType> => {
-    console.log("data", data.theme);
-    const redis = await getClient();
-    const cachedKey = `explore_data:${context.user.id}`;
-    const cached = await redis.get(cachedKey);
-
-    if (cached) {
-      return {
-        success: true,
-        data: JSON.parse(cached),
-      };
-    }
-
+  .validator(searchParamSchema)
+  .handler(async ({ context, data }) => {
     const [categories, jewerlies, users] = await Promise.all([
       db.select().from(category),
-      db.execute(sql`
-          SELECT ja.*, c.name AS category_name, u.name AS creator_name, u.image AS creator_image,
-          string_agg(t.name, ', ') AS tags
-          FROM jewerly_assets ja
-          JOIN category c ON ja.category_id = c.id
-          JOIN "user" u ON ja.user_id = u.id
-          LEFT JOIN jewerly_asset_tags jat ON ja.id = jat.jewerly_asset_id
-          LEFT JOIN tag t ON jat.tag_id = t.id
-          GROUP BY ja.id, c.name, u.name, u.image
-        `),
-
+      db
+        .select()
+        .from(jewerlyAssets)
+        .innerJoin(category, eq(jewerlyAssets.categoryId, category.id))
+        .innerJoin(user, eq(jewerlyAssets.userId, user.id))
+        .where(
+          data?.category
+            ? eq(jewerlyAssets.categoryId, data.category)
+            : data.artist
+              ? eq(jewerlyAssets.userId, data.artist)
+              : undefined,
+        ),
       db.select().from(user),
     ]);
-
-    await redis.set(cachedKey, JSON.stringify({ categories, jewerlies, users }));
 
     return {
       success: true,
       data: {
         categories,
-        jewerlies: jewerlies as unknown as JewerlyWithMeta[],
+        jewerlies: jewerlies,
         users,
+      },
+    };
+  });
+
+export const getFilterExploreAsset = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    const [categories, artists] = await Promise.all([
+      db.select().from(category),
+      db.select().from(user).where(eq(user.role, "artist")),
+    ]);
+
+    return {
+      success: true,
+      data: {
+        categories,
+        artists,
       },
     };
   });

@@ -105,9 +105,6 @@ function RouteComponent() {
             <Button
               onClick={() =>
                 navigate({
-                  search: {
-                    theme: "dark",
-                  },
                   to: "/~/general/explore",
                 })
               }
