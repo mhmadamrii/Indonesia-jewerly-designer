@@ -16,7 +16,10 @@ export function CategoryFilters({
   return (
     <div className="relative">
       <div className="relative flex flex-wrap gap-2">
-        {categories?.map((item, index) => {
+        {[...categories, {
+          id: "",
+          name: "all"
+        }]?.map((item, index) => {
           const isSelected = selectedCategory === item.id;
           return (
             <div key={item.id} className="relative">

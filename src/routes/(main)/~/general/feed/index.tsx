@@ -7,9 +7,9 @@ import { TrendingCollectionsSkeleton } from "~/components/skeletons/trending-col
 import { authClient } from "~/lib/auth/auth-client";
 import { cn } from "~/lib/utils";
 import { CategoryFilters } from "./-components/category-filters";
+import { Summary } from "./-components/summary";
 import { TopArtists } from "./-components/top-artists";
 import { Trendings } from "./-components/trendings";
-import { Summary } from "./-components/summary";
 
 export const Route = createFileRoute("/(main)/~/general/feed/")({
   loader: async () => {
@@ -17,6 +17,7 @@ export const Route = createFileRoute("/(main)/~/general/feed/")({
     return { dashboard };
   },
   component: RouteComponent,
+  staleTime: 30_000,
 });
 
 function RouteComponent() {
@@ -55,7 +56,17 @@ function RouteComponent() {
             </div>
             <div className="flex gap-2">
               <Await promise={dashboard} fallback={<TrendingCollectionsSkeleton />}>
-                {({ data }) => <Trendings jewerlies={data?.jewerlies} />}
+                {({ data }) => (
+                  <Trendings
+                    jewerlies={
+                      selectedCategory === ""
+                        ? data?.jewerlies
+                        : data?.jewerlies.filter(
+                            (item) => item.category_id === selectedCategory,
+                          )
+                    }
+                  />
+                )}
               </Await>
             </div>
           </div>

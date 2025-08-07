@@ -68,7 +68,7 @@ export function CartDrawer() {
     0,
   );
 
-  if (location.pathname.includes("artist")) {
+  if (location.pathname.includes("artist") || location.pathname.includes('cart')) {
     return;
   }
 
@@ -201,6 +201,9 @@ export function CartDrawer() {
                     className="w-full cursor-pointer bg-transparent"
                     onClick={() =>
                       navigate({
+                        search: {
+                          theme: "dark",
+                        },
                         to: "/~/general/explore",
                       })
                     }

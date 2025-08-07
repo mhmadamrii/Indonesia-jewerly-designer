@@ -15,6 +15,7 @@ type TrendingsProps = {
 };
 
 export function Trendings({ jewerlies }: TrendingsProps) {
+  console.log('jewerlies', jewerlies)
   const queryClient = useQueryClient();
   const [selected3D, setSelected3D] = useState("");
   const [selectedId, setSelectedId] = useState<number | null>(null);
