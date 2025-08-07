@@ -16,7 +16,7 @@ function RouteComponent() {
   const { wishlistItems } = Route.useLoaderData();
 
   return (
-    <section className="flex min-h-screen justify-center gap-3 px-4 py-2">
+    <section className="mx-10 flex min-h-screen justify-center gap-3 px-4 py-2">
       <Await promise={wishlistItems} fallback={<WishlistMasonrySkeleton />}>
         {({ data }) => {
           if (!data || data.length === 0) {

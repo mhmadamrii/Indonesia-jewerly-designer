@@ -22,7 +22,7 @@ export const Route = createFileRoute("/(main)/~/general/explore/")({
 function RouteComponent() {
   const { explores } = Route.useLoaderData();
   return (
-    <section className="container mx-auto flex flex-col gap-5 p-4">
+    <section className="container mx-10 flex flex-col gap-5 p-4">
       <FilterAssets />
       <Await promise={explores} fallback={<AssetGridSkeleton />}>
         {({ data }) => (
