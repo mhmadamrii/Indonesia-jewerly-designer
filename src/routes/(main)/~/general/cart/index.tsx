@@ -1,6 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { HardDrive, ShoppingBag, Tag, Trash2, Zap } from "lucide-react";
 import { useState } from "react";
+import { getCartItems } from "~/actions/cart.action";
+import { ModelViewer } from "~/components/3D/model-viewer";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -79,6 +82,13 @@ function RouteComponent() {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState<CartItem[]>(mockCartItems);
 
+  const { data: cartItemsData, isLoading: isLoadingCart } = useQuery({
+    queryKey: ["cart_items"],
+    queryFn: () => getCartItems(),
+  });
+
+  console.log("cartItemsData", cartItemsData);
+
   const removeItem = (id: string) => {
     setCartItems((items) => items.filter((item) => item.id !== id));
   };
@@ -125,106 +135,114 @@ function RouteComponent() {
         <div className="mb-8">
           <h1 className="mb-2 text-4xl font-bold">Shopping Cart</h1>
           <p>
-            {cartItems.length} {cartItems.length === 1 ? "item" : "items"} in your cart
+            {cartItemsData?.data?.length}{" "}
+            {cartItemsData?.data?.length === 1 ? "item" : "items"} in your cart
           </p>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-3">
           <div className="space-y-6 lg:col-span-2">
-            {cartItems.map((item) => (
-              <Card
-                key={item.id}
-                className="overflow-hidden transition-shadow hover:shadow-lg"
-              >
-                <CardContent className="p-6">
-                  <div className="flex gap-6">
-                    <div className="w-80 flex-shrink-0">
-                      <Tabs defaultValue="thumbnail" className="w-full">
-                        <TabsList className="mb-4 grid w-full grid-cols-2">
-                          <TabsTrigger value="thumbnail">Thumbnail</TabsTrigger>
-                          <TabsTrigger value="3d-view">3D View</TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="thumbnail" className="mt-0">
-                          <div className="relative h-48 w-full overflow-hidden rounded-lg bg-slate-100">
-                            <img
-                              src={item.thumbnailUrl || "/placeholder.svg"}
-                              alt={item.name}
-                              className="object-cover"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                          </div>
-                        </TabsContent>
-                        <TabsContent value="3d-view" className="mt-0">
+            {cartItemsData?.data
+              ?.map((item) => ({
+                id: item?.cart_item?.id,
+                name: item?.jewerly_assets?.name,
+                price: item?.jewerly_assets?.price,
+                tags: ["spaceship", "sci-fi", "vehicle", "animated"],
+                thumbnailUrl: item?.jewerly_assets?.thumbnailUrl,
+                description: item?.jewerly_assets?.description,
+                previewUrl: item?.jewerly_assets?.previewUrl,
+              }))
+              .map((item) => (
+                <Card
+                  key={item.id}
+                  className="overflow-hidden transition-shadow hover:shadow-lg"
+                >
+                  <CardContent className="p-6">
+                    <div className="flex gap-6">
+                      <div className="w-80 flex-shrink-0">
+                        <Tabs defaultValue="thumbnail" className="w-full">
+                          <TabsList className="mb-4 grid w-full grid-cols-2">
+                            <TabsTrigger value="thumbnail">Thumbnail</TabsTrigger>
+                            <TabsTrigger value="3d-view">3D View</TabsTrigger>
+                          </TabsList>
+                          <TabsContent value="thumbnail" className="mt-0">
+                            <div className="relative h-48 w-full overflow-hidden rounded-lg bg-slate-100">
+                              <img
+                                src={item.thumbnailUrl || "/placeholder.svg"}
+                                alt={item.name}
+                                className="object-cover"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                            </div>
+                          </TabsContent>
+                          <TabsContent value="3d-view" className="mt-0">
+                            <div className="h-full w-full">
+                              <ModelViewer src={item.previewUrl as string} />
+                            </div>
+                          </TabsContent>
+                        </Tabs>
+                      </div>
+
+                      <div className="min-w-0 flex-1">
+                        <div className="mb-3 flex items-start justify-between">
                           <div>
-                            <p>
-                              Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                              Inventore, delectus?
-                            </p>
+                            <h3 className="mb-1 text-xl font-semibold">{item.name}</h3>
+                            <p className="line-clamp-2 text-sm">{item.description}</p>
                           </div>
-                        </TabsContent>
-                      </Tabs>
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <div className="mb-3 flex items-start justify-between">
-                        <div>
-                          <h3 className="mb-1 text-xl font-semibold">{item.name}</h3>
-                          <p className="line-clamp-2 text-sm">{item.description}</p>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeItem(item.id)}
+                            className="text-slate-400 hover:bg-red-50 hover:text-red-500"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => removeItem(item.id)}
-                          className="text-slate-400 hover:bg-red-50 hover:text-red-500"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
 
-                      {/* Tags */}
-                      {item.tags && item.tags.length > 0 && (
-                        <div className="mb-3 flex flex-wrap gap-1">
-                          {item.tags.slice(0, 3).map((tag) => (
-                            <Badge key={tag} variant="secondary" className="text-xs">
-                              <Tag className="mr-1 h-3 w-3" />
-                              {tag}
-                            </Badge>
-                          ))}
-                          {item.tags.length > 3 && (
-                            <Badge variant="secondary" className="text-xs">
-                              +{item.tags.length - 3} more
-                            </Badge>
-                          )}
-                        </div>
-                      )}
+                        {/* Tags */}
+                        {item.tags && item.tags.length > 0 && (
+                          <div className="mb-3 flex flex-wrap gap-1">
+                            {item.tags.slice(0, 3).map((tag) => (
+                              <Badge key={tag} variant="secondary" className="text-xs">
+                                <Tag className="mr-1 h-3 w-3" />
+                                {tag}
+                              </Badge>
+                            ))}
+                            {item.tags.length > 3 && (
+                              <Badge variant="secondary" className="text-xs">
+                                +{item.tags.length - 3} more
+                              </Badge>
+                            )}
+                          </div>
+                        )}
 
-                      {/* Asset Info */}
-                      <div className="mb-4 flex items-center gap-4 text-sm">
-                        <div className="flex items-center gap-1">
-                          <Zap className="h-4 w-4 text-yellow-500" />
-                          <span>Boost: +{item.totalBoostToUpdate}</span>
+                        {/* Asset Info */}
+                        <div className="mb-4 flex items-center gap-4 text-sm">
+                          <div className="flex items-center gap-1">
+                            <Zap className="h-4 w-4 text-yellow-500" />
+                            <span>Boost: +{item.totalBoostToUpdate}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <HardDrive className="h-4 w-4 text-blue-500" />
+                            <span>Storage: {item.totalStorageLimitToUpdate}MB</span>
+                          </div>
+                          <Badge variant="outline" className="capitalize">
+                            {item.typeAsset}
+                          </Badge>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <HardDrive className="h-4 w-4 text-blue-500" />
-                          <span>Storage: {item.totalStorageLimitToUpdate}MB</span>
-                        </div>
-                        <Badge variant="outline" className="capitalize">
-                          {item.typeAsset}
-                        </Badge>
-                      </div>
 
-                      <div className="flex items-center justify-end">
-                        <div className="text-right">
-                          <div className="text-2xl font-bold">
-                            ${item.price.toFixed(2)}
+                        <div className="flex items-center justify-end">
+                          <div className="text-right">
+                            <div className="text-2xl font-bold">
+                              ${item?.price?.toFixed(2)}
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
           </div>
 
           <div className="lg:col-span-1">
@@ -281,6 +299,11 @@ function RouteComponent() {
                 </Button>
 
                 <Button
+                  onClick={() =>
+                    navigate({
+                      to: "/~/general/explore",
+                    })
+                  }
                   variant="outline"
                   size="lg"
                   className="mt-3 w-full bg-transparent"

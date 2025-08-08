@@ -81,6 +81,7 @@ export function LoginForm({ onClickLoginForm }: IProps) {
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={isLoading}
                     className="w-full rounded-xl"
                     placeholder="john@gmail.com"
                     type="email"
@@ -100,6 +101,7 @@ export function LoginForm({ onClickLoginForm }: IProps) {
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <PasswordInput
+                    disabled={isLoading}
                     className="w-full rounded-xl"
                     placeholder="password"
                     {...field}
