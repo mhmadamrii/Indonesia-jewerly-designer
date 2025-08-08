@@ -1,8 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { HardDrive, ShoppingBag, Tag, Trash2, Zap } from "lucide-react";
 import { useState } from "react";
-import { getCartItems } from "~/actions/cart.action";
+import { toast } from "sonner";
+import { deleteCartItem, getCartItems } from "~/actions/cart.action";
 import { ModelViewer } from "~/components/3D/model-viewer";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -81,13 +82,35 @@ export const Route = createFileRoute("/(main)/~/general/cart/")({
 function RouteComponent() {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState<CartItem[]>(mockCartItems);
+  const [currentId, setCurrentId] = useState<string | null>(null);
 
-  const { data: cartItemsData, isLoading: isLoadingCart } = useQuery({
+  const {
+    data: cartItemsData,
+    isLoading: isLoadingCart,
+    refetch,
+  } = useQuery({
     queryKey: ["cart_items"],
     queryFn: () => getCartItems(),
   });
 
-  console.log("cartItemsData", cartItemsData);
+  const { mutate: deleteItem, isPending: isDeletingItem } = useMutation({
+    mutationFn: deleteCartItem,
+    onSuccess: (res) => {
+      toast.success("Successfully", {
+        description: "Item removed from cart successfully",
+      });
+      refetch();
+    },
+  });
+
+  const handleRemoveItem = (id: string) => {
+    setCurrentId(id);
+    deleteItem({
+      data: {
+        id,
+      },
+    });
+  };
 
   const removeItem = (id: string) => {
     setCartItems((items) => items.filter((item) => item.id !== id));
@@ -176,7 +199,7 @@ function RouteComponent() {
                             </div>
                           </TabsContent>
                           <TabsContent value="3d-view" className="mt-0">
-                            <div className="h-full w-full">
+                            <div className="h-[300px] w-full">
                               <ModelViewer src={item.previewUrl as string} />
                             </div>
                           </TabsContent>
@@ -192,7 +215,7 @@ function RouteComponent() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => removeItem(item.id)}
+                            onClick={() => handleRemoveItem(item.id)}
                             className="text-slate-400 hover:bg-red-50 hover:text-red-500"
                           >
                             <Trash2 className="h-4 w-4" />
