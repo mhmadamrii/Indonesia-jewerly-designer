@@ -64,7 +64,7 @@ import {
 } from "~/components/ui/select";
 
 const formSchema = z.object({
-  name: z.string().min(1).min(3).max(20),
+  name: z.string().min(1).min(3).max(50),
   price: z.coerce.number().min(1).max(500000),
   currency: z.string(),
   category: z.string().min(3).max(500),
@@ -107,21 +107,21 @@ const currencies = [
 
 export function AssetPublish() {
   const navigate = useNavigate();
+
   const [isUsingBoost, setIsUsingBoost] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [totalStorageLimitToUpdate, setTotalStorageLimitToUpdate] = useState(0);
   const [tagsValue, setTagsValue] = useState<{ value: string; label: string }[]>([]);
   const [assetStorageUrl, setAssetStorageUrl] = useState({
     thumbnail_url: "",
     preview_url: "",
     asset_url: "",
   });
-  const [totalStorageLimitToUpdate, setTotalStorageLimitToUpdate] = useState(0);
 
   const { data: tagsAndCategories } = useQuery({
     queryKey: ["tags_and_categories"],
     queryFn: () => getJewerlyTagsAndCategories(),
   });
-  console.log("tagsAndCategories", tagsAndCategories);
 
   const { data: currentCredit } = useQuery({
     queryKey: ["current_credit"],

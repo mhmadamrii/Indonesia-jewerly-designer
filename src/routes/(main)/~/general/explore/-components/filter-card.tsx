@@ -87,7 +87,7 @@ export function FilterCard() {
               value={priceRange}
               onValueChange={setPriceRange}
               min={0}
-              max={1000}
+              max={10000}
               step={10}
               className="w-full"
             />
