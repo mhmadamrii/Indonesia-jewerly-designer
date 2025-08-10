@@ -484,7 +484,7 @@ export function FileUploadCenter({
                   category="asset"
                   title="Upload Assets"
                   description="Documents, files, and other digital assets"
-                  acceptedTypes="*"
+                  acceptedTypes=".zip"
                 />
               </TabsContent>
             </Tabs>
