@@ -3,15 +3,18 @@ import { LoaderIcon } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { payWithMidtrans } from "~/actions/payment.action";
+import { cn } from "~/lib/utils";
 import { Button } from "./ui/button";
 
 export function PaymentButton({
   purchaseLabel,
   totalPrice,
+  className = "",
   setIsOpenDrawer,
 }: {
   purchaseLabel: string;
   totalPrice: number;
+  className?: string;
   setIsOpenDrawer?: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { mutate: checkout, isPending: isLoadingCheckout } = useMutation({
@@ -78,7 +81,7 @@ export function PaymentButton({
           },
         })
       }
-      className="w-full cursor-pointer"
+      className={cn("w-full cursor-pointer", className)}
       size="lg"
     >
       {isLoadingCheckout ? <LoaderIcon className="animate-spin" /> : purchaseLabel}

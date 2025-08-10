@@ -9,7 +9,6 @@ type InputProps = SearchProps;
 
 const SearchInput = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, onChange, ...props }, ref) => {
-    console.log("prop", { ...props });
     return (
       <div
         className={cn(

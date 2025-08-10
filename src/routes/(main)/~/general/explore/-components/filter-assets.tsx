@@ -20,9 +20,10 @@ export function FilterAssets() {
     from: "/~/general/explore",
   });
 
-  const { data } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ["explore_data_filter"],
     queryFn: () => getFilterExploreAsset(),
+    enabled: false,
   });
 
   const [filters, setFilters] = useState({
@@ -70,8 +71,12 @@ export function FilterAssets() {
 
         <div className="flex w-full flex-col space-y-1">
           <label className="text-sm font-medium">Category</label>
-          <Select onValueChange={handleCategoryChange} value={filters.category}>
-            <SelectTrigger className="w-full">
+          <Select
+            onOpenChange={() => refetch()}
+            onValueChange={handleCategoryChange}
+            value={filters.category}
+          >
+            <SelectTrigger onClick={() => refetch()} className="w-full">
               <SelectValue placeholder="Select Category" />
             </SelectTrigger>
             <SelectContent>
@@ -86,7 +91,11 @@ export function FilterAssets() {
 
         <div className="flex w-full flex-col space-y-1">
           <label className="text-sm font-medium">Artist</label>
-          <Select onValueChange={handleArtistChange} value={filters.artist}>
+          <Select
+            onOpenChange={() => refetch()}
+            onValueChange={handleArtistChange}
+            value={filters.artist}
+          >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select Artist" />
             </SelectTrigger>

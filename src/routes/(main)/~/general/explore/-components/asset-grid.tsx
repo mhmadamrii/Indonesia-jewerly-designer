@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { createCartItem } from "~/actions/cart.action";
 import { JewerlyWithJoins } from "~/actions/explore.action";
 import { AddWishlist } from "~/components/add-wishlist";
+import { PaymentButton } from "~/components/payment-button";
 import { Button } from "~/components/ui/button";
 
 export function AssetGrid({ jewerly_assets, category, user }: JewerlyWithJoins) {
@@ -105,7 +106,7 @@ export function AssetGrid({ jewerly_assets, category, user }: JewerlyWithJoins) 
 
             <div className="mb-3 flex items-center">
               <img
-                src={user.image ?? ""}
+                src={user.image ?? "placeholder-img.jpg"}
                 alt={user.name}
                 className="mr-2 h-6 w-6 rounded-full"
               />
@@ -137,12 +138,11 @@ export function AssetGrid({ jewerly_assets, category, user }: JewerlyWithJoins) 
           </div>
 
           <div className="mt-2 flex items-center justify-between gap-2">
-            <Button
+            <PaymentButton
+              purchaseLabel="Purchase"
+              totalPrice={jewerly_assets.price}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600 py-3 font-semibold text-white hover:from-blue-700 hover:to-purple-700"
-              variant="default"
-            >
-              Purchase
-            </Button>
+            />
 
             <div className="flex items-center space-x-2">
               <Button size="icon" variant="outline">

@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { authClient } from "~/lib/auth/auth-client";
@@ -9,6 +10,8 @@ type Role = "user" | "artist";
 const roles: Role[] = ["user", "artist"];
 
 export function SwitchRole() {
+  const navigate = useNavigate();
+
   const { data: session } = authClient.useSession();
   const [isOpenConfirmArtist, setIsOpenConfirmArtist] = useState(false);
 
@@ -28,6 +31,10 @@ export function SwitchRole() {
         setIsOpenConfirmArtist(true);
       } else {
         setCurrentRole(newRole);
+
+        navigate({
+          to: newRole === "user" ? "/~/general/feed" : "/~/artist/dashboard",
+        });
       }
     } catch (error) {
       console.log(error);
