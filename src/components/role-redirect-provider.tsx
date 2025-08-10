@@ -1,29 +1,26 @@
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { Loader } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRoleStore } from "~/lib/store/role.store";
 
-export function RoleRedirectProvider({
-  children,
-  sessionRole,
-}: {
-  children: React.ReactNode;
-  sessionRole: string;
-}) {
+export function RoleRedirectProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
+  const { location } = useRouterState(); // get current path
   const { role: currentRole, isRoleChanging } = useRoleStore();
 
+  const prevRoleRef = useRef<string | null>(null);
+
   useEffect(() => {
-    if (currentRole === "artist") {
-      navigate({
-        to: "/~/artist/dashboard",
-      });
-    } else {
-      navigate({
-        to: "/~/general/feed",
-      });
+    if (!currentRole) return;
+
+    const targetPath = currentRole === "artist" ? "/~/artist/dashboard" : "/~/general/feed"; // prettier-ignore
+
+    if (prevRoleRef.current !== currentRole && location.pathname !== targetPath) {
+      navigate({ to: targetPath });
     }
-  }, [currentRole, sessionRole]);
+
+    prevRoleRef.current = currentRole;
+  }, [currentRole, location.pathname, navigate]);
 
   return (
     <>
