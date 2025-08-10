@@ -1,9 +1,10 @@
 import type React from "react";
 
+import { upload } from "@imagekit/react";
 import { useMutation } from "@tanstack/react-query";
-import { useImageKit } from "imagekit-react-hook";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { imageKitAuthenticator } from "~/actions/imagekit.action";
 import { ModelViewer } from "~/components/3D/model-viewer";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -13,6 +14,7 @@ import { cn } from "~/lib/utils";
 
 import {
   Check,
+  CheckCircle,
   File,
   FileText,
   HardDrive,
@@ -66,7 +68,6 @@ export function FileUploadCenter({
   onSetUsedStorage,
 }: IProps) {
   const { data: session } = authClient.useSession();
-  const { upload } = useImageKit();
 
   const [uploadedFiles, setUploadedFiles] = useState<{
     thumbnail: UploadedFile[];
@@ -83,14 +84,7 @@ export function FileUploadCenter({
 
   // const totalStorage = 1073741824; // 1GB in bytes
   const totalStorage = userStorageLimit;
-  const usedStorage =
-    Object.values(uploadedFiles)
-      .flat()
-      .reduce((total, file) => total + file.size, 0) + userStorageUsage;
-
-  useEffect(() => {
-    onSetUsedStorage(usedStorage);
-  }, [usedStorage, onSetUsedStorage]);
+  const usedStorage = Object.values(uploadedFiles).flat().reduce((total, file) => total + file.size, 0) + userStorageUsage; // prettier-ignore
 
   const storagePercentage = (usedStorage / totalStorage) * 100;
 
@@ -158,11 +152,48 @@ export function FileUploadCenter({
     setUploading(category);
 
     try {
-      const res = await upload({
-        file: files[0],
+      const { expire, token, signature } = (await imageKitAuthenticator()) as {
+        expire: number;
+        token: string;
+        signature: string;
+      };
+
+      let currentProgress = 0;
+
+      const toastId = toast(`Uploading file...`, {
+        description: `${currentProgress}%`,
+        duration: Infinity,
+      });
+
+      const res = (await upload({
+        expire,
+        token,
+        signature,
+        publicKey: import.meta.env.VITE_IMAGE_KIT_PUBLIC_KEY,
+        file,
         fileName: `${session?.user?.email.split("@")[0]}c=${category}f=${files[0].name}`,
         folder: getCategoryFolder(category),
+        onProgress: (event) => {
+          currentProgress = Math.round((event.loaded / event.total) * 100);
+          toast(`Uploading file...`, {
+            id: toastId,
+            description: `${currentProgress}%`,
+          });
+        },
+      })) as { url: string; fileId: string };
+
+      toast.success("Upload complete!", {
+        id: toastId,
+        icon: <CheckCircle className="h-5 w-5 text-green-500" />,
+        description: "Your file uploaded successfully.",
+        action: {
+          label: "Close",
+          onClick: () => {
+            console.log("Closed toast");
+          },
+        },
       });
+
       if (res.url && category == "thumbnail") {
         onSetAssetStorageUrl((prev) => ({
           ...prev,
@@ -363,10 +394,13 @@ export function FileUploadCenter({
     </div>
   );
 
+  useEffect(() => {
+    onSetUsedStorage(usedStorage);
+  }, [usedStorage, onSetUsedStorage]);
+
   return (
     <div className="min-h-[800px] bg-gradient-to-br p-4">
       <div className="mx-auto max-w-4xl space-y-8">
-        {/* Header */}
         <div className="space-y-4 text-center">
           <h1 className="text-4xl font-bold tracking-tight">File Upload Center</h1>
           <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
@@ -375,7 +409,6 @@ export function FileUploadCenter({
           </p>
         </div>
 
-        {/* Storage Usage */}
         <Card>
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
@@ -390,7 +423,7 @@ export function FileUploadCenter({
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              <Progress value={storagePercentage}>
+              <Progress value={parseInt(storagePercentage.toFixed())}>
                 <ProgressLabel />
                 <ProgressValue />
                 <ProgressTrack />
@@ -458,7 +491,6 @@ export function FileUploadCenter({
           </CardContent>
         </Card>
 
-        {/* Summary Stats */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <Card>
             <CardHeader className="pb-2">

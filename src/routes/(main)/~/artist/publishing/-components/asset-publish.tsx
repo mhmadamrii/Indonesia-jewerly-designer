@@ -461,11 +461,6 @@ export function AssetPublish() {
             />
 
             <div className="flex w-full flex-col justify-center">
-              {/* <FileUploadDirect
-                isUploadingImage={isUploadingImage}
-                setIsUploadingImage={setIsUploadingImage}
-                onSetImageUrl={setImageUrl}
-              /> */}
               <FileUploadCenter
                 userStorageLimit={
                   tagsAndCategories?.data?.storage[0]?.userStorageLimit ?? 0
