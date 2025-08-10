@@ -42,31 +42,21 @@ import {
 } from "~/components/animate-ui/radix/sidebar";
 
 import {
-  AudioWaveform,
   BadgeCheck,
   Bell,
-  BookOpen,
-  Bot,
   ChevronsUpDown,
   Clock,
-  Command,
   CreditCard,
-  Frame,
-  GalleryVerticalEnd,
   Heart,
   HelpCircle,
   Home,
   Library,
   LogOut,
   Mail,
-  Map,
-  PieChart,
   Receipt,
   Search,
-  Settings2,
   ShoppingCart,
   Sparkles,
-  SquareTerminal,
   UserCog,
 } from "lucide-react";
 
@@ -164,136 +154,6 @@ const USER_SIDEBAR = [
   },
 ];
 
-const DATA = {
-  user: {
-    name: "Skyleen",
-    email: "skyleen@example.com",
-    avatar:
-      "https://pbs.twimg.com/profile_images/1909615404789506048/MTqvRsjo_400x400.jpg",
-  },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
-  navMain: [
-    {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
-};
-
 export const Route = createFileRoute("/(main)/~/general")({
   component: MainLayout,
   beforeLoad: async ({ context }) => {
@@ -360,7 +220,7 @@ function MainLayout() {
               ))}
             </SidebarContent>
           </ScrollArea>
-          <SidebarFooter className="bottom-0 border">
+          <SidebarFooter className="bottom-0">
             <SidebarMenu>
               <SidebarMenuItem>
                 <DropdownMenu>

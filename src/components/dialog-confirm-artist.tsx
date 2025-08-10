@@ -1,9 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate, useRouter } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { Loader } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { registerToArtist } from "~/actions/user.action";
+import { authClient } from "~/lib/auth/auth-client";
 import { useRoleStore } from "~/lib/store/role.store";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
@@ -27,23 +28,30 @@ export function DialogConfirmArtist({
   onClose: () => void;
 }) {
   const navigate = useNavigate();
-  const router = useRouter();
 
   const [isAgree, setIsAgree] = useState(false);
-  const { setRole } = useRoleStore();
+
+  const { refetch: refetchSession } = authClient.useSession();
+  const { setRole, setIsRoleChanging } = useRoleStore();
   const { mutate, isPending } = useMutation({
     mutationFn: registerToArtist,
     onSuccess: async () => {
-      window.location.reload();
-      navigate({ to: "/~/artist/dashboard" });
       toast.success("Registered successfully");
       setRole("artist");
       onClose();
+      refetchSession();
+      navigate({ to: "/~/artist/dashboard" });
     },
   });
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog
+      open={open}
+      onClose={() => {
+        setIsRoleChanging(false);
+        onClose();
+      }}
+    >
       <DialogBackdrop />
       <DialogPanel>
         <DialogHeader>
