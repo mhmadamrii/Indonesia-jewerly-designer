@@ -302,7 +302,6 @@ function Filter({ column }: { column: Column<any, unknown> }) {
 }
 
 export function ModelsDataTable({ jewerlies }: { jewerlies: JewerlyAsset[] }) {
-  console.log("jewerlies", jewerlies);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const [sorting, setSorting] = useState<SortingState>([
@@ -331,8 +330,8 @@ export function ModelsDataTable({ jewerlies }: { jewerlies: JewerlyAsset[] }) {
   });
 
   return (
-    <Card>
-      <CardHeader className="flex flex-wrap gap-3 px-2 py-6">
+    <Card className="py-2">
+      <CardHeader className="flex flex-wrap gap-3 border px-2">
         <div className="w-44">
           <Filter column={table.getColumn("name")!} />
         </div>

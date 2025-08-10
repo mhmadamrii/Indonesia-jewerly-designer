@@ -8,6 +8,8 @@ import { db } from "~/lib/db";
 import { category, jewerlyAssets, jewerlyAssetTags, tag, user } from "~/lib/db/schema";
 import { getClient } from "~/lib/redis/config";
 
+export type MyJewelryAssetsType = Awaited<ReturnType<(typeof getMyJewerlyAssets)>>["data"]; // prettier-ignore
+
 const JewerlyAssetSchema = z.object({
   name: z.string(),
   description: z.string(),
@@ -81,7 +83,10 @@ export const getMyJewerlyAssets = createServerFn({ method: "GET" })
     const res = await db
       .select()
       .from(jewerlyAssets)
+      .innerJoin(user, eq(user.id, jewerlyAssets.userId))
+      .innerJoin(category, eq(category.id, jewerlyAssets.categoryId))
       .where(eq(jewerlyAssets.userId, context.user.id));
+
     return {
       success: true,
       data: res,

@@ -82,7 +82,6 @@ export function PaymentButton({
         })
       }
       className={cn("w-full cursor-pointer", className)}
-      size="lg"
     >
       {isLoadingCheckout ? <LoaderIcon className="animate-spin" /> : purchaseLabel}
     </Button>

@@ -1,15 +1,22 @@
 import { ClientOnly, Link, useNavigate } from "@tanstack/react-router";
 import { Search, ShoppingBag } from "lucide-react";
+import { useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import { authClient } from "~/lib/auth/auth-client";
+import { useRoleStore } from "~/lib/store/role.store";
 import { useTheme } from "../theme-provider";
 import { ThemeToggle } from "../theme-toggle";
 import { UserAvatar } from "../user-avatar";
 
 export function HeaderLandingPage() {
   const navigate = useNavigate();
+  const { setIsRoleChanging } = useRoleStore();
   const { theme } = useTheme();
   const { data: session } = authClient.useSession();
+
+  useEffect(() => {
+    setIsRoleChanging(false);
+  }, []);
 
   return (
     <header className="fixed top-0 z-50 w-full border-b backdrop-blur-md">
