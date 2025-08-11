@@ -125,10 +125,10 @@ export const payments = pgTable("payments", {
   jewerlyAssetId: uuid("jewelry_asset_id")
     .notNull()
     .references(() => jewerlyAssets.id, { onDelete: "cascade" }),
-  amount: integer("amount").notNull(),
+  amount: text("amount").notNull(),
   status: text("status").notNull(),
-  currency: varchar("currency", { length: 3 }).notNull(),
-  provider: varchar("provider", { length: 50 }).notNull(),
+  currency: varchar("currency", { length: 100 }).notNull(),
+  provider: varchar("provider", { length: 100 }).notNull(),
   providerId: varchar("provider_id", { length: 100 }).notNull(),
   description: varchar("description", { length: 255 }),
   createdAt: timestamp("created_at").defaultNow(),

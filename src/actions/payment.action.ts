@@ -1,12 +1,15 @@
-import { createServerFn } from "@tanstack/react-start";
 import z from "zod";
-import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 
+import { createServerFn } from "@tanstack/react-start";
+import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
+import { db } from "~/lib/db";
+import { payments } from "~/lib/db/schema";
+
+// 4411 1111 1111 1118
 export const payWithMidtrans = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator(z.object({ amount: z.number().min(1) }))
   .handler(async ({ context, data }) => {
-    // 4411 1111 1111 1118
     try {
       const response = await fetch(
         "https://app.sandbox.midtrans.com/snap/v1/transactions",
@@ -21,6 +24,7 @@ export const payWithMidtrans = createServerFn({ method: "POST" })
           },
           body: JSON.stringify({
             transaction_details: {
+              name: "Order",
               order_id: "order-csb-" + Math.random().toString(36).substr(2, 9),
               gross_amount: data.amount,
             },
@@ -32,6 +36,9 @@ export const payWithMidtrans = createServerFn({ method: "POST" })
               last_name: "",
               email: context.user.email,
               phone: "",
+            },
+            callbacks: {
+              finish: "#",
             },
           }),
         },
@@ -49,10 +56,45 @@ export const payWithMidtrans = createServerFn({ method: "POST" })
           success: true,
           data: {
             token: requestPaymentToken.token,
+            redirect_url: "",
           },
         };
       }
     } catch (error) {
       console.log("error", error);
     }
+  });
+
+export const createPaymentTransaction = createServerFn({ method: "POST" })
+  .validator(
+    z.object({
+      midtransResponse: z.string(),
+      assetId: z.string(),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data, context }) => {
+    const midtransResponse = JSON.parse(data.midtransResponse);
+    console.log("JSON.parse(data.res)", JSON.parse(data.midtransResponse));
+    const res = await db
+      .insert(payments)
+      .values({
+        userId: context.user.id,
+        jewerlyAssetId: data.assetId,
+        amount: midtransResponse.gross_amount,
+        status: midtransResponse.transaction_status,
+        currency: "IDR or USD",
+        provider: `${midtransResponse.card_type} - ${midtransResponse.bank}`,
+        providerId: `order-${midtransResponse.order_id}`,
+        description:
+          midtransResponse.transaction_status === "captured"
+            ? "Payment Successful"
+            : "Payment Failed",
+      })
+      .returning({ id: payments.id });
+
+    return {
+      success: true,
+      data: res[0],
+    };
   });

@@ -139,6 +139,7 @@ export function AssetGrid({ jewerly_assets, category, user }: JewerlyWithJoins) 
 
           <div className="mt-2 flex items-center justify-between gap-2">
             <PaymentButton
+              assetId={jewerly_assets.id}
               purchaseLabel="Purchase"
               totalPrice={jewerly_assets.price}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600 py-3 font-semibold text-white hover:from-blue-700 hover:to-purple-700"

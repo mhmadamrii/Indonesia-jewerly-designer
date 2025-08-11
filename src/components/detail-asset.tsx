@@ -81,7 +81,7 @@ export function AssetDetail({ data }: { data: TypeJewerlyAssetById }) {
                 </Button>
               </div>
 
-              {asset?.boost > 0 && (
+              {asset?.boost! > 0 && (
                 <div className="absolute top-4 left-4">
                   <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
                     <Zap className="mr-1 h-3 w-3" />
@@ -183,6 +183,7 @@ export function AssetDetail({ data }: { data: TypeJewerlyAssetById }) {
             {/* Purchase Actions */}
             <div className="space-y-3">
               <PaymentButton
+                assetId={asset.id}
                 totalPrice={asset.price}
                 purchaseLabel={`Purchase for ${formatPrice(asset.price)}`}
               />
