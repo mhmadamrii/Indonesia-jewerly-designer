@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { TypeJewerlyAssetById } from "~/actions/jewerly.action";
 import { ModelViewer } from "~/components/3D/model-viewer";
+import { PaymentButton } from "~/components/payment-button";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -18,45 +20,12 @@ import {
   User,
   Zap,
 } from "lucide-react";
-import { PaymentButton } from "~/components/payment-button";
 
-interface AssetData {
-  jewerly_assets: {
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    thumbnailUrl: string;
-    assetUrl: string;
-    previewUrl: string;
-    typeAsset: string;
-    userId: string;
-    boost: number;
-    categoryId: string;
-    createdAt: string;
-    updatedAt: string;
-  };
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    role: string;
-    boostCredit: number;
-    emailVerified: boolean;
-    image: string;
-    createdAt: string;
-    updatedAt: string;
-  };
-}
-
-interface AssetDetailPageProps {
-  data: AssetData;
-}
-
-export function AssetDetail({ data }: AssetDetailPageProps) {
+export function AssetDetail({ data }: { data: TypeJewerlyAssetById }) {
+  console.log("data", data);
   const [isLiked, setIsLiked] = useState(false);
   const [viewMode, setViewMode] = useState<"image" | "3d">("image");
-  const { jewerly_assets: asset, user } = data;
+  const { jewerly_assets: asset, user, category } = data;
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -112,7 +81,7 @@ export function AssetDetail({ data }: AssetDetailPageProps) {
                 </Button>
               </div>
 
-              {asset.boost > 0 && (
+              {asset?.boost > 0 && (
                 <div className="absolute top-4 left-4">
                   <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
                     <Zap className="mr-1 h-3 w-3" />
@@ -169,30 +138,33 @@ export function AssetDetail({ data }: AssetDetailPageProps) {
               <CardContent>
                 <div className="flex items-center gap-4">
                   <Avatar className="h-12 w-12">
-                    <AvatarImage src={user.image || "/placeholder.svg"} alt={user.name} />
-                    <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage
+                      src={user?.image || "/placeholder.svg"}
+                      alt={user?.name}
+                    />
+                    <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <Link
                         to="/~/general/u/$userId"
-                        params={{ userId: user.id }}
+                        params={{ userId: user!.id }}
                         className="font-semibold"
                       >
-                        {user.name}
+                        {user?.name}
                       </Link>
-                      {user.emailVerified && (
+                      {user?.emailVerified && (
                         <Shield className="h-4 w-4 text-green-500" />
                       )}
                     </div>
                     <div className="text-muted-foreground flex items-center gap-4 text-sm">
                       <div className="flex items-center gap-1">
                         <User className="h-3 w-3" />
-                        <span className="capitalize">{user.role}</span>
+                        <span className="capitalize">{user?.role}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Zap className="h-3 w-3" />
-                        <span>{user.boostCredit.toLocaleString()} Credits</span>
+                        <span>{user?.boostCredit?.toLocaleString()} Credits</span>
                       </div>
                     </div>
                   </div>
@@ -237,15 +209,15 @@ export function AssetDetail({ data }: AssetDetailPageProps) {
                 </div>
                 <div>
                   <span className="text-muted-foreground">Category:</span>
-                  <p className="font-mono text-xs break-all">{asset.categoryId}</p>
+                  <p className="font-mono text-xs break-all">{category.name}</p>
                 </div>
                 <div>
                   <span className="text-muted-foreground">Created:</span>
-                  <p>{formatDate(asset.createdAt)}</p>
+                  <p>{formatDate(asset?.createdAt as unknown as string)}</p>
                 </div>
                 <div>
                   <span className="text-muted-foreground">Updated:</span>
-                  <p>{formatDate(asset.updatedAt)}</p>
+                  <p>{formatDate(asset.updatedAt as unknown as string)}</p>
                 </div>
               </div>
             </div>

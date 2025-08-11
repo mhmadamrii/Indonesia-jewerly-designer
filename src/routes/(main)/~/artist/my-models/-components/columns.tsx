@@ -67,7 +67,6 @@ export const createColumns = ({
     accessorKey: "thumbnailUrl",
     header: "Preview",
     cell: ({ row }) => {
-      console.log("row", row);
       return (
         <div className="bg-muted relative h-16 w-16 overflow-hidden rounded-lg">
           <img

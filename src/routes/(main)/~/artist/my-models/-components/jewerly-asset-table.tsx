@@ -71,7 +71,10 @@ export function JewelryAssetTable({
 
   const handleDetail = (asset: JewelryAssetWithRelations) => {
     setSelectedAsset(asset);
-    setDetailModalOpen(true);
+    navigate({
+      to: "/~/artist/assets/$assetId",
+      params: { assetId: asset.id },
+    });
   };
 
   const confirmDelete = () => {
