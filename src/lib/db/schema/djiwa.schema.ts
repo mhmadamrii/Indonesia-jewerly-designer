@@ -122,6 +122,9 @@ export const payments = pgTable("payments", {
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
+  jewerlyAssetId: uuid("jewelry_asset_id")
+    .notNull()
+    .references(() => jewerlyAssets.id, { onDelete: "cascade" }),
   amount: integer("amount").notNull(),
   status: text("status").notNull(),
   currency: varchar("currency", { length: 3 }).notNull(),
