@@ -9,6 +9,7 @@ import { category, jewerlyAssets, jewerlyAssetTags, tag, user } from "~/lib/db/s
 import { getClient } from "~/lib/redis/config";
 
 export type MyJewelryAssetsType = Awaited<ReturnType<(typeof getMyJewerlyAssets)>>["data"]; // prettier-ignore
+export type TypeJewerlyAssetById = Awaited<ReturnType<(typeof getJewerlyById)>>["data"]; // prettier-ignore
 
 const JewerlyAssetSchema = z.object({
   name: z.string(),
@@ -191,6 +192,50 @@ export const deleteJewerlyAsset = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const res = await db
       .delete(jewerlyAssets)
+      .where(eq(jewerlyAssets.id, data.id))
+      .returning({ id: jewerlyAssets.id });
+
+    return {
+      success: true,
+      data: res,
+    };
+  });
+
+export const editJewerlyAsset = createServerFn({ method: "POST" })
+  .validator(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      description: z.string(),
+      price: z.coerce.number().min(1).max(500000),
+      thumbnailUrl: z.string(),
+      previewUrl: z.string(),
+      assetUrl: z.string(),
+      typeAsset: z.string(),
+      userId: z.string(),
+      boost: z.number(),
+      categoryId: z.string(),
+      tags: z.array(z.string()).optional(),
+      totalBoostToUpdate: z.number(),
+      totalStorageLimitToUpdate: z.number(),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data, context }) => {
+    const res = await db
+      .update(jewerlyAssets)
+      .set({
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        thumbnailUrl: data.thumbnailUrl,
+        previewUrl: data.previewUrl,
+        assetUrl: data.assetUrl,
+        typeAsset: data.typeAsset,
+        userId: data.userId,
+        boost: data.boost,
+        categoryId: data.categoryId,
+      })
       .where(eq(jewerlyAssets.id, data.id))
       .returning({ id: jewerlyAssets.id });
 

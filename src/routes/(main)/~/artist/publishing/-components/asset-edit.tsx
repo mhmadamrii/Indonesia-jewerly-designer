@@ -37,6 +37,7 @@ import {
 import {
   createJewerlyAsset,
   getJewerlyTagsAndCategories,
+  TypeJewerlyAssetById,
 } from "~/actions/jewerly.action";
 
 import {
@@ -105,7 +106,7 @@ const currencies = [
   },
 ];
 
-export function AssetPublish() {
+export function AssetEdit({ initialData }: { initialData: TypeJewerlyAssetById }) {
   const navigate = useNavigate();
 
   const [isUsingBoost, setIsUsingBoost] = useState(false);
@@ -113,9 +114,9 @@ export function AssetPublish() {
   const [totalStorageLimitToUpdate, setTotalStorageLimitToUpdate] = useState(0);
   const [tagsValue, setTagsValue] = useState<{ value: string; label: string }[]>([]);
   const [assetStorageUrl, setAssetStorageUrl] = useState({
-    thumbnail_url: "",
-    preview_url: "",
-    asset_url: "",
+    thumbnail_url: initialData.jewerly_assets.thumbnailUrl,
+    preview_url: initialData.jewerly_assets.previewUrl,
+    asset_url: initialData.jewerly_assets.assetUrl,
   });
 
   const { data: tagsAndCategories } = useQuery({
@@ -146,11 +147,11 @@ export function AssetPublish() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      price: 0,
+      name: initialData.jewerly_assets.name,
+      price: initialData.jewerly_assets.price,
       currency: "m@example.com",
       category: "arts",
-      description: "",
+      description: initialData.jewerly_assets.description,
       boost: "10",
     },
   });
@@ -187,9 +188,9 @@ export function AssetPublish() {
     <Card className="w-full">
       <CardHeader>
         <CardTitle>
-          <h2 className="text-2xl font-bold">Upload 3D Asset</h2>
+          <h2 className="text-2xl font-bold">Edit 3D Asset</h2>
         </CardTitle>
-        <CardDescription>Upload & post your 3D models</CardDescription>
+        <CardDescription>Edit & post your 3D models</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>

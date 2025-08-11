@@ -37,6 +37,7 @@ import { Route as mainChar126GeneralPaymentsStatusRouteImport } from "./routes/(
 import { Route as mainChar126GeneralAssetsAssetIdRouteImport } from "./routes/(main)/~/general/assets/$assetId";
 import { Route as mainChar126GeneralPaymentsReceiptIndexRouteImport } from "./routes/(main)/~/general/payments/receipt/index";
 import { Route as mainChar126GeneralPaymentsReceiptReceiptIdRouteImport } from "./routes/(main)/~/general/payments/receipt/$receiptId";
+import { Route as mainChar126ArtistPublishingEditAssetIdRouteImport } from "./routes/(main)/~/artist/publishing/edit/$assetId";
 import { ServerRoute as ApiImagekitUploadServerRouteImport } from "./routes/api/imagekit/upload";
 import { ServerRoute as ApiAuthSplatServerRouteImport } from "./routes/api/auth/$";
 
@@ -189,6 +190,12 @@ const mainChar126GeneralPaymentsReceiptReceiptIdRoute =
     path: "/payments/receipt/$receiptId",
     getParentRoute: () => mainChar126GeneralRouteRoute,
   } as any);
+const mainChar126ArtistPublishingEditAssetIdRoute =
+  mainChar126ArtistPublishingEditAssetIdRouteImport.update({
+    id: "/publishing/edit/$assetId",
+    path: "/publishing/edit/$assetId",
+    getParentRoute: () => mainChar126ArtistRouteRoute,
+  } as any);
 const ApiImagekitUploadServerRoute = ApiImagekitUploadServerRouteImport.update({
   id: "/api/imagekit/upload",
   path: "/api/imagekit/upload",
@@ -224,6 +231,7 @@ export interface FileRoutesByFullPath {
   "/~/general/notifications": typeof mainChar126GeneralNotificationsIndexRoute;
   "/~/general/purchased-models": typeof mainChar126GeneralPurchasedModelsIndexRoute;
   "/~/general/wishlists": typeof mainChar126GeneralWishlistsIndexRoute;
+  "/~/artist/publishing/edit/$assetId": typeof mainChar126ArtistPublishingEditAssetIdRoute;
   "/~/general/payments/receipt/$receiptId": typeof mainChar126GeneralPaymentsReceiptReceiptIdRoute;
   "/~/general/payments/receipt": typeof mainChar126GeneralPaymentsReceiptIndexRoute;
 }
@@ -251,6 +259,7 @@ export interface FileRoutesByTo {
   "/~/general/notifications": typeof mainChar126GeneralNotificationsIndexRoute;
   "/~/general/purchased-models": typeof mainChar126GeneralPurchasedModelsIndexRoute;
   "/~/general/wishlists": typeof mainChar126GeneralWishlistsIndexRoute;
+  "/~/artist/publishing/edit/$assetId": typeof mainChar126ArtistPublishingEditAssetIdRoute;
   "/~/general/payments/receipt/$receiptId": typeof mainChar126GeneralPaymentsReceiptReceiptIdRoute;
   "/~/general/payments/receipt": typeof mainChar126GeneralPaymentsReceiptIndexRoute;
 }
@@ -280,6 +289,7 @@ export interface FileRoutesById {
   "/(main)/~/general/notifications/": typeof mainChar126GeneralNotificationsIndexRoute;
   "/(main)/~/general/purchased-models/": typeof mainChar126GeneralPurchasedModelsIndexRoute;
   "/(main)/~/general/wishlists/": typeof mainChar126GeneralWishlistsIndexRoute;
+  "/(main)/~/artist/publishing/edit/$assetId": typeof mainChar126ArtistPublishingEditAssetIdRoute;
   "/(main)/~/general/payments/receipt/$receiptId": typeof mainChar126GeneralPaymentsReceiptReceiptIdRoute;
   "/(main)/~/general/payments/receipt/": typeof mainChar126GeneralPaymentsReceiptIndexRoute;
 }
@@ -309,6 +319,7 @@ export interface FileRouteTypes {
     | "/~/general/notifications"
     | "/~/general/purchased-models"
     | "/~/general/wishlists"
+    | "/~/artist/publishing/edit/$assetId"
     | "/~/general/payments/receipt/$receiptId"
     | "/~/general/payments/receipt";
   fileRoutesByTo: FileRoutesByTo;
@@ -336,6 +347,7 @@ export interface FileRouteTypes {
     | "/~/general/notifications"
     | "/~/general/purchased-models"
     | "/~/general/wishlists"
+    | "/~/artist/publishing/edit/$assetId"
     | "/~/general/payments/receipt/$receiptId"
     | "/~/general/payments/receipt";
   id:
@@ -364,6 +376,7 @@ export interface FileRouteTypes {
     | "/(main)/~/general/notifications/"
     | "/(main)/~/general/purchased-models/"
     | "/(main)/~/general/wishlists/"
+    | "/(main)/~/artist/publishing/edit/$assetId"
     | "/(main)/~/general/payments/receipt/$receiptId"
     | "/(main)/~/general/payments/receipt/";
   fileRoutesById: FileRoutesById;
@@ -587,6 +600,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof mainChar126GeneralPaymentsReceiptReceiptIdRouteImport;
       parentRoute: typeof mainChar126GeneralRouteRoute;
     };
+    "/(main)/~/artist/publishing/edit/$assetId": {
+      id: "/(main)/~/artist/publishing/edit/$assetId";
+      path: "/publishing/edit/$assetId";
+      fullPath: "/~/artist/publishing/edit/$assetId";
+      preLoaderRoute: typeof mainChar126ArtistPublishingEditAssetIdRouteImport;
+      parentRoute: typeof mainChar126ArtistRouteRoute;
+    };
   }
 }
 declare module "@tanstack/react-start/server" {
@@ -624,6 +644,7 @@ interface mainChar126ArtistRouteRouteChildren {
   mainChar126ArtistDashboardIndexRoute: typeof mainChar126ArtistDashboardIndexRoute;
   mainChar126ArtistMyModelsIndexRoute: typeof mainChar126ArtistMyModelsIndexRoute;
   mainChar126ArtistPublishingIndexRoute: typeof mainChar126ArtistPublishingIndexRoute;
+  mainChar126ArtistPublishingEditAssetIdRoute: typeof mainChar126ArtistPublishingEditAssetIdRoute;
 }
 
 const mainChar126ArtistRouteRouteChildren: mainChar126ArtistRouteRouteChildren =
@@ -632,6 +653,8 @@ const mainChar126ArtistRouteRouteChildren: mainChar126ArtistRouteRouteChildren =
     mainChar126ArtistMyModelsIndexRoute: mainChar126ArtistMyModelsIndexRoute,
     mainChar126ArtistPublishingIndexRoute:
       mainChar126ArtistPublishingIndexRoute,
+    mainChar126ArtistPublishingEditAssetIdRoute:
+      mainChar126ArtistPublishingEditAssetIdRoute,
   };
 
 const mainChar126ArtistRouteRouteWithChildren =
