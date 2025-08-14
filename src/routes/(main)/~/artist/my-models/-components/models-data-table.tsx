@@ -4,14 +4,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { MoreHorizontal, SearchIcon } from "lucide-react";
 import { useId, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { deleteJewerlyAsset } from "~/actions/jewerly.action";
+import { deletejewelryAsset } from "~/actions/jewelry.action";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { JewerlyAsset } from "~/lib/db/types";
+import { jewelryAsset } from "~/lib/db/types";
 
 import {
   AlertDialog,
@@ -77,7 +77,7 @@ declare module "@tanstack/react-table" {
   }
 }
 
-const columns: ColumnDef<JewerlyAsset>[] = [
+const columns: ColumnDef<jewelryAsset>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -130,10 +130,10 @@ const columns: ColumnDef<JewerlyAsset>[] = [
     cell: function Cell({ row }) {
       const queryClient = useQueryClient();
       const { mutate } = useMutation({
-        mutationFn: deleteJewerlyAsset,
+        mutationFn: deletejewelryAsset,
         onSuccess: () => {
-          toast.success("Jewerly has been deleted");
-          queryClient.invalidateQueries({ queryKey: ["my-jewerly"] });
+          toast.success("jewelry has been deleted");
+          queryClient.invalidateQueries({ queryKey: ["my-jewelry"] });
         },
         onError: () => {
           toast.error("Something went wrong");
@@ -301,7 +301,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
   );
 }
 
-export function ModelsDataTable({ jewerlies }: { jewerlies: JewerlyAsset[] }) {
+export function ModelsDataTable({ jewerlies }: { jewerlies: jewelryAsset[] }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const [sorting, setSorting] = useState<SortingState>([

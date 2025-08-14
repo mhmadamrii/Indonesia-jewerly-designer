@@ -37,7 +37,7 @@ export function AssetCard({
     setSelected3D(id);
     mutate({
       data: {
-        jewerlyAssetId: id,
+        jewelryAssetId: id,
         quantity: 1,
       },
     });
@@ -63,7 +63,7 @@ export function AssetCard({
           >
             <Eye className="h-4 w-4" />
           </button>
-          <AddWishlist imageUrl={asset.thumbnail_url} jewerlyAssetId={asset.id} />
+          <AddWishlist imageUrl={asset.thumbnail_url} jewelryAssetId={asset.id} />
         </div>
 
         <div className="absolute top-3 left-3">
@@ -80,7 +80,7 @@ export function AssetCard({
       </div>
 
       <div className="p-4">
-        <h3 className="mb-2 line-clamp-1 font-semibold">{asset.jewerly_assets.name}</h3>
+        <h3 className="mb-2 line-clamp-1 font-semibold">{asset.jewelry_assets.name}</h3>
         <p className="mb-3 line-clamp-2 truncate text-sm text-gray-600">
           {asset.description}
         </p>

@@ -1,6 +1,6 @@
 import { Skeleton } from "~/components/ui/skeleton";
 
-export function JewerlyFormSkeleton() {
+export function jewelryFormSkeleton() {
   return (
     <div className="space-y-8 px-10 py-10">
       <div className="w-full space-y-2">

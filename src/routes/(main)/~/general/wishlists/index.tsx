@@ -27,7 +27,7 @@ function RouteComponent() {
               items={data.map((item) => ({
                 id: item.id,
                 img: item.imageUrl,
-                url: item.jewerlyAssetId,
+                url: item.jewelryAssetId,
                 height: Math.random() * 1000 + 250,
               }))}
               ease="power3.out"

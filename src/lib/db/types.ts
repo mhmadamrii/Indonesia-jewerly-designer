@@ -1,18 +1,18 @@
 import type { InferSelectModel } from "drizzle-orm";
 import {
   category as categoryTable,
-  jewerlyAssets as jewerlyAssetsTable,
+  jewelryAssets as jewelryAssetsTable,
   user as userTable,
 } from "./schema";
 
 export type Category = InferSelectModel<typeof categoryTable>;
-export type JewerlyAsset = InferSelectModel<typeof jewerlyAssetsTable>;
+export type jewelryAsset = InferSelectModel<typeof jewelryAssetsTable>;
 export type User = InferSelectModel<typeof userTable>;
 export type UserWithRole = User & {
   role: string;
 };
 
-export type JewerlyWithMeta = {
+export type jewelryWithMeta = {
   id: string;
   name: string;
   description: string;
@@ -35,19 +35,19 @@ export type DashboardReturnType = {
   success: boolean;
   data: {
     categories: Category[];
-    jewerlies: JewerlyWithMeta[];
+    jewerlies: jewelryWithMeta[];
     users: User[];
   };
 };
 
-export type JewerlyWithUser = {
-  jewerly_assets: JewerlyAsset;
+export type jewelryWithUser = {
+  jewelry_assets: jewelryAsset;
   user: User | null;
   category: Category | null;
 };
 
 export type DashboardData = {
   categories: Category[];
-  jewerlies: JewerlyWithUser[];
+  jewerlies: jewelryWithUser[];
   users: User[];
 };

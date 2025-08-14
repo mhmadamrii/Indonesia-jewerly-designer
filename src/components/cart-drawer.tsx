@@ -64,7 +64,7 @@ export function CartDrawer() {
   };
 
   const totalPrice = cartItemsData?.data?.reduce(
-    (sum, item) => sum + item.jewerly_assets?.price!,
+    (sum, item) => sum + item.jewelry_assets?.price!,
     0,
   );
 
@@ -141,21 +141,21 @@ export function CartDrawer() {
                     })}
                   >
                     <img
-                      src={item.jewerly_assets?.thumbnailUrl || "/placeholder-img.jpg"}
+                      src={item.jewelry_assets?.thumbnailUrl || "/placeholder-img.jpg"}
                       alt="Asset Image"
                       className="h-16 w-16 rounded-md object-cover"
                     />
                     <div className="min-w-0 flex-1">
                       <h3 className="truncate text-sm font-medium">
-                        {item.jewerly_assets?.name}
+                        {item.jewelry_assets?.name}
                       </h3>
                       <p className="text-muted-foreground text-sm">
-                        ${item.jewerly_assets?.price.toFixed(2)}
+                        ${item.jewelry_assets?.price.toFixed(2)}
                       </p>
                     </div>
                     <div className="flex flex-col items-end space-y-2">
                       <p className="text-sm font-medium">
-                        ${(item.jewerly_assets?.price ?? 0 * 1).toFixed(2)}
+                        ${(item.jewelry_assets?.price ?? 0 * 1).toFixed(2)}
                       </p>
                       <Button
                         variant="ghost"

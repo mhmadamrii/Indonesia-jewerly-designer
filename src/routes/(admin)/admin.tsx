@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { createCategory } from "~/actions/category.action";
-import { seedJewerlyTags } from "~/actions/jewerly.action";
+import { seedjewelryTags } from "~/actions/jewelry.action";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
@@ -24,7 +24,7 @@ function RouteComponent() {
   });
 
   const { mutate: seedTags, isPending: isSeedingTags } = useMutation({
-    mutationFn: seedJewerlyTags,
+    mutationFn: seedjewelryTags,
     onSuccess: () => {
       toast.success("Seed created successfully");
     },

@@ -8,10 +8,10 @@ import { ModelViewer } from "~/components/3D/model-viewer";
 import { AddWishlist } from "~/components/add-wishlist";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
-import { JewerlyWithMeta } from "~/lib/db/types";
+import { jewelryWithMeta } from "~/lib/db/types";
 
 type TrendingsProps = {
-  jewerlies: JewerlyWithMeta[];
+  jewerlies: jewelryWithMeta[];
 };
 
 export function Trendings({ jewerlies }: TrendingsProps) {
@@ -31,7 +31,7 @@ export function Trendings({ jewerlies }: TrendingsProps) {
     setSelected3D(id);
     mutate({
       data: {
-        jewerlyAssetId: id,
+        jewelryAssetId: id,
         quantity: 1,
       },
     });
@@ -68,7 +68,7 @@ export function Trendings({ jewerlies }: TrendingsProps) {
               >
                 <Eye className="h-4 w-4" />
               </button>
-              <AddWishlist imageUrl={item.thumbnail_url} jewerlyAssetId={item.id} />
+              <AddWishlist imageUrl={item.thumbnail_url} jewelryAssetId={item.id} />
             </div>
 
             <div className="absolute top-3 left-3">

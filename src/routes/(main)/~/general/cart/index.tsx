@@ -168,12 +168,12 @@ function RouteComponent() {
             {cartItemsData?.data
               ?.map((item) => ({
                 id: item?.cart_item?.id,
-                name: item?.jewerly_assets?.name,
-                price: item?.jewerly_assets?.price,
+                name: item?.jewelry_assets?.name,
+                price: item?.jewelry_assets?.price,
                 tags: ["spaceship", "sci-fi", "vehicle", "animated"],
-                thumbnailUrl: item?.jewerly_assets?.thumbnailUrl,
-                description: item?.jewerly_assets?.description,
-                previewUrl: item?.jewerly_assets?.previewUrl,
+                thumbnailUrl: item?.jewelry_assets?.thumbnailUrl,
+                description: item?.jewelry_assets?.description,
+                previewUrl: item?.jewelry_assets?.previewUrl,
               }))
               .map((item) => (
                 <Card

@@ -2,13 +2,13 @@
 
 import { Await, createFileRoute } from "@tanstack/react-router";
 import { ExternalLink } from "lucide-react";
-import { getMyJewerlyAssets } from "~/actions/jewerly.action";
+import { getMyjewelryAssets } from "~/actions/jewelry.action";
 import { Button } from "~/components/ui/button";
-import { JewelryAssetTable } from "./-components/jewerly-asset-table";
+import { JewelryAssetTable } from "./-components/jewelry-asset-table";
 
 export const Route = createFileRoute("/(main)/~/artist/my-models/")({
   loader: async () => {
-    const myJewerlies = getMyJewerlyAssets();
+    const myJewerlies = getMyjewelryAssets();
     return { myJewerlies };
   },
   component: RouteComponent,
@@ -39,7 +39,7 @@ function RouteComponent() {
                 // @ts-expect-error
                 jewelryAssetData={data.map((item) => {
                   return {
-                    ...item.jewerly_assets,
+                    ...item.jewelry_assets,
                     user: item.user,
                     category: item.category,
                   };

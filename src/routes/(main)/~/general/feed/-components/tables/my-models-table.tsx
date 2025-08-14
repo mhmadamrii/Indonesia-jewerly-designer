@@ -7,7 +7,7 @@ import { Badge } from "~/components/ui/badge";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { JewerlyAsset } from "~/lib/db/types";
+import { jewelryAsset } from "~/lib/db/types";
 import { cn } from "~/lib/utils";
 
 import type {
@@ -327,7 +327,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
   );
 }
 
-export function MyModelsTable({ jewerlies }: { jewerlies: JewerlyAsset[] }) {
+export function MyModelsTable({ jewerlies }: { jewerlies: jewelryAsset[] }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const [sorting, setSorting] = useState<SortingState>([

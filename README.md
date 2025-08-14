@@ -1,6 +1,6 @@
 ![ssdjid](public/ssdjid.png)
 
-# Indonesia Jewerly Designer
+# Indonesia jewelry Designer
 
 - The best way to create your jewelry designs
 - The best way to sell your jewelry designs

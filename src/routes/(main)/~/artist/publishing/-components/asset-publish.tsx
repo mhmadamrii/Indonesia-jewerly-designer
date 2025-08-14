@@ -35,9 +35,9 @@ import {
 } from "~/components/ui/card";
 
 import {
-  createJewerlyAsset,
-  getJewerlyTagsAndCategories,
-} from "~/actions/jewerly.action";
+  createjewelryAsset,
+  getjewelryTagsAndCategories,
+} from "~/actions/jewelry.action";
 
 import {
   Form,
@@ -120,7 +120,7 @@ export function AssetPublish() {
 
   const { data: tagsAndCategories } = useQuery({
     queryKey: ["tags_and_categories"],
-    queryFn: () => getJewerlyTagsAndCategories(),
+    queryFn: () => getjewelryTagsAndCategories(),
   });
 
   const { data: currentCredit } = useQuery({
@@ -129,7 +129,7 @@ export function AssetPublish() {
   });
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: createJewerlyAsset,
+    mutationFn: createjewelryAsset,
     onSuccess: (res) => {
       toast.success("Data saved successfully");
       navigate({
@@ -210,7 +210,7 @@ export function AssetPublish() {
                     <FormControl>
                       <Input
                         placeholder="Enter product name"
-                        className="h-12 text-base"
+                        className="h-10 text-base"
                         {...field}
                       />
                     </FormControl>
@@ -238,7 +238,7 @@ export function AssetPublish() {
                         type="number"
                         min="0"
                         placeholder="0.00"
-                        className="h-12 text-base"
+                        className="h-10 text-base"
                         {...field}
                         onChange={(e) =>
                           field.onChange(Number.parseFloat(e.target.value) || 0)
@@ -258,7 +258,7 @@ export function AssetPublish() {
                     <FormLabel className="text-base font-semibold">Currency</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <SelectTrigger className="min-h-12 w-full text-base">
+                        <SelectTrigger className="min-h-10 w-full text-base">
                           <SelectValue placeholder="Select currency" />
                         </SelectTrigger>
                       </FormControl>
@@ -288,7 +288,7 @@ export function AssetPublish() {
                     disabled={isPending || isUploadingImage}
                   >
                     <FormControl>
-                      <SelectTrigger className="min-h-12 w-full">
+                      <SelectTrigger className="min-h-10 w-full">
                         <SelectValue placeholder="Arts" />
                       </SelectTrigger>
                     </FormControl>
@@ -312,7 +312,7 @@ export function AssetPublish() {
                 Tags
               </FormLabel>
               <MultipleSelector
-                className="bg-accent flex h-12 items-center"
+                className="bg-accent flex h-10 items-center"
                 onChange={(e) => setTagsValue(e)}
                 options={tagsAndCategories?.data?.tags?.map((item) => ({
                   value: item.id,

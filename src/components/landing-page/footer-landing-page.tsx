@@ -77,7 +77,7 @@ export function FooterLandingPage() {
             <span className="text-muted-foreground">
               &copy; {new Date().getFullYear()}{" "}
               <Link to="/" target="_blank">
-                Indonesia Jewerly Designer
+                Indonesia jewelry Designer
               </Link>
               . All rights reserved.
             </span>

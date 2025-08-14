@@ -4,7 +4,7 @@ import { and, eq, gte, InferSelectModel, lte } from "drizzle-orm";
 import { z } from "zod";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { category, jewerlyAssets, user } from "~/lib/db/schema";
+import { category, jewelryAssets, user } from "~/lib/db/schema";
 
 export const exploreSearchParamSchema = z.object({
   artist: z.string().optional(),
@@ -14,14 +14,14 @@ export const exploreSearchParamSchema = z.object({
   priceTo: z.number().optional(),
 });
 
-export type JewerlyWithJoins = {
-  jewerly_assets: InferSelectModel<typeof jewerlyAssets>;
+export type jewelryWithJoins = {
+  jewelry_assets: InferSelectModel<typeof jewelryAssets>;
   category: InferSelectModel<typeof category>;
   user: InferSelectModel<typeof user>;
 };
 
 export interface IExploreProps {
-  assets: InferSelectModel<typeof jewerlyAssets>[];
+  assets: InferSelectModel<typeof jewelryAssets>[];
 }
 
 export const getExploreAssetDatas = createServerFn({ method: "GET" })
@@ -32,20 +32,20 @@ export const getExploreAssetDatas = createServerFn({ method: "GET" })
 
     // Category filter
     if (data.category) {
-      filters.push(eq(jewerlyAssets.categoryId, data.category));
+      filters.push(eq(jewelryAssets.categoryId, data.category));
     }
 
     // Artist filter
     if (data.artist) {
-      filters.push(eq(jewerlyAssets.userId, data.artist));
+      filters.push(eq(jewelryAssets.userId, data.artist));
     }
 
     // Price range
     if (data.priceFrom !== undefined) {
-      filters.push(gte(jewerlyAssets.price, data.priceFrom));
+      filters.push(gte(jewelryAssets.price, data.priceFrom));
     }
     if (data.priceTo !== undefined) {
-      filters.push(lte(jewerlyAssets.price, data.priceTo));
+      filters.push(lte(jewelryAssets.price, data.priceTo));
     }
 
     // Sorting / special filters
@@ -53,23 +53,23 @@ export const getExploreAssetDatas = createServerFn({ method: "GET" })
       const now = new Date();
 
       if (data.sort === "popular") {
-        // filters.push(gt(jewerlyAssets.sold, 10));
+        // filters.push(gt(jewelryAssets.sold, 10));
       }
 
       if (data.sort === "trending") {
-        // filters.push(gt(jewerlyAssets.likes, 20));
+        // filters.push(gt(jewelryAssets.likes, 20));
       }
 
       if (data.sort === "latest") {
-        filters.push(gte(jewerlyAssets.createdAt, startOfMonth(now)));
+        filters.push(gte(jewelryAssets.createdAt, startOfMonth(now)));
       }
 
       if (data.sort === "oldest") {
         const prevMonthStart = startOfMonth(subMonths(now, 1));
         const prevMonthEnd = endOfMonth(subMonths(now, 1));
         filters.push(
-          gte(jewerlyAssets.createdAt, prevMonthStart),
-          lte(jewerlyAssets.createdAt, prevMonthEnd),
+          gte(jewelryAssets.createdAt, prevMonthStart),
+          lte(jewelryAssets.createdAt, prevMonthEnd),
         );
       }
     }
@@ -78,9 +78,9 @@ export const getExploreAssetDatas = createServerFn({ method: "GET" })
       db.select().from(category),
       db
         .select()
-        .from(jewerlyAssets)
-        .innerJoin(category, eq(jewerlyAssets.categoryId, category.id))
-        .innerJoin(user, eq(jewerlyAssets.userId, user.id))
+        .from(jewelryAssets)
+        .innerJoin(category, eq(jewelryAssets.categoryId, category.id))
+        .innerJoin(user, eq(jewelryAssets.userId, user.id))
         .where(filters.length > 0 ? and(...filters) : undefined),
       db.select().from(user),
     ]);

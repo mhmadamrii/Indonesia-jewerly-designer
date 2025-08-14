@@ -34,16 +34,16 @@ export const getWishlistItems = createServerFn({ method: "GET" })
 
 export const addWishlistItem = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .validator(z.object({ imageUrl: z.string(), jewerlyAssetId: z.string() }))
+  .validator(z.object({ imageUrl: z.string(), jewelryAssetId: z.string() }))
   .handler(async ({ data, context }) => {
     const cacheKey = `wishlist_data:${context.user.id}`;
 
-    const { imageUrl, jewerlyAssetId } = data;
+    const { imageUrl, jewelryAssetId } = data;
 
     const res = await db
       .insert(wishlistItem)
       .values({
-        jewerlyAssetId,
+        jewelryAssetId,
         userId: context.user.id,
         imageUrl,
       })

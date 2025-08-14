@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { FooterLandingPage } from "~/components/landing-page/footer-landing-page";
 import { HeaderLandingPage } from "~/components/landing-page/header-landing-page";
 import { HeroCarousel } from "~/components/landing-page/hero-carousel";
-import { JewelryShowcase } from "~/components/landing-page/jewerly-showcase";
+import { JewelryShowcase } from "~/components/landing-page/jewelry-showcase";
 
 export const Route = createFileRoute("/")({
   component: Home,

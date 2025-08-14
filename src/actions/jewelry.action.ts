@@ -5,13 +5,13 @@ import { eq } from "drizzle-orm";
 import { OPTIONS } from "~/constants";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { category, jewerlyAssets, jewerlyAssetTags, tag, user } from "~/lib/db/schema";
+import { category, jewelryAssets, jewelryAssetTags, tag, user } from "~/lib/db/schema";
 import { getClient } from "~/lib/redis/config";
 
-export type MyJewelryAssetsType = Awaited<ReturnType<(typeof getMyJewerlyAssets)>>["data"]; // prettier-ignore
-export type TypeJewerlyAssetById = Awaited<ReturnType<(typeof getJewerlyById)>>["data"]; // prettier-ignore
+export type MyJewelryAssetsType = Awaited<ReturnType<(typeof getMyjewelryAssets)>>["data"]; // prettier-ignore
+export type TypejewelryAssetById = Awaited<ReturnType<(typeof getjewelryById)>>["data"]; // prettier-ignore
 
-const JewerlyAssetSchema = z.object({
+const jewelryAssetSchema = z.object({
   name: z.string(),
   description: z.string(),
   price: z.number(),
@@ -34,7 +34,7 @@ export const getAllCategories = createServerFn({ method: "GET" }).handler(async 
   };
 });
 
-export const getJewerlyById = createServerFn({ method: "GET" })
+export const getjewelryById = createServerFn({ method: "GET" })
   .validator(
     z.object({
       id: z.string(),
@@ -43,10 +43,14 @@ export const getJewerlyById = createServerFn({ method: "GET" })
   .handler(async ({ data }) => {
     const res = await db
       .select()
-      .from(jewerlyAssets)
-      .leftJoin(user, eq(user.id, jewerlyAssets.userId))
-      .innerJoin(category, eq(category.id, jewerlyAssets.categoryId))
-      .where(eq(jewerlyAssets.id, data.id));
+      .from(jewelryAssets)
+      .leftJoin(user, eq(user.id, jewelryAssets.userId))
+      .innerJoin(category, eq(category.id, jewelryAssets.categoryId))
+      .leftJoin(
+        jewelryAssetTags,
+        eq(jewelryAssetTags.jewelryAssetId, jewelryAssets.categoryId),
+      )
+      .where(eq(jewelryAssets.id, data.id));
 
     return {
       success: true,
@@ -54,7 +58,7 @@ export const getJewerlyById = createServerFn({ method: "GET" })
     };
   });
 
-export const getJewerlyTagsAndCategories = createServerFn({ method: "GET" })
+export const getjewelryTagsAndCategories = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     const [tags, categories, currentStorageLimit] = await Promise.all([
@@ -79,15 +83,15 @@ export const getJewerlyTagsAndCategories = createServerFn({ method: "GET" })
     };
   });
 
-export const getMyJewerlyAssets = createServerFn({ method: "GET" })
+export const getMyjewelryAssets = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     const res = await db
       .select()
-      .from(jewerlyAssets)
-      .innerJoin(user, eq(user.id, jewerlyAssets.userId))
-      .innerJoin(category, eq(category.id, jewerlyAssets.categoryId))
-      .where(eq(jewerlyAssets.userId, context.user.id));
+      .from(jewelryAssets)
+      .innerJoin(user, eq(user.id, jewelryAssets.userId))
+      .innerJoin(category, eq(category.id, jewelryAssets.categoryId))
+      .where(eq(jewelryAssets.userId, context.user.id));
 
     return {
       success: true,
@@ -95,8 +99,8 @@ export const getMyJewerlyAssets = createServerFn({ method: "GET" })
     };
   });
 
-export const createJewerlyAsset = createServerFn({ method: "POST" })
-  .validator(JewerlyAssetSchema)
+export const createjewelryAsset = createServerFn({ method: "POST" })
+  .validator(jewelryAssetSchema)
   .middleware([authMiddleware])
   .handler(async ({ data, context }) => {
     const redis = await getClient();
@@ -119,7 +123,7 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
 
     const [insertedAsset, updateBoostCredit] = await Promise.all([
       await db
-        .insert(jewerlyAssets)
+        .insert(jewelryAssets)
         .values({
           userId: context.user.id,
           name,
@@ -132,7 +136,7 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
           assetUrl,
           boost,
         })
-        .returning({ id: jewerlyAssets.id }),
+        .returning({ id: jewelryAssets.id }),
       await db
         .update(user)
         .set({
@@ -143,12 +147,12 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
         .returning({ id: user.id }),
     ]);
 
-    const jewerlyAssetId = insertedAsset[0].id;
+    const jewelryAssetId = insertedAsset[0].id;
 
     if (tags && tags.length > 0) {
-      await db.insert(jewerlyAssetTags).values(
+      await db.insert(jewelryAssetTags).values(
         tags.map((tagId: string) => ({
-          jewerlyAssetId,
+          jewelryAssetId,
           tagId,
         })),
       );
@@ -165,7 +169,7 @@ export const createJewerlyAsset = createServerFn({ method: "POST" })
     };
   });
 
-export const seedJewerlyTags = createServerFn({ method: "POST" })
+export const seedjewelryTags = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     const res = await db
@@ -183,7 +187,7 @@ export const seedJewerlyTags = createServerFn({ method: "POST" })
     };
   });
 
-export const deleteJewerlyAsset = createServerFn({ method: "POST" })
+export const deletejewelryAsset = createServerFn({ method: "POST" })
   .validator(
     z.object({
       id: z.string(),
@@ -192,9 +196,9 @@ export const deleteJewerlyAsset = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .handler(async ({ data, context }) => {
     const res = await db
-      .delete(jewerlyAssets)
-      .where(eq(jewerlyAssets.id, data.id))
-      .returning({ id: jewerlyAssets.id });
+      .delete(jewelryAssets)
+      .where(eq(jewelryAssets.id, data.id))
+      .returning({ id: jewelryAssets.id });
 
     return {
       success: true,
@@ -202,7 +206,7 @@ export const deleteJewerlyAsset = createServerFn({ method: "POST" })
     };
   });
 
-export const editJewerlyAsset = createServerFn({ method: "POST" })
+export const editjewelryAsset = createServerFn({ method: "POST" })
   .validator(
     z.object({
       id: z.string(),
@@ -224,7 +228,7 @@ export const editJewerlyAsset = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .handler(async ({ data, context }) => {
     const res = await db
-      .update(jewerlyAssets)
+      .update(jewelryAssets)
       .set({
         name: data.name,
         description: data.description,
@@ -237,8 +241,8 @@ export const editJewerlyAsset = createServerFn({ method: "POST" })
         boost: data.boost,
         categoryId: data.categoryId,
       })
-      .where(eq(jewerlyAssets.id, data.id))
-      .returning({ id: jewerlyAssets.id });
+      .where(eq(jewelryAssets.id, data.id))
+      .returning({ id: jewelryAssets.id });
 
     return {
       success: true,

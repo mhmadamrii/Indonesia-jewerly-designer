@@ -5,7 +5,7 @@ import { useNavigate, useRouter } from "@tanstack/react-router";
 import { Archive, LoaderIcon, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { deleteJewerlyAsset } from "~/actions/jewerly.action";
+import { deletejewelryAsset } from "~/actions/jewelry.action";
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { createColumns } from "./columns";
@@ -38,7 +38,7 @@ export function JewelryAssetTable({
   const router = useRouter();
 
   const { mutate: deleteAsset, isPending: isDeleting } = useMutation({
-    mutationFn: deleteJewerlyAsset,
+    mutationFn: deletejewelryAsset,
     onSuccess: () => {
       router.invalidate();
       toast.success("Asset deleted successfully");

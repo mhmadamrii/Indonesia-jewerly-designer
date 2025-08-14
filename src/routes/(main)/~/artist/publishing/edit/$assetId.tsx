@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { ClientOnly, createFileRoute } from "@tanstack/react-router";
-import { getJewerlyById } from "~/actions/jewerly.action";
+import { getjewelryById } from "~/actions/jewelry.action";
 import { AssetEdit } from "../-components/asset-edit";
 import { UploadTermsConditions } from "../-components/upload-terms-conditions";
 
@@ -13,7 +13,7 @@ function RouteComponent() {
 
   const { data } = useQuery({
     queryKey: ["jewelry_asset", assetId],
-    queryFn: () => getJewerlyById({ data: { id: assetId } }),
+    queryFn: () => getjewelryById({ data: { id: assetId } }),
   });
   console.log("data", data);
 

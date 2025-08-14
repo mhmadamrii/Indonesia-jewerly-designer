@@ -1,12 +1,12 @@
 import { Await, createFileRoute } from "@tanstack/react-router";
-import { getJewerlyById } from "~/actions/jewerly.action";
+import { getjewelryById } from "~/actions/jewelry.action";
 import { AssetDetail } from "~/components/detail-asset";
 import { AssetDetailSkeleton } from "~/components/skeletons/asset-detail-skeleton";
 
 export const Route = createFileRoute("/(main)/~/general/assets/$assetId")({
   component: RouteComponent,
   loader: async ({ params }) => {
-    const assetById = getJewerlyById({
+    const assetById = getjewelryById({
       data: {
         id: params.assetId,
       },

@@ -42,6 +42,11 @@ import {
 interface IProps {
   userStorageUsage: number;
   userStorageLimit: number;
+  initialImageUrl?: {
+    thumbnail_url: string;
+    preview_url: string;
+    asset_url: string;
+  };
   onSetAssetStorageUrl: React.Dispatch<
     React.SetStateAction<{
       thumbnail_url: string;
@@ -64,6 +69,7 @@ interface UploadedFile {
 export function FileUploadCenter({
   userStorageUsage,
   userStorageLimit,
+  initialImageUrl,
   onSetAssetStorageUrl,
   onSetUsedStorage,
 }: IProps) {
@@ -140,6 +146,7 @@ export function FileUploadCenter({
     if (!file) return;
 
     const remainingStorage = totalStorage - usedStorage;
+    console.log("remainingStorage", remainingStorage);
     if (file.size > remainingStorage) {
       toast.error(
         `File size (${formatFileSize(

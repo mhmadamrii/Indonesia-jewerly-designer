@@ -26,7 +26,7 @@ export const NAV_LINKS = [
     label: "Profile",
     logo: "/my-sale.svg",
   },
-];
+] as const;
 
 export const OPTIONS = [
   {
@@ -62,3 +62,34 @@ export const OPTIONS = [
     value: "travel",
   },
 ] as Option[];
+
+export const CURRENCIES = [
+  {
+    value: "USD",
+    label: "USD ($)",
+  },
+  {
+    value: "IDR",
+    label: "IDR (Rp)",
+  },
+  {
+    value: "EUR",
+    label: "EUR (€)",
+  },
+  {
+    value: "GBP",
+    label: "GBP (£)",
+  },
+  {
+    value: "JPY",
+    label: "JPY (¥)",
+  },
+  {
+    value: "CAD",
+    label: "CAD (C$)",
+  },
+  {
+    value: "AUD",
+    label: "AUD (A$)",
+  },
+] as const;

@@ -36,7 +36,7 @@ function RouteComponent() {
                   key={idx}
                   category={item.category}
                   user={item.user}
-                  jewerly_assets={item.jewerly_assets}
+                  jewelry_assets={item.jewelry_assets}
                 />
               ))}
             </>

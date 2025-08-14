@@ -4,10 +4,10 @@ import { createServerFn } from "@tanstack/react-start";
 import { and, eq } from "drizzle-orm";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { cartItem, jewerlyAssets } from "~/lib/db/schema";
+import { cartItem, jewelryAssets } from "~/lib/db/schema";
 
 const CartSchema = z.object({
-  jewerlyAssetId: z.string(),
+  jewelryAssetId: z.string(),
   quantity: z.number(),
 });
 
@@ -17,7 +17,7 @@ export const getCartItems = createServerFn({ method: "GET" })
     const res = await db
       .select()
       .from(cartItem)
-      .leftJoin(jewerlyAssets, eq(cartItem.jewerlyAssetId, jewerlyAssets.id))
+      .leftJoin(jewelryAssets, eq(cartItem.jewelryAssetId, jewelryAssets.id))
       .where(eq(cartItem.userId, context.user.id));
 
     return {
@@ -30,13 +30,13 @@ export const createCartItem = createServerFn({ method: "POST" })
   .validator(CartSchema)
   .middleware([authMiddleware])
   .handler(async ({ data, context }) => {
-    const { jewerlyAssetId, quantity } = data;
+    const { jewelryAssetId, quantity } = data;
 
     const res = await db
       .insert(cartItem)
       .values({
         userId: context.user.id,
-        jewerlyAssetId,
+        jewelryAssetId,
         quantity,
       })
       .returning({ id: cartItem.id });

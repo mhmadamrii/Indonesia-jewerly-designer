@@ -4,12 +4,12 @@ import { Eye, Heart, MessageCircle, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { createCartItem } from "~/actions/cart.action";
-import { JewerlyWithJoins } from "~/actions/explore.action";
+import { jewelryWithJoins } from "~/actions/explore.action";
 import { AddWishlist } from "~/components/add-wishlist";
 import { PaymentButton } from "~/components/payment-button";
 import { Button } from "~/components/ui/button";
 
-export function AssetGrid({ jewerly_assets, category, user }: JewerlyWithJoins) {
+export function AssetGrid({ jewelry_assets, category, user }: jewelryWithJoins) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [selected3D, setSelected3D] = useState("");
@@ -26,7 +26,7 @@ export function AssetGrid({ jewerly_assets, category, user }: JewerlyWithJoins) 
     setSelected3D(id);
     mutate({
       data: {
-        jewerlyAssetId: id,
+        jewelryAssetId: id,
         quantity: 1,
       },
     });
@@ -37,8 +37,8 @@ export function AssetGrid({ jewerly_assets, category, user }: JewerlyWithJoins) 
       <div className="flex flex-col md:flex-row">
         <div className="relative z-10 h-[300px] md:w-[40%]">
           <img
-            src={jewerly_assets.thumbnailUrl ?? "/placeholder-img.jpg"}
-            alt={jewerly_assets.name}
+            src={jewelry_assets.thumbnailUrl ?? "/placeholder-img.jpg"}
+            alt={jewelry_assets.name}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
 
@@ -48,15 +48,15 @@ export function AssetGrid({ jewerly_assets, category, user }: JewerlyWithJoins) 
               onClick={() =>
                 navigate({
                   to: `/~/general/assets/$assetId`,
-                  params: { assetId: jewerly_assets.id },
+                  params: { assetId: jewelry_assets.id },
                 })
               }
             >
               <Eye className="h-4 w-4" />
             </button>
             <AddWishlist
-              imageUrl={jewerly_assets.thumbnailUrl}
-              jewerlyAssetId={jewerly_assets.id}
+              imageUrl={jewelry_assets.thumbnailUrl}
+              jewelryAssetId={jewelry_assets.id}
             />
           </div>
 
@@ -74,7 +74,7 @@ export function AssetGrid({ jewerly_assets, category, user }: JewerlyWithJoins) 
 
           <div className="absolute top-3 right-3">
             <span className="rounded-full bg-indigo-600 px-2 py-1 text-sm font-bold text-white">
-              ${jewerly_assets.price}
+              ${jewelry_assets.price}
             </span>
           </div>
         </div>
@@ -82,10 +82,10 @@ export function AssetGrid({ jewerly_assets, category, user }: JewerlyWithJoins) 
         <div className="bg-card z-20 flex flex-col justify-between border-t p-4 md:w-1/2 md:border-t-0 md:border-l">
           <div>
             <h3 className="mb-1 line-clamp-1 text-lg font-semibold">
-              {jewerly_assets.name}
+              {jewelry_assets.name}
             </h3>
             <p className="text-muted-foreground mb-3 line-clamp-2 text-sm">
-              {jewerly_assets.description}
+              {jewelry_assets.description}
             </p>
 
             <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
@@ -124,24 +124,24 @@ export function AssetGrid({ jewerly_assets, category, user }: JewerlyWithJoins) 
             <div className="text-muted-foreground mb-4 grid grid-cols-3 gap-2 text-sm">
               <button className="hover:text-primary flex items-center transition-colors">
                 <Eye className="mr-1 h-4 w-4" />
-                <span>{jewerly_assets.impressions ?? 0} views</span>
+                <span>{jewelry_assets.impressions ?? 0} views</span>
               </button>
               <button className="hover:text-primary flex items-center transition-colors">
                 <Heart className="mr-1 h-4 w-4 text-red-500" />
-                <span>{jewerly_assets.likes ?? 0} likes</span>
+                <span>{jewelry_assets.likes ?? 0} likes</span>
               </button>
               <button className="hover:text-primary flex items-center transition-colors">
                 <MessageCircle className="mr-1 h-4 w-4" />
-                <span>{jewerly_assets.commentsCount ?? 0} comments</span>
+                <span>{jewelry_assets.commentsCount ?? 0} comments</span>
               </button>
             </div>
           </div>
 
           <div className="mt-2 flex items-center justify-between gap-2">
             <PaymentButton
-              assetId={jewerly_assets.id}
+              assetId={jewelry_assets.id}
               purchaseLabel="Purchase"
-              totalPrice={jewerly_assets.price}
+              totalPrice={jewelry_assets.price}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600 py-3 font-semibold text-white hover:from-blue-700 hover:to-purple-700"
             />
 
@@ -150,8 +150,8 @@ export function AssetGrid({ jewerly_assets, category, user }: JewerlyWithJoins) 
                 <MessageCircle className="h-4 w-4" />
               </Button>
               <Button
-                disabled={isPending && selected3D === jewerly_assets.id}
-                onClick={() => handleAddToCart(jewerly_assets.id)}
+                disabled={isPending && selected3D === jewelry_assets.id}
+                onClick={() => handleAddToCart(jewelry_assets.id)}
                 size="icon"
                 variant="outline"
               >

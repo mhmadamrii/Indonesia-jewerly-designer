@@ -13,6 +13,7 @@ import { Label } from "~/components/ui/label";
 import { MultipleSelector } from "~/components/ui/multi-select";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Textarea } from "~/components/ui/textarea";
+import { CURRENCIES } from "~/constants";
 import { cn } from "~/lib/utils";
 import { FileUploadCenter } from "./file-upload-center";
 
@@ -35,10 +36,10 @@ import {
 } from "~/components/ui/card";
 
 import {
-  createJewerlyAsset,
-  getJewerlyTagsAndCategories,
-  TypeJewerlyAssetById,
-} from "~/actions/jewerly.action";
+  createjewelryAsset,
+  getjewelryTagsAndCategories,
+  TypejewelryAssetById,
+} from "~/actions/jewelry.action";
 
 import {
   Form,
@@ -75,38 +76,7 @@ const formSchema = z.object({
   }),
 });
 
-const currencies = [
-  {
-    value: "USD",
-    label: "USD ($)",
-  },
-  {
-    value: "IDR",
-    label: "IDR (Rp)",
-  },
-  {
-    value: "EUR",
-    label: "EUR (€)",
-  },
-  {
-    value: "GBP",
-    label: "GBP (£)",
-  },
-  {
-    value: "JPY",
-    label: "JPY (¥)",
-  },
-  {
-    value: "CAD",
-    label: "CAD (C$)",
-  },
-  {
-    value: "AUD",
-    label: "AUD (A$)",
-  },
-];
-
-export function AssetEdit({ initialData }: { initialData: TypeJewerlyAssetById }) {
+export function AssetEdit({ initialData }: { initialData: TypejewelryAssetById }) {
   const navigate = useNavigate();
 
   const [isUsingBoost, setIsUsingBoost] = useState(false);
@@ -114,14 +84,14 @@ export function AssetEdit({ initialData }: { initialData: TypeJewerlyAssetById }
   const [totalStorageLimitToUpdate, setTotalStorageLimitToUpdate] = useState(0);
   const [tagsValue, setTagsValue] = useState<{ value: string; label: string }[]>([]);
   const [assetStorageUrl, setAssetStorageUrl] = useState({
-    thumbnail_url: initialData.jewerly_assets.thumbnailUrl,
-    preview_url: initialData.jewerly_assets.previewUrl,
-    asset_url: initialData.jewerly_assets.assetUrl,
+    thumbnail_url: initialData.jewelry_assets.thumbnailUrl,
+    preview_url: initialData.jewelry_assets.previewUrl,
+    asset_url: initialData.jewelry_assets.assetUrl,
   });
 
   const { data: tagsAndCategories } = useQuery({
     queryKey: ["tags_and_categories"],
-    queryFn: () => getJewerlyTagsAndCategories(),
+    queryFn: () => getjewelryTagsAndCategories(),
   });
 
   const { data: currentCredit } = useQuery({
@@ -130,7 +100,7 @@ export function AssetEdit({ initialData }: { initialData: TypeJewerlyAssetById }
   });
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: createJewerlyAsset,
+    mutationFn: createjewelryAsset,
     onSuccess: (res) => {
       toast.success("Data saved successfully");
       navigate({
@@ -147,42 +117,45 @@ export function AssetEdit({ initialData }: { initialData: TypeJewerlyAssetById }
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: initialData.jewerly_assets.name,
-      price: initialData.jewerly_assets.price,
+      name: initialData.jewelry_assets.name,
+      price: initialData.jewelry_assets.price,
       currency: "m@example.com",
       category: "arts",
-      description: initialData.jewerly_assets.description,
+      description: initialData.jewelry_assets.description,
       boost: "10",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (currentCredit?.data?.boostCredit! < parseInt(values.boost) && isUsingBoost) {
-      return toast.error("You don't have enough credits to boost this product.");
-    }
+    console.log("values", values);
+    // if (currentCredit?.data?.boostCredit! < parseInt(values.boost) && isUsingBoost) {
+    //   return toast.error("You don't have enough credits to boost this product.");
+    // }
 
-    try {
-      await mutateAsync({
-        data: {
-          name: values.name,
-          description: values.description,
-          price: values.price,
-          thumbnailUrl: assetStorageUrl.thumbnail_url,
-          previewUrl: assetStorageUrl.preview_url,
-          assetUrl: assetStorageUrl.asset_url,
-          categoryId: values.category,
-          typeAsset: "image",
-          tags: tagsValue.map((item) => item.value),
-          totalBoostToUpdate: getTotalBoostToUpdate(parseInt(values.boost)),
-          boost: isUsingBoost ? Number.parseFloat(values.boost) : 0,
-          totalStorageLimitToUpdate: totalStorageLimitToUpdate,
-        },
-      });
-    } catch (error) {
-      console.error("Form submission error", error);
-      toast.error("Failed to submit the form. Please try again.");
-    }
+    // try {
+    //   await mutateAsync({
+    //     data: {
+    //       name: values.name,
+    //       description: values.description,
+    //       price: values.price,
+    //       thumbnailUrl: assetStorageUrl.thumbnail_url,
+    //       previewUrl: assetStorageUrl.preview_url,
+    //       assetUrl: assetStorageUrl.asset_url,
+    //       categoryId: values.category,
+    //       typeAsset: "image",
+    //       tags: tagsValue.map((item) => item.value),
+    //       totalBoostToUpdate: getTotalBoostToUpdate(parseInt(values.boost)),
+    //       boost: isUsingBoost ? Number.parseFloat(values.boost) : 0,
+    //       totalStorageLimitToUpdate: totalStorageLimitToUpdate,
+    //     },
+    //   });
+    // } catch (error) {
+    //   console.error("Form submission error", error);
+    //   toast.error("Failed to submit the form. Please try again.");
+    // }
   }
+
+  console.log("currentCredit", currentCredit);
 
   return (
     <Card className="w-full">
@@ -211,7 +184,7 @@ export function AssetEdit({ initialData }: { initialData: TypeJewerlyAssetById }
                     <FormControl>
                       <Input
                         placeholder="Enter product name"
-                        className="h-12 text-base"
+                        className="h-10 text-base"
                         {...field}
                       />
                     </FormControl>
@@ -239,7 +212,7 @@ export function AssetEdit({ initialData }: { initialData: TypeJewerlyAssetById }
                         type="number"
                         min="0"
                         placeholder="0.00"
-                        className="h-12 text-base"
+                        className="h-10 text-base"
                         {...field}
                         onChange={(e) =>
                           field.onChange(Number.parseFloat(e.target.value) || 0)
@@ -257,14 +230,14 @@ export function AssetEdit({ initialData }: { initialData: TypeJewerlyAssetById }
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel className="text-base font-semibold">Currency</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} defaultValue="USD">
                       <FormControl>
-                        <SelectTrigger className="min-h-12 w-full text-base">
+                        <SelectTrigger className="min-h-10 w-full text-base">
                           <SelectValue placeholder="Select currency" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {currencies.map((currency) => (
+                        {CURRENCIES.map((currency) => (
                           <SelectItem key={currency.value} value={currency.value}>
                             {currency.label}
                           </SelectItem>
@@ -285,11 +258,11 @@ export function AssetEdit({ initialData }: { initialData: TypeJewerlyAssetById }
                   <FormLabel>Category</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    defaultValue={initialData.jewelry_assets.categoryId}
                     disabled={isPending || isUploadingImage}
                   >
                     <FormControl>
-                      <SelectTrigger className="min-h-12 w-full">
+                      <SelectTrigger className="min-h-10 w-full">
                         <SelectValue placeholder="Arts" />
                       </SelectTrigger>
                     </FormControl>
@@ -313,7 +286,7 @@ export function AssetEdit({ initialData }: { initialData: TypeJewerlyAssetById }
                 Tags
               </FormLabel>
               <MultipleSelector
-                className="bg-accent flex h-12 items-center"
+                className="bg-accent flex h-10 items-center"
                 onChange={(e) => setTagsValue(e)}
                 options={tagsAndCategories?.data?.tags?.map((item) => ({
                   value: item.id,
@@ -462,6 +435,11 @@ export function AssetEdit({ initialData }: { initialData: TypeJewerlyAssetById }
 
             <div className="flex w-full flex-col justify-center">
               <FileUploadCenter
+                initialImageUrl={{
+                  preview_url: initialData.jewelry_assets.previewUrl,
+                  thumbnail_url: initialData.jewelry_assets.thumbnailUrl,
+                  asset_url: initialData.jewelry_assets.assetUrl,
+                }}
                 userStorageLimit={
                   tagsAndCategories?.data?.storage[0]?.userStorageLimit ?? 0
                 }

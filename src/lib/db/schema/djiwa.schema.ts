@@ -4,7 +4,6 @@ import { user } from "./auth.schema";
 import {
   boolean,
   integer,
-  pgEnum,
   pgTable,
   primaryKey,
   text,
@@ -12,13 +11,6 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-
-export const notificationTypeEnum = pgEnum("notification_type", [
-  "new_review",
-  "price_drop",
-  "back_in_stock",
-  "other",
-]);
 
 export const category = pgTable("category", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -35,7 +27,7 @@ export const tag = pgTable("tag", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const jewerlyAssets = pgTable("jewerly_assets", {
+export const jewelryAssets = pgTable("jewelry_assets", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   description: text("description").notNull(),
@@ -51,18 +43,18 @@ export const jewerlyAssets = pgTable("jewerly_assets", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const jewerlyAssetTags = pgTable(
-  "jewerly_asset_tags",
+export const jewelryAssetTags = pgTable(
+  "jewelry_asset_tags",
   {
-    jewerlyAssetId: uuid("jewerly_asset_id")
+    jewelryAssetId: uuid("jewelry_asset_id")
       .notNull()
-      .references(() => jewerlyAssets.id, { onDelete: "cascade" }),
+      .references(() => jewelryAssets.id, { onDelete: "cascade" }),
     tagId: uuid("tag_id")
       .notNull()
       .references(() => tag.id, { onDelete: "cascade" }),
   },
   (t) => ({
-    pk: primaryKey(t.jewerlyAssetId, t.tagId),
+    pk: primaryKey(t.jewelryAssetId, t.tagId),
   }),
 );
 
@@ -72,7 +64,7 @@ export const review = pgTable("review", {
   description: text("description"),
   image: text("image"),
   userId: text("user_id").notNull(),
-  jewerlyAssetId: text("jewerly_asset_id").notNull(),
+  jewelryAssetId: text("jewelry_asset_id").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -86,7 +78,7 @@ export const notification = pgTable("notification", {
   isRead: boolean("is_read") // Whether the user has read it
     .default(false)
     .notNull(),
-  type: notificationTypeEnum("type"),
+  type: text("type"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -96,9 +88,9 @@ export const cartItem = pgTable("cart_item", {
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  jewerlyAssetId: uuid("jewerly_asset_id")
+  jewelryAssetId: uuid("jewelry_asset_id")
     .notNull()
-    .references(() => jewerlyAssets.id, { onDelete: "cascade" }),
+    .references(() => jewelryAssets.id, { onDelete: "cascade" }),
   quantity: integer("quantity").notNull().default(1),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -110,9 +102,9 @@ export const wishlistItem = pgTable("wishlist_item", {
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   imageUrl: text("image_url").notNull(),
-  jewerlyAssetId: uuid("jewerly_asset_id")
+  jewelryAssetId: uuid("jewelry_asset_id")
     .notNull()
-    .references(() => jewerlyAssets.id, { onDelete: "cascade" }),
+    .references(() => jewelryAssets.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -122,9 +114,9 @@ export const payments = pgTable("payments", {
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  jewerlyAssetId: uuid("jewelry_asset_id")
+  jewelryAssetId: uuid("jewelry_asset_id")
     .notNull()
-    .references(() => jewerlyAssets.id, { onDelete: "cascade" }),
+    .references(() => jewelryAssets.id, { onDelete: "cascade" }),
   amount: text("amount").notNull(),
   status: text("status").notNull(),
   currency: varchar("currency", { length: 100 }).notNull(),
@@ -137,19 +129,19 @@ export const payments = pgTable("payments", {
 });
 
 export const userRelations = relations(user, ({ many }) => ({
-  jewerlyAssets: many(jewerlyAssets),
+  jewelryAssets: many(jewelryAssets),
   cartItems: many(cartItem),
   wishlistItems: many(wishlistItem),
 }));
 
-export const jewerlyAssetsRelations = relations(jewerlyAssets, ({ many }) => ({
+export const jewelryAssetsRelations = relations(jewelryAssets, ({ many }) => ({
   reviews: many(review),
-  jewerlyAssetTags: many(jewerlyAssetTags),
+  jewelryAssetTags: many(jewelryAssetTags),
   cartItems: many(cartItem),
 }));
 
 export const tagRelations = relations(tag, ({ many }) => ({
-  jewerlyAssetTags: many(jewerlyAssetTags),
+  jewelryAssetTags: many(jewelryAssetTags),
 }));
 
 export const paymentsRelations = relations(payments, ({ one }) => ({
@@ -159,19 +151,19 @@ export const paymentsRelations = relations(payments, ({ one }) => ({
   }),
 }));
 
-export const jewerlyAssetTagsRelations = relations(jewerlyAssetTags, ({ one }) => ({
-  jewerlyAsset: one(jewerlyAssets, {
-    fields: [jewerlyAssetTags.jewerlyAssetId],
-    references: [jewerlyAssets.id],
+export const jewelryAssetTagsRelations = relations(jewelryAssetTags, ({ one }) => ({
+  jewelryAsset: one(jewelryAssets, {
+    fields: [jewelryAssetTags.jewelryAssetId],
+    references: [jewelryAssets.id],
   }),
   tag: one(tag, {
-    fields: [jewerlyAssetTags.tagId],
+    fields: [jewelryAssetTags.tagId],
     references: [tag.id],
   }),
 }));
 
 export const categoryRelations = relations(category, ({ many }) => ({
-  jewerlyAssets: many(jewerlyAssets),
+  jewelryAssets: many(jewelryAssets),
 }));
 
 export const follow = pgTable(
@@ -197,8 +189,8 @@ export const cartItemRelations = relations(cartItem, ({ one }) => ({
     fields: [cartItem.userId],
     references: [user.id],
   }),
-  jewerlyAsset: one(jewerlyAssets, {
-    fields: [cartItem.jewerlyAssetId],
-    references: [jewerlyAssets.id],
+  jewelryAsset: one(jewelryAssets, {
+    fields: [cartItem.jewelryAssetId],
+    references: [jewelryAssets.id],
   }),
 }));

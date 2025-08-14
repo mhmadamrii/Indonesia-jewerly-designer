@@ -80,7 +80,7 @@ export const createPaymentTransaction = createServerFn({ method: "POST" })
       .insert(payments)
       .values({
         userId: context.user.id,
-        jewerlyAssetId: data.assetId,
+        jewelryAssetId: data.assetId,
         amount: midtransResponse.gross_amount,
         status: midtransResponse.transaction_status,
         currency: "IDR or USD",

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { TypeJewerlyAssetById } from "~/actions/jewerly.action";
+import { TypejewelryAssetById } from "~/actions/jewelry.action";
 import { ModelViewer } from "~/components/3D/model-viewer";
 import { PaymentButton } from "~/components/payment-button";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
@@ -21,11 +21,11 @@ import {
   Zap,
 } from "lucide-react";
 
-export function AssetDetail({ data }: { data: TypeJewerlyAssetById }) {
+export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
   console.log("data", data);
   const [isLiked, setIsLiked] = useState(false);
   const [viewMode, setViewMode] = useState<"image" | "3d">("image");
-  const { jewerly_assets: asset, user, category } = data;
+  const { jewelry_assets: asset, user, category } = data;
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {

@@ -12,9 +12,9 @@ type Form = {
 };
 
 type FormState = {
-  jewerlyForm: Form;
-  addJewerlyForm: (form: Form) => void;
-  resetJewerlyForm: () => void;
+  jewelryForm: Form;
+  addjewelryForm: (form: Form) => void;
+  resetjewelryForm: () => void;
 };
 
 const defaultForm: Form = {
@@ -30,9 +30,9 @@ const defaultForm: Form = {
 export const useFormStorage = create<FormState>()(
   persist(
     (set) => ({
-      jewerlyForm: defaultForm,
-      addJewerlyForm: (form) => set(() => ({ jewerlyForm: form })),
-      resetJewerlyForm: () => set(() => ({ jewerlyForm: defaultForm })),
+      jewelryForm: defaultForm,
+      addjewelryForm: (form) => set(() => ({ jewelryForm: form })),
+      resetjewelryForm: () => set(() => ({ jewelryForm: defaultForm })),
     }),
     {
       name: "form-djiwa-storage",

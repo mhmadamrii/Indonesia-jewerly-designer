@@ -5,10 +5,10 @@ import { addWishlistItem } from "~/actions/wishlist.action";
 
 export function AddWishlist({
   imageUrl,
-  jewerlyAssetId,
+  jewelryAssetId,
 }: {
   imageUrl: string;
-  jewerlyAssetId: string;
+  jewelryAssetId: string;
 }) {
   const { mutate, isPending } = useMutation({
     mutationFn: addWishlistItem,
@@ -20,7 +20,7 @@ export function AddWishlist({
   return (
     <button
       disabled={isPending}
-      onClick={() => mutate({ data: { imageUrl, jewerlyAssetId } })}
+      onClick={() => mutate({ data: { imageUrl, jewelryAssetId } })}
       className="cursor-pointer rounded-full bg-white/20 p-2 text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/30"
     >
       {isPending ? (
