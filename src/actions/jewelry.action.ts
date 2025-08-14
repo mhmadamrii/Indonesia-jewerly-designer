@@ -141,7 +141,7 @@ export const createjewelryAsset = createServerFn({ method: "POST" })
         .update(user)
         .set({
           boostCredit: totalBoostToUpdate,
-          userStorageLimit: totalStorageLimitToUpdate,
+          userStorageUsage: totalStorageLimitToUpdate,
         })
         .where(eq(user.id, context.user.id))
         .returning({ id: user.id }),

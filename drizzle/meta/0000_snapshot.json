@@ -1,5 +1,5 @@
 {
-  "id": "7c90771b-46ea-453a-9b80-a705b39420f2",
+  "id": "3104302a-2515-491c-862b-877de1b7224e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -672,7 +672,34 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "jewelry_assets_user_id_user_id_fk": {
+          "name": "jewelry_assets_user_id_user_id_fk",
+          "tableFrom": "jewelry_assets",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "jewelry_assets_category_id_category_id_fk": {
+          "name": "jewelry_assets_category_id_category_id_fk",
+          "tableFrom": "jewelry_assets",
+          "tableTo": "category",
+          "columnsFrom": [
+            "category_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -904,7 +931,7 @@
         },
         "jewelry_asset_id": {
           "name": "jewelry_asset_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -924,7 +951,34 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "review_user_id_user_id_fk": {
+          "name": "review_user_id_user_id_fk",
+          "tableFrom": "review",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "review_jewelry_asset_id_jewelry_assets_id_fk": {
+          "name": "review_jewelry_asset_id_jewelry_assets_id_fk",
+          "tableFrom": "review",
+          "tableTo": "jewelry_assets",
+          "columnsFrom": [
+            "jewelry_asset_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},

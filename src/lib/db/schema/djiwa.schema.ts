@@ -36,9 +36,13 @@ export const jewelryAssets = pgTable("jewelry_assets", {
   thumbnailUrl: text("thumbnail_url").notNull(),
   assetUrl: text("asset_url").notNull(),
   typeAsset: text("type_asset").notNull(),
-  userId: text("user_id").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
   boost: integer("boost").default(0),
-  categoryId: uuid("category_id").notNull(),
+  categoryId: uuid("category_id")
+    .notNull()
+    .references(() => category.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -63,8 +67,12 @@ export const review = pgTable("review", {
   title: text("title").notNull(),
   description: text("description"),
   image: text("image"),
-  userId: text("user_id").notNull(),
-  jewelryAssetId: text("jewelry_asset_id").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  jewelryAssetId: uuid("jewelry_asset_id")
+    .notNull()
+    .references(() => jewelryAssets.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -74,10 +82,8 @@ export const notification = pgTable("notification", {
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  message: text("message").notNull(), // Notification content
-  isRead: boolean("is_read") // Whether the user has read it
-    .default(false)
-    .notNull(),
+  message: text("message").notNull(),
+  isRead: boolean("is_read").default(false).notNull(),
   type: text("type"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -125,46 +131,8 @@ export const payments = pgTable("payments", {
   description: varchar("description", { length: 255 }),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
-  deletedAt: timestamp("deleted_at"), // Soft delete column
+  deletedAt: timestamp("deleted_at"),
 });
-
-export const userRelations = relations(user, ({ many }) => ({
-  jewelryAssets: many(jewelryAssets),
-  cartItems: many(cartItem),
-  wishlistItems: many(wishlistItem),
-}));
-
-export const jewelryAssetsRelations = relations(jewelryAssets, ({ many }) => ({
-  reviews: many(review),
-  jewelryAssetTags: many(jewelryAssetTags),
-  cartItems: many(cartItem),
-}));
-
-export const tagRelations = relations(tag, ({ many }) => ({
-  jewelryAssetTags: many(jewelryAssetTags),
-}));
-
-export const paymentsRelations = relations(payments, ({ one }) => ({
-  user: one(user, {
-    fields: [payments.userId],
-    references: [user.id],
-  }),
-}));
-
-export const jewelryAssetTagsRelations = relations(jewelryAssetTags, ({ one }) => ({
-  jewelryAsset: one(jewelryAssets, {
-    fields: [jewelryAssetTags.jewelryAssetId],
-    references: [jewelryAssets.id],
-  }),
-  tag: one(tag, {
-    fields: [jewelryAssetTags.tagId],
-    references: [tag.id],
-  }),
-}));
-
-export const categoryRelations = relations(category, ({ many }) => ({
-  jewelryAssets: many(jewelryAssets),
-}));
 
 export const follow = pgTable(
   "follow",
@@ -184,6 +152,74 @@ export const follow = pgTable(
   }),
 );
 
+/**
+ * Relations
+ */
+
+export const userRelations = relations(user, ({ many }) => ({
+  jewelryAssets: many(jewelryAssets),
+  cartItems: many(cartItem),
+  wishlistItems: many(wishlistItem),
+  reviews: many(review),
+  notifications: many(notification),
+  payments: many(payments),
+  followers: many(follow, { relationName: "followers" }),
+  followings: many(follow, { relationName: "followings" }),
+}));
+
+export const categoryRelations = relations(category, ({ many }) => ({
+  jewelryAssets: many(jewelryAssets),
+}));
+
+export const tagRelations = relations(tag, ({ many }) => ({
+  jewelryAssetTags: many(jewelryAssetTags),
+}));
+
+export const jewelryAssetsRelations = relations(jewelryAssets, ({ one, many }) => ({
+  user: one(user, {
+    fields: [jewelryAssets.userId],
+    references: [user.id],
+  }),
+  category: one(category, {
+    fields: [jewelryAssets.categoryId],
+    references: [category.id],
+  }),
+  reviews: many(review),
+  jewelryAssetTags: many(jewelryAssetTags),
+  cartItems: many(cartItem),
+  wishlistItems: many(wishlistItem),
+  payments: many(payments),
+}));
+
+export const jewelryAssetTagsRelations = relations(jewelryAssetTags, ({ one }) => ({
+  jewelryAsset: one(jewelryAssets, {
+    fields: [jewelryAssetTags.jewelryAssetId],
+    references: [jewelryAssets.id],
+  }),
+  tag: one(tag, {
+    fields: [jewelryAssetTags.tagId],
+    references: [tag.id],
+  }),
+}));
+
+export const reviewRelations = relations(review, ({ one }) => ({
+  user: one(user, {
+    fields: [review.userId],
+    references: [user.id],
+  }),
+  jewelryAsset: one(jewelryAssets, {
+    fields: [review.jewelryAssetId],
+    references: [jewelryAssets.id],
+  }),
+}));
+
+export const notificationRelations = relations(notification, ({ one }) => ({
+  user: one(user, {
+    fields: [notification.userId],
+    references: [user.id],
+  }),
+}));
+
 export const cartItemRelations = relations(cartItem, ({ one }) => ({
   user: one(user, {
     fields: [cartItem.userId],
@@ -192,5 +228,40 @@ export const cartItemRelations = relations(cartItem, ({ one }) => ({
   jewelryAsset: one(jewelryAssets, {
     fields: [cartItem.jewelryAssetId],
     references: [jewelryAssets.id],
+  }),
+}));
+
+export const wishlistItemRelations = relations(wishlistItem, ({ one }) => ({
+  user: one(user, {
+    fields: [wishlistItem.userId],
+    references: [user.id],
+  }),
+  jewelryAsset: one(jewelryAssets, {
+    fields: [wishlistItem.jewelryAssetId],
+    references: [jewelryAssets.id],
+  }),
+}));
+
+export const paymentsRelations = relations(payments, ({ one }) => ({
+  user: one(user, {
+    fields: [payments.userId],
+    references: [user.id],
+  }),
+  jewelryAsset: one(jewelryAssets, {
+    fields: [payments.jewelryAssetId],
+    references: [jewelryAssets.id],
+  }),
+}));
+
+export const followRelations = relations(follow, ({ one }) => ({
+  follower: one(user, {
+    fields: [follow.followerId],
+    references: [user.id],
+    relationName: "followers",
+  }),
+  following: one(user, {
+    fields: [follow.followingId],
+    references: [user.id],
+    relationName: "followings",
   }),
 }));

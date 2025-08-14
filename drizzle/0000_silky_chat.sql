@@ -127,7 +127,7 @@ CREATE TABLE "review" (
 	"description" text,
 	"image" text,
 	"user_id" text NOT NULL,
-	"jewelry_asset_id" text NOT NULL,
+	"jewelry_asset_id" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now()
 );
@@ -156,8 +156,12 @@ ALTER TABLE "follow" ADD CONSTRAINT "follow_follower_id_user_id_fk" FOREIGN KEY 
 ALTER TABLE "follow" ADD CONSTRAINT "follow_following_id_user_id_fk" FOREIGN KEY ("following_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "jewelry_asset_tags" ADD CONSTRAINT "jewelry_asset_tags_jewelry_asset_id_jewelry_assets_id_fk" FOREIGN KEY ("jewelry_asset_id") REFERENCES "public"."jewelry_assets"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "jewelry_asset_tags" ADD CONSTRAINT "jewelry_asset_tags_tag_id_tag_id_fk" FOREIGN KEY ("tag_id") REFERENCES "public"."tag"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "jewelry_assets" ADD CONSTRAINT "jewelry_assets_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "jewelry_assets" ADD CONSTRAINT "jewelry_assets_category_id_category_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."category"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "notification" ADD CONSTRAINT "notification_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "payments" ADD CONSTRAINT "payments_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "payments" ADD CONSTRAINT "payments_jewelry_asset_id_jewelry_assets_id_fk" FOREIGN KEY ("jewelry_asset_id") REFERENCES "public"."jewelry_assets"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "review" ADD CONSTRAINT "review_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "review" ADD CONSTRAINT "review_jewelry_asset_id_jewelry_assets_id_fk" FOREIGN KEY ("jewelry_asset_id") REFERENCES "public"."jewelry_assets"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "wishlist_item" ADD CONSTRAINT "wishlist_item_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "wishlist_item" ADD CONSTRAINT "wishlist_item_jewelry_asset_id_jewelry_assets_id_fk" FOREIGN KEY ("jewelry_asset_id") REFERENCES "public"."jewelry_assets"("id") ON DELETE cascade ON UPDATE no action;
