@@ -1,21 +1,39 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Calendar, DollarSign, Download, MessageCircle } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
-import type { PurchasedAsset } from "../types/purchased-asset";
 
 interface PurchasedColumnsProps {
-  onDownload: (asset: PurchasedAsset) => void;
-  onChatArtist: (asset: PurchasedAsset) => void;
+  onDownload: (asset: any) => void;
+  onChatArtist: (asset: any) => void;
 }
+
+type RebuildTransactionType = {
+  jewelry: {
+    name: string;
+    description: string;
+    downloadUrl: string;
+  };
+  payment: {
+    id: string;
+    amount: string;
+    status: string;
+    purchasedAt: Date | null;
+  };
+  category: string;
+  artist: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}[];
 
 export const createPurchasedColumns = ({
   onDownload,
   onChatArtist,
-}: PurchasedColumnsProps): ColumnDef<PurchasedAsset>[] => [
+}: PurchasedColumnsProps): ColumnDef<RebuildTransactionType | undefined>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -52,15 +70,16 @@ export const createPurchasedColumns = ({
       );
     },
     cell: ({ row }) => {
-      const asset = row.original;
+      const asset = row?.original;
+      console.log("asset", asset);
       return (
         <div className="max-w-[200px] space-y-1">
-          <div className="font-medium">{asset.name}</div>
+          <div className="font-medium">{asset?.name}</div>
           <div className="text-muted-foreground line-clamp-2 text-sm">
-            {asset.description}
+            {asset?.description}
           </div>
           <Badge variant="outline" className="text-xs">
-            {asset.typeAsset}
+            {row?.original?.category}
           </Badge>
         </div>
       );
@@ -70,23 +89,11 @@ export const createPurchasedColumns = ({
     accessorKey: "artist",
     header: "Artist",
     cell: ({ row }) => {
-      const artist = row.original.artist;
+      const artist = row?.original?.artist;
       return (
         <div className="flex items-center space-x-2">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={artist.image || "/placeholder.svg"} />
-            <AvatarFallback>
-              {artist.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")}
-            </AvatarFallback>
-          </Avatar>
           <div>
-            <div className="text-sm font-medium">{artist.name}</div>
-            <Badge variant="secondary" className="text-xs">
-              {artist.role}
-            </Badge>
+            <div className="text-sm font-medium">{artist?.name}</div>
           </div>
         </div>
       );
@@ -97,8 +104,8 @@ export const createPurchasedColumns = ({
     accessorKey: "category",
     header: "Category",
     cell: ({ row }) => {
-      const category = row.original.category;
-      return <Badge variant="outline">{category.name}</Badge>;
+      const category = row?.original?.category;
+      return <Badge variant="outline">{category}</Badge>;
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
@@ -118,7 +125,8 @@ export const createPurchasedColumns = ({
       );
     },
     cell: ({ row }) => {
-      const price = Number.parseFloat(row.getValue("price"));
+      console.log("row", row.original);
+      const price = Number.parseFloat(row.original?.amount);
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
@@ -146,7 +154,7 @@ export const createPurchasedColumns = ({
       );
     },
     cell: ({ row }) => {
-      const date = new Date(row.getValue("purchaseDate"));
+      const date = new Date(row.original.purchasedAt);
       const formatted = date.toLocaleDateString("en-US", {
         year: "numeric",
         month: "short",

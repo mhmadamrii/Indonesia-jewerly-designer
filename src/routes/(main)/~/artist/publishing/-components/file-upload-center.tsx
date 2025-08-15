@@ -73,6 +73,7 @@ export function FileUploadCenter({
   onSetAssetStorageUrl,
   onSetUsedStorage,
 }: IProps) {
+  console.log("initialImageUrl", initialImageUrl);
   const { data: session } = authClient.useSession();
 
   const [uploadedFiles, setUploadedFiles] = useState<{
@@ -498,7 +499,11 @@ export function FileUploadCenter({
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div
+          className={cn("grid grid-cols-1 gap-4 md:grid-cols-3", {
+            hidden: initialImageUrl?.thumbnail_url,
+          })}
+        >
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-muted-foreground text-sm font-medium">

@@ -1,4 +1,4 @@
-import { Await, createFileRoute, Link } from "@tanstack/react-router";
+import { Await, createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { getDashboard } from "~/actions/dashboard.action";
 import { ArtistSkeleton } from "~/components/skeletons/artist-skeleton";
@@ -6,6 +6,7 @@ import { CategoryFilterSkeleton } from "~/components/skeletons/category-filter-s
 import { TrendingCollectionsSkeleton } from "~/components/skeletons/trending-collections-skeleton";
 import { authClient } from "~/lib/auth/auth-client";
 import { cn } from "~/lib/utils";
+import { CarouselBanner } from "./-components/carousel-banner";
 import { CategoryFilters } from "./-components/category-filters";
 import { Summary } from "./-components/summary";
 import { TopArtists } from "./-components/top-artists";
@@ -30,15 +31,7 @@ function RouteComponent() {
     <section className="flex h-full w-full flex-col px-5 py-8">
       <section className="flex h-full w-full flex-col gap-4 sm:flex-row">
         <div className="flex w-full flex-col gap-4 sm:w-[70%]">
-          <div className="relative w-full">
-            <img src="/banner.svg" className="w-full" alt="Banner" loading="lazy" />
-            <Link
-              to="/~/artist/publishing"
-              className="absolute top-[58%] left-[28%] cursor-pointer bg-transparent text-transparent hover:bg-transparent hover:text-transparent"
-            >
-              Create
-            </Link>
-          </div>
+          <CarouselBanner />
           <div className="flex flex-col gap-4">
             <div className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row sm:gap-0">
               <h1 className="text-xl font-semibold">Featured Collections</h1>

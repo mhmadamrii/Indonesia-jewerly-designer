@@ -15,7 +15,6 @@ import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Textarea } from "~/components/ui/textarea";
 import { CURRENCIES } from "~/constants";
 import { cn } from "~/lib/utils";
-import { FileUploadCenter } from "./file-upload-center";
 
 import {
   ChevronDown,
@@ -36,7 +35,7 @@ import {
 } from "~/components/ui/card";
 
 import {
-  createjewelryAsset,
+  editjewelryAsset,
   getjewelryTagsAndCategories,
   TypejewelryAssetById,
 } from "~/actions/jewelry.action";
@@ -100,7 +99,7 @@ export function AssetEdit({ initialData }: { initialData: TypejewelryAssetById }
   });
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: createjewelryAsset,
+    mutationFn: editjewelryAsset,
     onSuccess: (res) => {
       toast.success("Data saved successfully");
       navigate({
@@ -128,34 +127,33 @@ export function AssetEdit({ initialData }: { initialData: TypejewelryAssetById }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("values", values);
-    // if (currentCredit?.data?.boostCredit! < parseInt(values.boost) && isUsingBoost) {
-    //   return toast.error("You don't have enough credits to boost this product.");
-    // }
+    if (currentCredit?.data?.boostCredit! < parseInt(values.boost) && isUsingBoost) {
+      return toast.error("You don't have enough credits to boost this product.");
+    }
 
-    // try {
-    //   await mutateAsync({
-    //     data: {
-    //       name: values.name,
-    //       description: values.description,
-    //       price: values.price,
-    //       thumbnailUrl: assetStorageUrl.thumbnail_url,
-    //       previewUrl: assetStorageUrl.preview_url,
-    //       assetUrl: assetStorageUrl.asset_url,
-    //       categoryId: values.category,
-    //       typeAsset: "image",
-    //       tags: tagsValue.map((item) => item.value),
-    //       totalBoostToUpdate: getTotalBoostToUpdate(parseInt(values.boost)),
-    //       boost: isUsingBoost ? Number.parseFloat(values.boost) : 0,
-    //       totalStorageLimitToUpdate: totalStorageLimitToUpdate,
-    //     },
-    //   });
-    // } catch (error) {
-    //   console.error("Form submission error", error);
-    //   toast.error("Failed to submit the form. Please try again.");
-    // }
+    try {
+      await mutateAsync({
+        data: {
+          id: initialData.jewelry_assets.id,
+          name: values.name,
+          description: values.description,
+          price: values.price,
+          thumbnailUrl: assetStorageUrl.thumbnail_url,
+          previewUrl: assetStorageUrl.preview_url,
+          assetUrl: assetStorageUrl.asset_url,
+          categoryId: values.category,
+          typeAsset: "image",
+          tags: tagsValue.map((item) => item.value),
+          totalBoostToUpdate: getTotalBoostToUpdate(parseInt(values.boost)),
+          boost: isUsingBoost ? Number.parseFloat(values.boost) : 0,
+          totalStorageLimitToUpdate: totalStorageLimitToUpdate,
+        },
+      });
+    } catch (error) {
+      console.error("Form submission error", error);
+      toast.error("Failed to submit the form. Please try again.");
+    }
   }
-
-  console.log("currentCredit", currentCredit);
 
   return (
     <Card className="w-full">
@@ -433,7 +431,7 @@ export function AssetEdit({ initialData }: { initialData: TypejewelryAssetById }
               )}
             />
 
-            <div className="flex w-full flex-col justify-center">
+            {/* <div className="flex w-full flex-col justify-center">
               <FileUploadCenter
                 initialImageUrl={{
                   preview_url: initialData.jewelry_assets.previewUrl,
@@ -449,7 +447,7 @@ export function AssetEdit({ initialData }: { initialData: TypejewelryAssetById }
                 onSetAssetStorageUrl={setAssetStorageUrl}
                 onSetUsedStorage={setTotalStorageLimitToUpdate}
               />
-            </div>
+            </div> */}
 
             <div className="flex w-full items-center justify-end">
               <Button

@@ -1,28 +1,48 @@
+import { Card, CardContent } from "~/components/ui/card";
 import { Skeleton } from "~/components/ui/skeleton";
 
-const SKELETON_COUNT = 12;
-
-const generateRandomHeight = () => Math.floor(Math.random() * 800 + 200); // 200–1000px
-
 export function WishlistMasonrySkeleton() {
-  return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
-      {Array.from({ length: SKELETON_COUNT }).map((_, index) => {
-        const height = generateRandomHeight();
+  const cardHeights = [
+    "h-48",
+    "h-64",
+    "h-40",
+    "h-56",
+    "h-72",
+    "h-44",
+    "h-60",
+    "h-52",
+    "h-68",
+    "h-36",
+    "h-80",
+    "h-44",
+    "h-56",
+    "h-48",
+    "h-64",
+    "h-40",
+    "h-72",
+    "h-52",
+  ];
 
-        return (
-          <div
-            key={index}
-            className="group relative box-content rounded-[10px] shadow-[0px_10px_50px_-10px_rgba(0,0,0,0.2)]"
-            style={{
-              height: generateRandomHeight(),
-              width: 240, // or whatever width you're using in grid
-            }}
-          >
-            <Skeleton className="h-full w-full rounded-[10px]" />
-          </div>
-        );
-      })}
+  return (
+    <div className="w-full columns-1 gap-4 space-y-4 sm:columns-2 md:columns-3 lg:columns-4">
+      {cardHeights.map((height, index) => (
+        <Card key={index} className={`${height} mb-4 break-inside-avoid overflow-hidden`}>
+          <CardContent className="space-y-3">
+            <Skeleton className="h-32 w-full rounded-md" />
+            <div className="space-y-2">
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="h-3 w-4/5" />
+              <Skeleton className="h-3 w-3/5" />
+            </div>
+            {(height === "h-72" || height === "h-80") && (
+              <div className="space-y-2 pt-2">
+                <Skeleton className="h-3 w-full" />
+                <Skeleton className="h-3 w-2/3" />
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 }

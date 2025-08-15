@@ -1,5 +1,6 @@
 "use no memo";
 
+import { useNavigate } from "@tanstack/react-router";
 import { ChevronDown, Search } from "lucide-react";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
@@ -27,7 +28,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { useNavigate } from "@tanstack/react-router";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -35,9 +35,29 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 
+type RebuildTransactionType = {
+  jewelry: {
+    name: string;
+    description: string;
+    downloadUrl: string;
+  };
+  payment: {
+    id: string;
+    amount: string;
+    status: string;
+    purchasedAt: Date | null;
+  };
+  category: string;
+  artist: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}[];
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  data: any | undefined;
   additionalFilters?: (table: any) => React.ReactNode;
   bulkActions?: (selectedRows: TData[]) => React.ReactNode;
 }
@@ -48,6 +68,7 @@ export function PurchasedDataTable<TData, TValue>({
   additionalFilters,
   bulkActions,
 }: DataTableProps<TData, TValue>) {
+  console.log("data table", data);
   const navigate = useNavigate();
 
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -148,13 +169,13 @@ export function PurchasedDataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   className="cursor-pointer"
-                  onClick={() =>
+                  onClick={() => {
                     navigate({
                       to: "/~/general/assets/$assetId",
-                      // @ts-expect-error
-                      params: { assetId: row.original.id },
-                    })
-                  }
+                      // @ts-expect-error - TODO: fix this
+                      params: { assetId: row.original.assetId },
+                    });
+                  }}
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
