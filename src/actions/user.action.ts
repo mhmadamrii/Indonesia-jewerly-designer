@@ -1,10 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getWebRequest } from "@tanstack/react-start/server";
 import { eq } from "drizzle-orm";
+import z from "zod";
 import { auth } from "~/lib/auth";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
 import { user } from "~/lib/db/schema";
+
+export type UserById = Awaited<ReturnType<(typeof getUserById)>>["data"]; // prettier-ignore
 
 export const getUser = createServerFn({ method: "GET" }).handler(async () => {
   console.log("Hello world");
@@ -68,6 +71,21 @@ export const registerToArtist = createServerFn({ method: "POST" })
       .set({ role: "artist" })
       .where(eq(user.id, context.user.id))
       .returning({ id: user.id });
+
+    return {
+      success: true,
+      data: res[0],
+    };
+  });
+
+export const getUserById = createServerFn({ method: "GET" })
+  .validator(
+    z.object({
+      id: z.string(),
+    }),
+  )
+  .handler(async ({ data }) => {
+    const res = await db.select().from(user).where(eq(user.id, data.id));
 
     return {
       success: true,

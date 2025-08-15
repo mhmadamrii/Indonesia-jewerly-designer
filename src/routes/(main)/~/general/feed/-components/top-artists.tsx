@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { FlipButton } from "~/components/animate-ui/buttons/flip";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Card, CardContent, CardTitle } from "~/components/ui/card";
@@ -25,7 +26,15 @@ export function TopArtists({ users }: TopArtistsProps) {
                     <AvatarFallback>{item.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
-                    <span className="truncate">{item.name}</span>
+                    <Link
+                      to="/~/general/u/$userId"
+                      params={{
+                        userId: item.id,
+                      }}
+                      className="truncate hover:cursor-pointer hover:underline"
+                    >
+                      {item.name}
+                    </Link>
                     <span className="text-muted-foreground">
                       @{item.email.split("@")[0]}
                     </span>
