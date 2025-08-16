@@ -8,6 +8,8 @@ import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
+import { ReviewSection } from "./review-section";
+import { ScrollArea } from "./ui/scroll-area";
 
 import {
   Download,
@@ -22,7 +24,6 @@ import {
 } from "lucide-react";
 
 export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
-  console.log("data", data);
   const [isLiked, setIsLiked] = useState(false);
   const [viewMode, setViewMode] = useState<"image" | "3d">("image");
   const { jewelry_assets: asset, user, category } = data;
@@ -44,10 +45,9 @@ export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
 
   return (
     <div className="bg-background min-h-screen">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-          {/* Asset Preview */}
-          <div className="space-y-4">
+      <div className="container mx-auto h-full px-4 py-8">
+        <div className="relative flex h-full flex-col gap-8 md:flex-row">
+          <div className="w-full space-y-4 sm:w-[60%]">
             <div className="bg-muted relative overflow-hidden rounded-lg">
               {viewMode === "image" ? (
                 <img
@@ -60,7 +60,6 @@ export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
                 </div>
               )}
 
-              {/* View Mode Toggle */}
               <div className="absolute top-4 right-4 flex gap-2">
                 <Button
                   className="cursor-pointer"
@@ -91,8 +90,7 @@ export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
               )}
             </div>
 
-            {/* Asset Actions */}
-            <div className="flex gap-2">
+            <div className="flex gap-2 px-3">
               <Button
                 variant="outline"
                 size="sm"
@@ -107,9 +105,19 @@ export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
                 Download Preview
               </Button>
             </div>
+
+            <div>
+              <ScrollArea className="h-[500px] px-3">
+                <ReviewSection
+                  jewelryAssetId="jewelry_123"
+                  averageRating={4.8}
+                  totalReviews={24}
+                />
+              </ScrollArea>
+            </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="top-5 w-full space-y-6 sm:w-[40%]">
             <div className="flex justify-between">
               <div>
                 <h1 className="mb-2 text-3xl font-bold">{asset.name}</h1>
@@ -133,7 +141,6 @@ export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
               </div>
             </div>
 
-            {/* Creator Info */}
             <Card>
               <CardContent>
                 <div className="flex items-center gap-4">
@@ -180,7 +187,6 @@ export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
               </CardContent>
             </Card>
 
-            {/* Purchase Actions */}
             <div className="space-y-3">
               <PaymentButton
                 assetId={asset.id}
@@ -200,7 +206,6 @@ export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
 
             <Separator />
 
-            {/* Asset Details */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Asset Details</h3>
               <div className="grid grid-cols-2 gap-4 text-sm">

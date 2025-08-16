@@ -50,9 +50,6 @@ export const Route = createRootRouteWithContext<{
 });
 
 function RootComponent() {
-  const publicKey = "public_TiL1AamWyyB0VJAGFZrIDL0MMnY=";
-  const urlEndpoint = "https://ik.imagekit.io/idnijd";
-
   return (
     <RootDocument>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">

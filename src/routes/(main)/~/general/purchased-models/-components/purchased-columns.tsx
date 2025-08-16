@@ -71,7 +71,6 @@ export const createPurchasedColumns = ({
     },
     cell: ({ row }) => {
       const asset = row?.original;
-      console.log("asset", asset);
       return (
         <div className="max-w-[200px] space-y-1">
           <div className="font-medium">{asset?.name}</div>
@@ -125,7 +124,6 @@ export const createPurchasedColumns = ({
       );
     },
     cell: ({ row }) => {
-      console.log("row", row.original);
       const price = Number.parseFloat(row.original?.amount);
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",

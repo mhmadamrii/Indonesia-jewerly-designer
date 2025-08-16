@@ -68,7 +68,6 @@ export function PurchasedDataTable<TData, TValue>({
   additionalFilters,
   bulkActions,
 }: DataTableProps<TData, TValue>) {
-  console.log("data table", data);
   const navigate = useNavigate();
 
   const [sorting, setSorting] = useState<SortingState>([]);
