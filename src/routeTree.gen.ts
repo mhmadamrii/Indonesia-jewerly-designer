@@ -40,6 +40,7 @@ import { Route as mainChar126ArtistAssetsAssetIdRouteImport } from "./routes/(ma
 import { Route as mainChar126GeneralPaymentsReceiptIndexRouteImport } from "./routes/(main)/~/general/payments/receipt/index";
 import { Route as mainChar126GeneralPaymentsReceiptReceiptIdRouteImport } from "./routes/(main)/~/general/payments/receipt/$receiptId";
 import { Route as mainChar126ArtistPublishingEditAssetIdRouteImport } from "./routes/(main)/~/artist/publishing/edit/$assetId";
+import { ServerRoute as ApiMidtransNotificationServerRouteImport } from "./routes/api/midtrans/notification";
 import { ServerRoute as ApiImagekitUploadServerRouteImport } from "./routes/api/imagekit/upload";
 import { ServerRoute as ApiAuthSplatServerRouteImport } from "./routes/api/auth/$";
 
@@ -209,6 +210,12 @@ const mainChar126ArtistPublishingEditAssetIdRoute =
     id: "/publishing/edit/$assetId",
     path: "/publishing/edit/$assetId",
     getParentRoute: () => mainChar126ArtistRouteRoute,
+  } as any);
+const ApiMidtransNotificationServerRoute =
+  ApiMidtransNotificationServerRouteImport.update({
+    id: "/api/midtrans/notification",
+    path: "/api/midtrans/notification",
+    getParentRoute: () => rootServerRouteImport,
   } as any);
 const ApiImagekitUploadServerRoute = ApiImagekitUploadServerRouteImport.update({
   id: "/api/imagekit/upload",
@@ -419,27 +426,38 @@ export interface RootRouteChildren {
 export interface FileServerRoutesByFullPath {
   "/api/auth/$": typeof ApiAuthSplatServerRoute;
   "/api/imagekit/upload": typeof ApiImagekitUploadServerRoute;
+  "/api/midtrans/notification": typeof ApiMidtransNotificationServerRoute;
 }
 export interface FileServerRoutesByTo {
   "/api/auth/$": typeof ApiAuthSplatServerRoute;
   "/api/imagekit/upload": typeof ApiImagekitUploadServerRoute;
+  "/api/midtrans/notification": typeof ApiMidtransNotificationServerRoute;
 }
 export interface FileServerRoutesById {
   __root__: typeof rootServerRouteImport;
   "/api/auth/$": typeof ApiAuthSplatServerRoute;
   "/api/imagekit/upload": typeof ApiImagekitUploadServerRoute;
+  "/api/midtrans/notification": typeof ApiMidtransNotificationServerRoute;
 }
 export interface FileServerRouteTypes {
   fileServerRoutesByFullPath: FileServerRoutesByFullPath;
-  fullPaths: "/api/auth/$" | "/api/imagekit/upload";
+  fullPaths:
+    | "/api/auth/$"
+    | "/api/imagekit/upload"
+    | "/api/midtrans/notification";
   fileServerRoutesByTo: FileServerRoutesByTo;
-  to: "/api/auth/$" | "/api/imagekit/upload";
-  id: "__root__" | "/api/auth/$" | "/api/imagekit/upload";
+  to: "/api/auth/$" | "/api/imagekit/upload" | "/api/midtrans/notification";
+  id:
+    | "__root__"
+    | "/api/auth/$"
+    | "/api/imagekit/upload"
+    | "/api/midtrans/notification";
   fileServerRoutesById: FileServerRoutesById;
 }
 export interface RootServerRouteChildren {
   ApiAuthSplatServerRoute: typeof ApiAuthSplatServerRoute;
   ApiImagekitUploadServerRoute: typeof ApiImagekitUploadServerRoute;
+  ApiMidtransNotificationServerRoute: typeof ApiMidtransNotificationServerRoute;
 }
 
 declare module "@tanstack/react-router" {
@@ -651,6 +669,13 @@ declare module "@tanstack/react-router" {
 }
 declare module "@tanstack/react-start/server" {
   interface ServerFileRoutesByPath {
+    "/api/midtrans/notification": {
+      id: "/api/midtrans/notification";
+      path: "/api/midtrans/notification";
+      fullPath: "/api/midtrans/notification";
+      preLoaderRoute: typeof ApiMidtransNotificationServerRouteImport;
+      parentRoute: typeof rootServerRouteImport;
+    };
     "/api/imagekit/upload": {
       id: "/api/imagekit/upload";
       path: "/api/imagekit/upload";
@@ -771,6 +796,7 @@ export const routeTree = rootRouteImport
 const rootServerRouteChildren: RootServerRouteChildren = {
   ApiAuthSplatServerRoute: ApiAuthSplatServerRoute,
   ApiImagekitUploadServerRoute: ApiImagekitUploadServerRoute,
+  ApiMidtransNotificationServerRoute: ApiMidtransNotificationServerRoute,
 };
 export const serverRouteTree = rootServerRouteImport
   ._addFileChildren(rootServerRouteChildren)

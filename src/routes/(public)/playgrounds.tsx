@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Await, createFileRoute, Link } from "@tanstack/react-router";
 import { getDashboard } from "~/actions/dashboard.action";
+import { Button } from "~/components/ui/button";
 
 export const Route = createFileRoute("/(public)/playgrounds")({
   staleTime: 50_000,
@@ -45,6 +46,16 @@ function RouteComponent() {
           ))
         }
       </Await>
+      <Button
+        onClick={async () => {
+          const res = await fetch("/api/midtrans/notification", {
+            method: "GET",
+          });
+          console.log("Notification sent", res);
+        }}
+      >
+        Get notification
+      </Button>
     </main>
   );
 }
