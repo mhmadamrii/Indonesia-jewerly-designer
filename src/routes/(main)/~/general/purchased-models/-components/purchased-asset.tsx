@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { Download, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -21,6 +22,7 @@ export function PurchasedAsset({
 }: {
   purchasedAssetsData: MyPaymentTransactionsType | undefined;
 }) {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const assets = useMemo(() => {
@@ -71,7 +73,9 @@ export function PurchasedAsset({
   };
 
   const handleExplore = () => {
-    console.log("explore");
+    navigate({
+      to: "/~/general/explore",
+    });
   };
 
   const handleBulkDownload = (selectedRows: any[]) => {

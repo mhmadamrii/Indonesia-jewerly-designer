@@ -1,8 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
-import { sql } from "drizzle-orm";
+import { count, sql } from "drizzle-orm";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { category, user } from "~/lib/db/schema";
+import { category, jewelryAssets, user } from "~/lib/db/schema";
 import { DashboardReturnType, jewelryWithMeta } from "~/lib/db/types";
 import { getClient } from "~/lib/redis/config";
 
@@ -47,3 +47,27 @@ export const getDashboard = createServerFn({ method: "GET" })
       },
     };
   });
+
+export const getFeedSummary = createServerFn({ method: "GET" }).handler(async () => {
+  const [totalAssets, totalArtists] = await Promise.all([
+    await db
+      .select({
+        count: count(),
+      })
+      .from(jewelryAssets),
+    await db
+      .select({
+        count: count(),
+      })
+      .from(user)
+      .where(sql`role = 'user'`),
+  ]);
+
+  return {
+    success: true,
+    data: {
+      totalAssets: totalAssets[0].count,
+      totalArtists: totalArtists[0].count,
+    },
+  };
+});

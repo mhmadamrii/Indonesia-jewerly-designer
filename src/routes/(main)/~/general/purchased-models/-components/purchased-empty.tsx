@@ -11,7 +11,7 @@ interface EmptyStateProps {
 export function PurchasedEmpty({ onExplore }: EmptyStateProps) {
   return (
     <Card className="border-dashed">
-      <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+      <CardContent className="flex h-[calc(100vh-250px)] flex-col items-center justify-center py-16 text-center">
         <div className="bg-muted mb-4 rounded-full p-4">
           <ShoppingBag className="text-muted-foreground h-8 w-8" />
         </div>

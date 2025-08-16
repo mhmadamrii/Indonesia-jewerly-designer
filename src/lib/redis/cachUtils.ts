@@ -1,10 +1,10 @@
 import { getClient } from "./config";
 
-type CacheOptions = {
-  ttlSeconds?: number; // time-to-live in seconds
-};
+const USE_REDIS = process.env.USE_REDIS === "true";
 
 export async function getFromCache<T>(key: string): Promise<T | null> {
+  if (!USE_REDIS) return null;
+
   const redis = await getClient();
   const cached = await redis.get(key);
 
@@ -20,22 +20,25 @@ export async function getFromCache<T>(key: string): Promise<T | null> {
 export async function setCache<T>(
   key: string,
   value: T,
-  options?: CacheOptions,
+  options?: { ttlSeconds?: number },
 ): Promise<void> {
-  const redis = await getClient();
-  const ttl = options?.ttlSeconds;
+  if (!USE_REDIS) return;
 
-  if (ttl) {
-    await redis.set(key, JSON.stringify(value), { EX: ttl });
+  const redis = await getClient();
+  if (options?.ttlSeconds) {
+    await redis.set(key, JSON.stringify(value), { EX: options.ttlSeconds });
   } else {
     await redis.set(key, JSON.stringify(value));
   }
 
-  console.log(`📝 Redis cache SET for key: ${key}${ttl ? ` (TTL: ${ttl}s)` : ""}`);
+  console.log(`📝 Redis cache SET for key: ${key}`);
 }
 
 export async function deleteCache(key: string): Promise<void> {
+  if (!USE_REDIS) return;
+
   const redis = await getClient();
   await redis.del(key);
+
   console.log(`🗑️ Redis cache DELETE for key: ${key}`);
 }
