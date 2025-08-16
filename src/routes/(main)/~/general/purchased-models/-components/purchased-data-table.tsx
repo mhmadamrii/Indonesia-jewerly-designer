@@ -166,18 +166,7 @@ export function PurchasedDataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  className="cursor-pointer"
-                  onClick={() => {
-                    navigate({
-                      to: "/~/general/assets/$assetId",
-                      // @ts-expect-error - TODO: fix this
-                      params: { assetId: row.original.assetId },
-                    });
-                  }}
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

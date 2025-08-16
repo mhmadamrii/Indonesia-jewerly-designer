@@ -182,7 +182,7 @@ export const createPurchasedColumns = ({
               onDownload(asset);
             }}
             size="sm"
-            className="h-8"
+            className="h-8 cursor-pointer"
           >
             <Download className="mr-1 h-3 w-3" />
             Download
@@ -191,7 +191,7 @@ export const createPurchasedColumns = ({
             onClick={() => onChatArtist(asset)}
             variant="outline"
             size="sm"
-            className="h-8"
+            className="h-8 cursor-pointer"
           >
             <MessageCircle className="mr-1 h-3 w-3" />
             Chat

@@ -84,11 +84,6 @@ const USER_SIDEBAR = [
         link: "/~/general/purchased-models",
         icon: Library,
       },
-      // {
-      //   label: "Downloads",
-      //   link: "/~/general/purchased-models",
-      //   icon: Download,
-      // },
       {
         label: "Favorites / Wishlist",
         link: "/~/general/wishlists",
@@ -204,15 +199,13 @@ function MainLayout() {
                   <SidebarMenu>
                     {item.items.map((item, idx) => (
                       <Link className="cursor-pointer" to={item.link} key={idx}>
-                        <SidebarMenuItem>
-                          <SidebarMenuButton
-                            className="cursor-pointer"
-                            tooltip={item.label}
-                          >
-                            <item.icon />
-                            {item.label}
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
+                        <SidebarMenuButton
+                          className="cursor-pointer"
+                          tooltip={item.label}
+                        >
+                          <item.icon />
+                          {item.label}
+                        </SidebarMenuButton>
                       </Link>
                     ))}
                   </SidebarMenu>

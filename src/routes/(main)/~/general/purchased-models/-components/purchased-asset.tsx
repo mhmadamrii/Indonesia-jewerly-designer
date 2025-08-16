@@ -1,4 +1,4 @@
-import { Download, Search, Trash2 } from "lucide-react";
+import { Download, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { MyPaymentTransactionsType } from "~/actions/payment.action";
@@ -59,9 +59,8 @@ export function PurchasedAsset({
   const handleDownload = (asset: any) => {
     // Simulate download
     toast.success(`Downloading ${asset.name}...`);
-    console.log("Download asset:", asset.id);
     // In real implementation, trigger file download
-    // window.open(asset.downloadUrl, '_blank')
+    window.open(asset.downloadUrl, "_blank");
   };
 
   const handleChatArtist = (asset: any) => {
@@ -115,10 +114,6 @@ export function PurchasedAsset({
             Your collection of purchased 3D jewelry assets
           </p>
         </div>
-        <Button onClick={handleExplore} variant="outline">
-          <Search className="mr-2 h-4 w-4" />
-          Explore More
-        </Button>
       </div>
 
       <Card>
