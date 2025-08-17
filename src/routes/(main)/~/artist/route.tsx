@@ -49,7 +49,6 @@ import {
   DollarSign,
   FileArchive,
   HelpCircle,
-  Image,
   LayoutDashboard,
   LogOut,
   Mail,
@@ -58,7 +57,6 @@ import {
   Sparkles,
   Upload,
   Users,
-  UserSquare,
 } from "lucide-react";
 
 const ARTIST_SIDEBAR = [
@@ -104,21 +102,6 @@ const ARTIST_SIDEBAR = [
         label: "Order Details",
         link: "/~/artist/orders",
         icon: Receipt,
-      },
-    ],
-  },
-  {
-    labelGroup: "Profile",
-    items: [
-      {
-        label: "Artist Profile Page",
-        link: "/~/artist/profile",
-        icon: UserSquare,
-      },
-      {
-        label: "Portfolio Showcase",
-        link: "/~/artist/my-showcases",
-        icon: Image,
       },
     ],
   },

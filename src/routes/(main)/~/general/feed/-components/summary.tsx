@@ -11,7 +11,7 @@ export function Summary() {
   });
 
   return (
-    <div className="grid h-[350px] grid-cols-2 gap-2 border">
+    <div className="grid h-[350px] grid-cols-2 gap-2">
       <Card className="h-full rounded-sm py-2">
         <CardHeader className="px-2">
           <CardTitle>
@@ -40,7 +40,7 @@ export function Summary() {
         </CardHeader>
         <CardContent className="flex h-full items-end p-2">
           <span className="text-4xl font-bold">
-            <SlidingNumber number={data?.data.totalAssets as unknown as string} />
+            <SlidingNumber number={data?.data.totalAssets ?? 0} />
           </span>
         </CardContent>
       </Card>
@@ -70,7 +70,7 @@ export function Summary() {
         </CardHeader>
         <CardContent className="flex h-full items-end p-2">
           <span className="text-4xl font-bold">
-            <SlidingNumber number={data?.data.totalArtists as unknown as string} />
+            <SlidingNumber number={data?.data.totalArtists ?? 0} />
           </span>
         </CardContent>
       </Card>

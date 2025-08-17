@@ -14,14 +14,15 @@ import { ScrollArea } from "./ui/scroll-area";
 import {
   Download,
   Eye,
-  Heart,
   Mail,
   MoreHorizontal,
   Share2,
   Shield,
+  Star,
   User,
   Zap,
 } from "lucide-react";
+import { IconButton } from "./animate-ui/buttons/icon";
 
 export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
   const [isLiked, setIsLiked] = useState(false);
@@ -91,15 +92,11 @@ export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
             </div>
 
             <div className="flex gap-2 px-3">
-              <Button
-                variant="outline"
-                size="sm"
+              <IconButton
+                icon={Star}
+                active={isLiked}
                 onClick={() => setIsLiked(!isLiked)}
-                className={isLiked ? "border-red-200 text-red-500" : ""}
-              >
-                <Heart className={`mr-2 h-4 w-4 ${isLiked ? "fill-current" : ""}`} />
-                {isLiked ? "Liked" : "Like"}
-              </Button>
+              />
               <Button variant="outline" size="sm">
                 <Download className="mr-2 h-4 w-4" />
                 Download Preview

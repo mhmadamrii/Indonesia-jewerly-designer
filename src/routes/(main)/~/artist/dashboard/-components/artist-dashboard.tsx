@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -16,7 +17,6 @@ import {
   Users,
 } from "lucide-react";
 
-import { useNavigate } from "@tanstack/react-router";
 import {
   Card,
   CardContent,
@@ -323,10 +323,6 @@ export function ArtistDashboard() {
                       Manage your jewelry listings and inventory
                     </CardDescription>
                   </div>
-                  <Button>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add New Product
-                  </Button>
                 </div>
               </CardHeader>
               <CardContent>

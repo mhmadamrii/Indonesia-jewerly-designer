@@ -1,11 +1,12 @@
+import z from "zod";
+
 import { createServerFn } from "@tanstack/react-start";
 import { getWebRequest } from "@tanstack/react-start/server";
-import { eq } from "drizzle-orm";
-import z from "zod";
+import { count, eq } from "drizzle-orm";
 import { auth } from "~/lib/auth";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { user } from "~/lib/db/schema";
+import { follow, jewelryAssets, user } from "~/lib/db/schema";
 
 export type UserById = Awaited<ReturnType<(typeof getUserById)>>["data"]; // prettier-ignore
 
@@ -90,5 +91,39 @@ export const getUserById = createServerFn({ method: "GET" })
     return {
       success: true,
       data: res[0],
+    };
+  });
+
+export const getUserProfileStats = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    const [followings, followers, totalProducts] = await Promise.allSettled([
+      db
+        .select({
+          count: count(),
+        })
+        .from(follow)
+        .where(eq(follow.followingId, context.user.id)),
+      db
+        .select({
+          count: count(),
+        })
+        .from(follow)
+        .where(eq(follow.followerId, context.user.id)),
+      db
+        .select({
+          count: count(),
+        })
+        .from(jewelryAssets)
+        .where(eq(jewelryAssets.userId, context.user.id)),
+    ]);
+
+    return {
+      success: true,
+      data: {
+        followings,
+        followers,
+        totalProducts,
+      },
     };
   });

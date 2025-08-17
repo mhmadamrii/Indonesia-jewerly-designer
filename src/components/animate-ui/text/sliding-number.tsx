@@ -1,4 +1,7 @@
-"use client";
+import * as React from "react";
+import useMeasure from "react-use-measure";
+
+import { cn } from "~/lib/utils";
 
 import {
   motion,
@@ -9,10 +12,6 @@ import {
   type SpringOptions,
   type UseInViewOptions,
 } from "motion/react";
-import * as React from "react";
-import useMeasure from "react-use-measure";
-
-import { cn } from "~/lib/utils";
 
 type SlidingNumberRollerProps = {
   prevValue: number;

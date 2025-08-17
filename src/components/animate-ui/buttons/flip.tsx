@@ -90,7 +90,7 @@ function FlipButton({
         transition={transition}
         className={cn(
           DEFAULT_SPAN_CLASS_NAME,
-          "bg-primary text-primary-foreground",
+          "text-primary-foreground bg-accent dark:bg-accent-foreground",
           backClassName,
         )}
       >

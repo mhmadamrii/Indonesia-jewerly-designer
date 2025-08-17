@@ -69,3 +69,27 @@ export const getFeedSummary = createServerFn({ method: "GET" }).handler(async ()
     },
   };
 });
+
+export const getArtistDashboard = createServerFn({ method: "GET" }).handler(async () => {
+  const [totalAssets, totalArtists] = await Promise.all([
+    await db
+      .select({
+        count: count(),
+      })
+      .from(jewelryAssets),
+    await db
+      .select({
+        count: count(),
+      })
+      .from(user)
+      .where(sql`role = 'user'`),
+  ]);
+
+  return {
+    success: true,
+    data: {
+      totalAssets: totalAssets[0].count,
+      totalArtists: totalArtists[0].count,
+    },
+  };
+});
