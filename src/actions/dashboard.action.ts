@@ -4,6 +4,7 @@ import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
 import { category, jewelryAssets, user } from "~/lib/db/schema";
 import { DashboardReturnType, jewelryWithMeta } from "~/lib/db/types";
+import { getFromCache } from "~/lib/redis/cachUtils";
 import { getClient } from "~/lib/redis/config";
 
 export const getDashboard = createServerFn({ method: "GET" })
@@ -11,13 +12,10 @@ export const getDashboard = createServerFn({ method: "GET" })
   .handler(async ({ context }): Promise<DashboardReturnType> => {
     const redis = await getClient();
     const cacheKey = `dashboard_data:${context.user.id}`;
-    const cached = await redis.get(cacheKey);
+    const cached = await getFromCache<any>(cacheKey);
 
     if (cached) {
-      return {
-        success: true,
-        data: JSON.parse(cached),
-      };
+      return { success: true, data: cached };
     }
 
     const [categories, jewerlies, users] = await Promise.all([
@@ -36,7 +34,7 @@ export const getDashboard = createServerFn({ method: "GET" })
       db.select().from(user),
     ]);
 
-    await redis.set(cacheKey, JSON.stringify({ categories, jewerlies, users }));
+    // await redis.set(cacheKey, JSON.stringify({ categories, jewerlies, users }));
 
     return {
       success: true,
