@@ -1,10 +1,22 @@
-import { useNavigate } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate, useSearch } from "@tanstack/react-router";
+import { Trash2 } from "lucide-react";
 import { useState } from "react";
+import { getFilterExploreAsset } from "~/actions/explore.action";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Separator } from "~/components/ui/separator";
 import { Slider } from "~/components/ui/slider";
+import { cn } from "~/lib/utils";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 
 import {
   Card,
@@ -19,8 +31,41 @@ export function FilterCard() {
     from: "/~/general/explore",
   });
 
+  const search = useSearch({
+    from: "/(main)/~/general/explore/",
+  });
+
   const [sortOption, setSortOption] = useState("latest");
   const [priceRange, setPriceRange] = useState([0, 500]);
+
+  const [filters, setFilters] = useState({
+    category: "All",
+    artist: "All",
+  });
+
+  const { data, refetch } = useQuery({
+    queryKey: ["explore_data_filter"],
+    queryFn: () => getFilterExploreAsset(),
+    enabled: false,
+  });
+
+  const resetFilters = () => {
+    navigate({
+      to: "/~/general/explore",
+    });
+    setFilters({
+      category: "All",
+      artist: "All",
+    });
+  };
+
+  const handleCategoryChange = (value: string) => {
+    setFilters((prev) => ({ ...prev, category: value }));
+  };
+
+  const handleArtistChange = (value: string) => {
+    setFilters((prev) => ({ ...prev, artist: value }));
+  };
 
   const handleApply = () => {
     navigate({
@@ -29,18 +74,20 @@ export function FilterCard() {
         sort: sortOption,
         priceFrom: priceRange[0],
         priceTo: priceRange[1],
+        category: filters.category !== "All" ? filters.category : undefined,
+        artist: filters.artist !== "All" ? filters.artist : undefined,
       }),
     });
   };
 
   return (
-    <div className="sticky top-37 h-[430px] w-[30%]">
+    <div className="sticky top-20 h-[550px] w-[30%]">
       <Card className="h-full">
         <CardHeader>
           <CardTitle>Filters</CardTitle>
         </CardHeader>
 
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-3">
           <div>
             <p className="mb-2 text-sm font-medium">Sort by</p>
             <RadioGroup
@@ -78,7 +125,6 @@ export function FilterCard() {
             </RadioGroup>
           </div>
 
-          {/* Price Range */}
           <div>
             <p className="mb-2 text-sm font-medium">
               Price Range: ${priceRange[0]} - ${priceRange[1]}
@@ -92,11 +138,66 @@ export function FilterCard() {
               className="w-full"
             />
           </div>
+
+          <div className="flex w-full flex-col space-y-1">
+            <label className="text-sm font-medium">Category</label>
+            <Select
+              onOpenChange={() => refetch()}
+              onValueChange={handleCategoryChange}
+              value={filters.category}
+            >
+              <SelectTrigger onClick={() => refetch()} className="w-full">
+                <SelectValue placeholder="Select Category" />
+              </SelectTrigger>
+              <SelectContent>
+                {data?.data?.categories.map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex w-full flex-col space-y-1">
+            <label className="text-sm font-medium">Artist</label>
+            <Select
+              onOpenChange={() => refetch()}
+              onValueChange={handleArtistChange}
+              value={filters.artist}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select Artist" />
+              </SelectTrigger>
+              <SelectContent>
+                {data?.data?.artists?.map((artist) => (
+                  <SelectItem key={artist.id} value={artist.id}>
+                    {artist.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </CardContent>
 
-        <CardFooter>
-          <Button className="w-full" onClick={handleApply}>
+        <CardFooter className="flex justify-center gap-2 px-2">
+          <Button
+            className={cn("w-full", {
+              "w-[80%]": Object.keys(search).length > 0,
+            })}
+            onClick={handleApply}
+          >
             Apply Filters
+          </Button>
+          <Button
+            onClick={resetFilters}
+            variant="destructive"
+            className={cn("flex", {
+              hidden: Object.keys(search).length == 0,
+            })}
+            size="icon"
+          >
+            <Trash2 />
           </Button>
         </CardFooter>
       </Card>

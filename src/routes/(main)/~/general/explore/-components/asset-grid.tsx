@@ -1,13 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Eye, Heart, MessageCircle, ShoppingCart } from "lucide-react";
+import { Eye, Heart, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { createCartItem } from "~/actions/cart.action";
 import { jewelryWithJoins } from "~/actions/explore.action";
 import { AddWishlist } from "~/components/add-wishlist";
 import { PaymentButton } from "~/components/payment-button";
-import { Button } from "~/components/ui/button";
 
 export function AssetGrid({ jewelry_assets, category, user }: jewelryWithJoins) {
   const queryClient = useQueryClient();
@@ -33,9 +32,9 @@ export function AssetGrid({ jewelry_assets, category, user }: jewelryWithJoins) 
   };
 
   return (
-    <div className="group bg-card h-[300px] overflow-hidden rounded-md shadow-md transition-all duration-300 hover:shadow-xl">
-      <div className="flex flex-col md:flex-row">
-        <div className="relative z-10 h-[300px] md:w-[40%]">
+    <div className="group bg-card h-[400px] max-w-4xl overflow-hidden rounded-md shadow-md transition-all duration-300 hover:shadow-xl">
+      <div className="flex h-full flex-col justify-between">
+        <div className="relative z-10 h-[40%]">
           <img
             src={jewelry_assets.thumbnailUrl ?? "/placeholder-img.jpg"}
             alt={jewelry_assets.name}
@@ -79,7 +78,7 @@ export function AssetGrid({ jewelry_assets, category, user }: jewelryWithJoins) 
           </div>
         </div>
 
-        <div className="bg-card z-20 flex flex-col justify-between border-t p-4 md:w-1/2 md:border-t-0 md:border-l">
+        <div className="bg-card z-20 flex flex-col justify-between p-4">
           <div>
             <h3 className="mb-1 line-clamp-1 text-lg font-semibold">
               {jewelry_assets.name}
@@ -137,28 +136,12 @@ export function AssetGrid({ jewelry_assets, category, user }: jewelryWithJoins) 
             </div>
           </div>
 
-          <div className="mt-2 flex items-center justify-between gap-2">
-            <PaymentButton
-              assetId={jewelry_assets.id}
-              purchaseLabel="Purchase"
-              totalPrice={jewelry_assets.price}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 py-3 font-semibold text-white hover:from-blue-700 hover:to-purple-700"
-            />
-
-            <div className="flex items-center space-x-2">
-              <Button size="icon" variant="outline">
-                <MessageCircle className="h-4 w-4" />
-              </Button>
-              <Button
-                disabled={isPending && selected3D === jewelry_assets.id}
-                onClick={() => handleAddToCart(jewelry_assets.id)}
-                size="icon"
-                variant="outline"
-              >
-                <ShoppingCart className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+          <PaymentButton
+            assetId={jewelry_assets.id}
+            purchaseLabel="Purchase"
+            totalPrice={jewelry_assets.price}
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 py-3 font-semibold text-white hover:from-blue-700 hover:to-purple-700"
+          />
         </div>
       </div>
     </div>
