@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { authClient } from "~/lib/auth/auth-client";
+import { getUser } from "~/lib/auth/functions/getUser";
 import { useRoleStore } from "~/lib/store/role.store";
 
 import {
@@ -152,10 +153,14 @@ const USER_SIDEBAR = [
 export const Route = createFileRoute("/(main)/~/general")({
   component: MainLayout,
   beforeLoad: async ({ context }) => {
-    if (!context.user) {
+    const user = await context.queryClient.fetchQuery({
+      queryKey: ["user"],
+      queryFn: ({ signal }) => getUser({ signal }),
+    });
+
+    if (!user) {
       throw redirect({ to: "/auth" });
     }
-
     // `context.queryClient` is also available in our loaders
     // https://tanstack.com/start/latest/docs/framework/react/examples/start-basic-react-query
     // https://tanstack.com/router/latest/docs/framework/react/guide/external-data-loading

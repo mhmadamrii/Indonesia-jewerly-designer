@@ -11,7 +11,6 @@ import { follow, jewelryAssets, user } from "~/lib/db/schema";
 export type UserById = Awaited<ReturnType<(typeof getUserById)>>["data"]; // prettier-ignore
 
 export const getUser = createServerFn({ method: "GET" }).handler(async () => {
-  console.log("Hello world");
   const { headers } = getWebRequest();
   const session = await auth.api.getSession({ headers });
 

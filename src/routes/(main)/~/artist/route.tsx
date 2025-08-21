@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { authClient } from "~/lib/auth/auth-client";
+import { getUser } from "~/lib/auth/functions/getUser";
 import { useRoleStore } from "~/lib/store/role.store";
 
 import {
@@ -135,8 +136,13 @@ const ARTIST_SIDEBAR = [
 export const Route = createFileRoute("/(main)/~/artist")({
   component: MainLayout,
   beforeLoad: async ({ context }) => {
-    if (!context.user) {
-      throw redirect({ to: "/" });
+    const user = await context.queryClient.fetchQuery({
+      queryKey: ["user"],
+      queryFn: ({ signal }) => getUser({ signal }),
+    });
+
+    if (!user) {
+      throw redirect({ to: "/auth" });
     }
   },
 });

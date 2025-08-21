@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Loader } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -14,6 +14,7 @@ export const Route = createFileRoute("/(auth)/auth")({
 });
 
 function RouteComponent() {
+  const navigate = useNavigate();
   const { theme } = useTheme();
   const [isLoginForm, setIsLoginForm] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -36,6 +37,11 @@ function RouteComponent() {
           }
           alt="djiwaID"
           className="h-[80px] w-[120px]"
+          onClick={() =>
+            navigate({
+              to: "/",
+            })
+          }
         />
         <h1 className="text-lg font-bold">Login</h1>
       </section>

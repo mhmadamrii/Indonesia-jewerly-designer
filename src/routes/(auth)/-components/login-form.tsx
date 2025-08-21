@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "@tanstack/react-router";
 import { Loader } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -30,7 +29,6 @@ interface IProps {
 
 export function LoginForm({ onClickLoginForm }: IProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
