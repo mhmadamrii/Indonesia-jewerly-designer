@@ -73,7 +73,6 @@ export function FileUploadCenter({
   onSetAssetStorageUrl,
   onSetUsedStorage,
 }: IProps) {
-  console.log("initialImageUrl", initialImageUrl);
   const { data: session } = authClient.useSession();
 
   const [uploadedFiles, setUploadedFiles] = useState<{
