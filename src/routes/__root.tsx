@@ -20,13 +20,6 @@ export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   user: Awaited<ReturnType<typeof getUser>>;
 }>()({
-  beforeLoad: async ({ context }) => {
-    const user = await context.queryClient.fetchQuery({
-      queryKey: ["user"],
-      queryFn: ({ signal }) => getUser({ signal }),
-    });
-    return { user };
-  },
   head: () => ({
     meta: [
       {
@@ -41,7 +34,8 @@ export const Route = createRootRouteWithContext<{
       },
       {
         name: "description",
-        content: "A minimal starter template for 🏝️ TanStack Start.",
+        content:
+          "Indonesia jewelry Designer is a platform for showcasing and selling unique jewelry designs from Indonesian artisans.",
       },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
