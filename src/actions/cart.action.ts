@@ -11,6 +11,8 @@ const CartSchema = z.object({
   quantity: z.number(),
 });
 
+export type CartItems = Awaited<ReturnType<(typeof getCartItems)>>["data"]; // prettier-ignore
+
 export const getCartItems = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {

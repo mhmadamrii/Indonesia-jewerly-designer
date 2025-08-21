@@ -12,7 +12,6 @@ function RouteComponent() {
     queryKey: ["purchased_assets"],
     queryFn: getMyPaymentTransactions,
   });
-  console.log("purchased_assets", data);
 
   return <PurchasedAsset purchasedAssetsData={data?.data} />;
 }

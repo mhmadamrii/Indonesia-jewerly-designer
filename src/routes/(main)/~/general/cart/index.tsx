@@ -11,78 +11,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
-interface CartItem {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  categoryId: string;
-  typeAsset: string;
-  thumbnailUrl: string;
-  assetUrl: string;
-  previewUrl: string;
-  tags?: string[];
-  boost: number;
-  totalBoostToUpdate: number;
-  totalStorageLimitToUpdate: number;
-}
-
-const mockCartItems: CartItem[] = [
-  {
-    id: "1",
-    name: "Futuristic Spaceship Model",
-    description: "High-quality 3D spaceship model with detailed textures and animations",
-    price: 49.99,
-    categoryId: "vehicles",
-    typeAsset: "model",
-    thumbnailUrl: "/placeholder.svg?height=200&width=200",
-    assetUrl: "/assets/3d/duck.glb",
-    previewUrl: "/preview/spaceship.jpg",
-    tags: ["spaceship", "sci-fi", "vehicle", "animated"],
-    boost: 15,
-    totalBoostToUpdate: 25,
-    totalStorageLimitToUpdate: 500,
-  },
-  {
-    id: "2",
-    name: "Medieval Castle Environment",
-    description: "Complete medieval castle scene with modular components",
-    price: 79.99,
-    categoryId: "environments",
-    typeAsset: "scene",
-    thumbnailUrl: "/placeholder.svg?height=200&width=200",
-    assetUrl: "/assets/3d/duck.glb",
-    previewUrl: "/preview/castle.jpg",
-    tags: ["castle", "medieval", "environment", "modular"],
-    boost: 25,
-    totalBoostToUpdate: 40,
-    totalStorageLimitToUpdate: 1200,
-  },
-  {
-    id: "3",
-    name: "Cyberpunk Character Rig",
-    description: "Fully rigged cyberpunk character with multiple animations",
-    price: 89.99,
-    categoryId: "characters",
-    typeAsset: "character",
-    thumbnailUrl: "/placeholder.svg?height=200&width=200",
-    assetUrl: "/assets/3d/duck.glb",
-    previewUrl: "/preview/character.jpg",
-    tags: ["character", "cyberpunk", "rigged", "animated"],
-    boost: 30,
-    totalBoostToUpdate: 50,
-    totalStorageLimitToUpdate: 800,
-  },
-];
-
 export const Route = createFileRoute("/(main)/~/general/cart/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const navigate = useNavigate();
-  const [cartItems, setCartItems] = useState<CartItem[]>(mockCartItems);
-  const [currentId, setCurrentId] = useState<string | null>(null);
 
   const {
     data: cartItemsData,
@@ -92,6 +26,8 @@ function RouteComponent() {
     queryKey: ["cart_items"],
     queryFn: () => getCartItems(),
   });
+
+  const [currentId, setCurrentId] = useState<string | null>(null);
 
   const { mutate: deleteItem, isPending: isDeletingItem } = useMutation({
     mutationFn: deleteCartItem,
@@ -112,20 +48,14 @@ function RouteComponent() {
     });
   };
 
-  const removeItem = (id: string) => {
-    setCartItems((items) => items.filter((item) => item.id !== id));
-  };
+  const subtotal = 0;
+  const totalBoost = 0;
+  const totalStorage = 10;
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0);
-  const totalBoost = cartItems.reduce((sum, item) => sum + item.totalBoostToUpdate, 0);
-  const totalStorage = cartItems.reduce(
-    (sum, item) => sum + item.totalStorageLimitToUpdate,
-    0,
-  );
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
 
-  if (cartItems.length === 0) {
+  if (cartItemsData?.data.length === 0) {
     return (
       <div className="flex h-[80vh] items-center justify-center p-4">
         <div className="mx-auto max-w-4xl">
@@ -193,7 +123,7 @@ function RouteComponent() {
                               <img
                                 src={item.thumbnailUrl || "/placeholder.svg"}
                                 alt={item.name}
-                                className="object-cover"
+                                className="h-full w-full object-cover"
                               />
                               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                             </div>
@@ -222,7 +152,6 @@ function RouteComponent() {
                           </Button>
                         </div>
 
-                        {/* Tags */}
                         {item.tags && item.tags.length > 0 && (
                           <div className="mb-3 flex flex-wrap gap-1">
                             {item.tags.slice(0, 3).map((tag) => (
@@ -239,18 +168,16 @@ function RouteComponent() {
                           </div>
                         )}
 
-                        {/* Asset Info */}
                         <div className="mb-4 flex items-center gap-4 text-sm">
                           <div className="flex items-center gap-1">
                             <Zap className="h-4 w-4 text-yellow-500" />
-                            <span>Boost: +{item.totalBoostToUpdate}</span>
                           </div>
                           <div className="flex items-center gap-1">
                             <HardDrive className="h-4 w-4 text-blue-500" />
-                            <span>Storage: {item.totalStorageLimitToUpdate}MB</span>
+                            <span>Storage: 0MB</span>
                           </div>
                           <Badge variant="outline" className="capitalize">
-                            {item.typeAsset}
+                            Category
                           </Badge>
                         </div>
 

@@ -1,5 +1,8 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { toast } from "sonner";
+import { createCartItem } from "~/actions/cart.action";
 import { TypejewelryAssetById } from "~/actions/jewelry.action";
 import { ModelViewer } from "~/components/3D/model-viewer";
 import { PaymentButton } from "~/components/payment-button";
@@ -8,6 +11,7 @@ import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
+import { IconButton } from "./animate-ui/buttons/icon";
 import { ReviewSection } from "./review-section";
 import { ScrollArea } from "./ui/scroll-area";
 
@@ -22,12 +26,30 @@ import {
   User,
   Zap,
 } from "lucide-react";
-import { IconButton } from "./animate-ui/buttons/icon";
 
 export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
+  const queryClient = useQueryClient();
+
   const [isLiked, setIsLiked] = useState(false);
   const [viewMode, setViewMode] = useState<"image" | "3d">("image");
   const { jewelry_assets: asset, user, category } = data;
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: createCartItem,
+    onSuccess: () => {
+      toast.success("Item added to cart successfully");
+      queryClient.invalidateQueries();
+    },
+  });
+
+  const handleAddToCart = (id: string) => {
+    mutate({
+      data: {
+        jewelryAssetId: id,
+        quantity: 1,
+      },
+    });
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -195,7 +217,11 @@ export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
                   <Zap className="mr-2 h-4 w-4" />
                   Boost Asset
                 </Button>
-                <Button variant="outline" size="lg">
+                <Button
+                  onClick={() => handleAddToCart(asset.id)}
+                  variant="outline"
+                  size="lg"
+                >
                   Add to Cart
                 </Button>
               </div>

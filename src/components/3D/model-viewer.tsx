@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 export function ModelViewer({ src }: { src: string }) {
-  console.log("src", src);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {

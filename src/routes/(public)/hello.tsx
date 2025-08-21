@@ -1,21 +1,29 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { getUser } from "~/actions/user.action";
+import { Await, createFileRoute, Link } from "@tanstack/react-router";
+import { getDashboard } from "~/actions/dashboard.action";
 
 export const Route = createFileRoute("/(public)/hello")({
   component: RouteComponent,
-  beforeLoad: async ({ context }) => {
-    const user = await context.queryClient.fetchQuery({
-      queryKey: ["user"],
-      queryFn: ({ signal }) => getUser({ signal }),
+  loader: async ({ context }) => {
+    const dashboard = context.queryClient.fetchQuery({
+      queryKey: ["dashboard_home"],
+      queryFn: () => getDashboard(),
     });
-    return { user };
+    return { dashboard };
   },
 });
 
 function RouteComponent() {
+  const { dashboard } = Route.useLoaderData();
   return (
     <div>
       <Link to="/playgrounds">To Hello page</Link>
+      <Await promise={dashboard} fallback={<div>Loading...</div>}>
+        {({ data }) => (
+          <div className="h-[50px] border border-red-500">
+            {data?.users.map((user) => <h1 key={user.id}>Hello, {user.name}</h1>)}
+          </div>
+        )}
+      </Await>
     </div>
   );
 }
