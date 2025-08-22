@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { HeaderPage } from "~/components/header-page";
 import { EarningsPayouts } from "./-components/earnings-payouts";
 
 export const Route = createFileRoute("/(main)/~/artist/earnings/")({
@@ -7,7 +8,11 @@ export const Route = createFileRoute("/(main)/~/artist/earnings/")({
 
 function RouteComponent() {
   return (
-    <div className="px-5">
+    <div className="flex flex-col gap-3 px-5">
+      <HeaderPage
+        headerTitle="Earnings & Payouts"
+        headerSubtitle="Track your jewelry sales earnings and manage payout requests"
+      />
       <EarningsPayouts />
     </div>
   );

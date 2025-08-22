@@ -86,7 +86,7 @@ const ARTIST_SIDEBAR = [
       },
       {
         label: "Drafts & Previews",
-        link: "/~/artist/lah",
+        link: "/~/artist/drafts",
         icon: FileArchive,
       },
     ],

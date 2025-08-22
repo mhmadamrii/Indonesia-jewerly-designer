@@ -11,7 +11,6 @@ import {
   Filter,
   Heart,
   Package,
-  Plus,
   Star,
   TrendingUp,
   Users,
@@ -118,29 +117,7 @@ export function ArtistDashboard() {
 
   return (
     <div className="bg-background min-h-screen">
-      <div className="container mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-foreground text-2xl font-bold">Artist Dashboard</h1>
-            <p className="text-muted-foreground">Manage your jewelry business</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <Button
-              onClick={() =>
-                navigate({
-                  to: "/~/artist/publishing",
-                })
-              }
-              className="cursor-pointer"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Add Product
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <main className="container mx-auto px-6 py-8">
+      <main>
         {/* Stats Overview */}
         <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           <Card>

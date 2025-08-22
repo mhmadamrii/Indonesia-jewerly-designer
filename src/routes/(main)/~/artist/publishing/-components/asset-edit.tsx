@@ -70,9 +70,7 @@ const formSchema = z.object({
   currency: z.string(),
   category: z.string().min(3).max(500),
   description: z.string().min(5).max(200),
-  boost: z.enum(["10", "50", "100"], {
-    required_error: "Please select a boost percentage.",
-  }),
+  boost: z.coerce.number().min(0).max(100),
 });
 
 export function AssetEdit({ initialData }: { initialData: TypejewelryAssetById }) {
@@ -119,15 +117,18 @@ export function AssetEdit({ initialData }: { initialData: TypejewelryAssetById }
       name: initialData.jewelry_assets.name,
       price: initialData.jewelry_assets.price,
       currency: "m@example.com",
-      category: "arts",
+      category: initialData.category.id,
       description: initialData.jewelry_assets.description,
-      boost: "10",
+      boost: initialData.jewelry_assets.boost as number,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("values", values);
-    if (currentCredit?.data?.boostCredit! < parseInt(values.boost) && isUsingBoost) {
+    if (
+      currentCredit?.data?.boostCredit! < parseInt(values.boost.toString()) &&
+      isUsingBoost
+    ) {
       return toast.error("You don't have enough credits to boost this product.");
     }
 
@@ -144,8 +145,8 @@ export function AssetEdit({ initialData }: { initialData: TypejewelryAssetById }
           categoryId: values.category,
           typeAsset: "image",
           tags: tagsValue.map((item) => item.value),
-          totalBoostToUpdate: getTotalBoostToUpdate(parseInt(values.boost)),
-          boost: isUsingBoost ? Number.parseFloat(values.boost) : 0,
+          totalBoostToUpdate: getTotalBoostToUpdate(values.boost),
+          boost: isUsingBoost ? values.boost : 0,
           totalStorageLimitToUpdate: totalStorageLimitToUpdate,
         },
       });
@@ -351,7 +352,7 @@ export function AssetEdit({ initialData }: { initialData: TypejewelryAssetById }
                         <FormControl>
                           <RadioGroup
                             onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            defaultValue={field.value.toString()}
                             className="grid grid-cols-1 gap-4 md:grid-cols-3"
                           >
                             {[

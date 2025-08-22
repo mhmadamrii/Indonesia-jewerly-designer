@@ -13,6 +13,7 @@ import { Label } from "~/components/ui/label";
 import { MultipleSelector } from "~/components/ui/multi-select";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Textarea } from "~/components/ui/textarea";
+import { useFormStorage } from "~/lib/store";
 import { cn } from "~/lib/utils";
 import { FileUploadCenter } from "./file-upload-center";
 
@@ -20,6 +21,7 @@ import {
   ChevronDown,
   Coins,
   DollarSign,
+  FileAxis3D,
   LoaderIcon,
   Package,
   Tag,
@@ -108,6 +110,8 @@ const currencies = [
 export function AssetPublish() {
   const navigate = useNavigate();
 
+  const { addDraft } = useFormStorage();
+
   const [isUsingBoost, setIsUsingBoost] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [totalStorageLimitToUpdate, setTotalStorageLimitToUpdate] = useState(0);
@@ -156,6 +160,8 @@ export function AssetPublish() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log("tags values", tagsValue);
+    return console.log("values", values);
     if (currentCredit?.data?.boostCredit! < parseInt(values.boost) && isUsingBoost) {
       return toast.error("You don't have enough credits to boost this product.");
     }
@@ -474,14 +480,39 @@ export function AssetPublish() {
 
             <div className="flex w-full items-center justify-end">
               <Button
+                type="button"
+                className="mr-2 flex w-[160px] cursor-pointer items-center justify-center"
+                variant="outline"
+                onClick={() => {
+                  const stringifiedForm = JSON.stringify(form.getValues());
+                  const stringifiedTags = JSON.stringify(tagsValue);
+                  const stringifiedImageUrl = JSON.stringify({
+                    thumbnail_url: assetStorageUrl.thumbnail_url,
+                    preview_url: assetStorageUrl.preview_url,
+                    asset_url: assetStorageUrl.asset_url,
+                  });
+
+                  addDraft({
+                    formValues: stringifiedForm,
+                    tagsValue: stringifiedTags,
+                    imageUrl: stringifiedImageUrl,
+                  });
+
+                  toast.success("Draft saved successfully");
+                }}
+              >
+                <FileAxis3D className="mr-2 h-4 w-4" />
+                Save as Draft
+              </Button>
+              <Button
                 className="w-[100px] cursor-pointer"
                 type="submit"
-                disabled={
-                  isPending ||
-                  isUploadingImage ||
-                  assetStorageUrl.asset_url === "" ||
-                  tagsValue.length === 0
-                }
+                // disabled={
+                //   isPending ||
+                //   isUploadingImage ||
+                //   assetStorageUrl.asset_url === "" ||
+                //   tagsValue.length === 0
+                // }
               >
                 {isPending ? <LoaderIcon className="animate-spin" /> : "Submit"}
               </Button>

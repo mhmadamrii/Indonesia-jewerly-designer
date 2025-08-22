@@ -4,6 +4,7 @@ import { CheckCircle, Clock, DollarSign, TrendingUp } from "lucide-react";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { PaymentsTable } from "./payments-table";
+import { PayoutRequest } from "./payout-request";
 
 import {
   Card,
@@ -12,7 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { PayoutRequest } from "./payout-request";
 
 // Mock data - replace with actual data fetching
 const mockPayments = [
@@ -73,15 +73,7 @@ export function EarningsPayouts() {
   const pendingPayments = payments.filter((p) => p.status === "pending");
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold">Earnings & Payouts</h1>
-        <p className="text-muted-foreground">
-          Track your jewelry sales earnings and manage payout requests
-        </p>
-      </div>
-
-      {/* Summary Cards */}
+    <>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -128,7 +120,6 @@ export function EarningsPayouts() {
         </Card>
       </div>
 
-      {/* Tabs for Earnings and Payouts */}
       <Tabs defaultValue="earnings" className="space-y-4">
         <TabsList>
           <TabsTrigger value="earnings">Earnings</TabsTrigger>
@@ -163,6 +154,6 @@ export function EarningsPayouts() {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+    </>
   );
 }
