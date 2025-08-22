@@ -1,4 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { toast } from "sonner";
+import { getReviewByAssetId } from "~/actions/review.action";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -43,6 +46,7 @@ export function ReviewSection({
   averageRating = 0,
   totalReviews = 0,
 }: ReviewSectionProps) {
+  console.log("jewelryAssetId", jewelryAssetId);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isWritingReview, setIsWritingReview] = useState(false);
   const [newReview, setNewReview] = useState({
@@ -114,6 +118,19 @@ export function ReviewSection({
   const displayAverageRating = averageRating > 0 ? averageRating : 4.8;
   const displayTotalReviews = totalReviews > 0 ? totalReviews : mockReviews.length;
 
+  const { data: reviewsData, refetch: refetchReviews } = useQuery({
+    queryKey: ["jewelry_reviews"],
+    queryFn: () =>
+      getReviewByAssetId({
+        data: {
+          id: jewelryAssetId,
+        },
+      }),
+    enabled: false,
+  });
+
+  console.log("reviewsData", reviewsData);
+
   const formatDate = (date: Date) => {
     return date.toLocaleDateString("en-US", {
       year: "numeric",
@@ -178,7 +195,10 @@ export function ReviewSection({
           </div>
           <Button
             variant="ghost"
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={() => {
+              refetchReviews();
+              setIsExpanded(!isExpanded);
+            }}
             className="flex items-center space-x-2"
           >
             <MessageSquare className="h-4 w-4" />
@@ -202,7 +222,13 @@ export function ReviewSection({
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setIsWritingReview(true)}
+                  onClick={() => {
+                    if (reviewsData?.data.isUserOwnedProduct) {
+                      setIsWritingReview(true);
+                    } else {
+                      toast.error("You don't own this product");
+                    }
+                  }}
                 >
                   Write a Review
                 </Button>

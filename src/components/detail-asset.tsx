@@ -13,7 +13,6 @@ import { Card, CardContent } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 import { IconButton } from "./animate-ui/buttons/icon";
 import { ReviewSection } from "./review-section";
-import { ScrollArea } from "./ui/scroll-area";
 
 import {
   Download,
@@ -126,13 +125,11 @@ export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
             </div>
 
             <div>
-              <ScrollArea className="h-[500px] px-3">
-                <ReviewSection
-                  jewelryAssetId="jewelry_123"
-                  averageRating={4.8}
-                  totalReviews={24}
-                />
-              </ScrollArea>
+              <ReviewSection
+                jewelryAssetId={asset.id}
+                averageRating={4.8}
+                totalReviews={24}
+              />
             </div>
           </div>
 

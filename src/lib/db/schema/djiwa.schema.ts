@@ -67,6 +67,7 @@ export const review = pgTable("review", {
   title: text("title").notNull(),
   description: text("description"),
   image: text("image"),
+  rating: integer("rating").notNull(),
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),

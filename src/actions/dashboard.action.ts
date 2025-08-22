@@ -5,12 +5,10 @@ import { db } from "~/lib/db";
 import { category, jewelryAssets, user } from "~/lib/db/schema";
 import { DashboardReturnType, jewelryWithMeta } from "~/lib/db/types";
 import { getFromCache } from "~/lib/redis/cachUtils";
-import { getClient } from "~/lib/redis/config";
 
 export const getDashboard = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }): Promise<DashboardReturnType> => {
-    const redis = await getClient();
     const cacheKey = `dashboard_data:${context.user.id}`;
     const cached = await getFromCache<any>(cacheKey);
 
@@ -33,6 +31,7 @@ export const getDashboard = createServerFn({ method: "GET" })
       `),
       db.select().from(user),
     ]);
+    console.log("jewerlies", jewerlies);
 
     // await redis.set(cacheKey, JSON.stringify({ categories, jewerlies, users }));
 
