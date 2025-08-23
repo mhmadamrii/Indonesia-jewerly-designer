@@ -301,7 +301,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
   );
 }
 
-export function ModelsDataTable({ jewerlies }: { jewerlies: jewelryAsset[] }) {
+export function ModelsDataTable({ jewelries }: { jewelries: jewelryAsset[] }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const [sorting, setSorting] = useState<SortingState>([
@@ -312,7 +312,7 @@ export function ModelsDataTable({ jewerlies }: { jewerlies: jewelryAsset[] }) {
   ]);
 
   const table = useReactTable({
-    data: jewerlies,
+    data: jewelries,
     columns,
     state: {
       sorting,

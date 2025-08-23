@@ -162,7 +162,7 @@ export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
                 <div className="flex items-center gap-4">
                   <Avatar className="h-12 w-12">
                     <AvatarImage
-                      src={user?.image || "/placeholder.svg"}
+                      src={user?.image || "/placeholder-img.jpg"}
                       alt={user?.name}
                     />
                     <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>

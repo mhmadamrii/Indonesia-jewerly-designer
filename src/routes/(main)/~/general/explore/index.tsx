@@ -27,7 +27,7 @@ function RouteComponent() {
         <div className="grid w-[70%] grid-cols-1 gap-3 md:grid-cols-2">
           {isLoading
             ? Array.from({ length: 5 }).map((_, idx) => <AssetGridSkeleton key={idx} />)
-            : data?.data?.jewerlies?.map((item, idx) => (
+            : data?.data?.jewelries?.map((item, idx) => (
                 <AssetGrid
                   key={idx}
                   category={item.category}

@@ -42,7 +42,7 @@ const mockUser = {
   userStorageLimit: 41943040, // ~40MB
   userStorageUsage: 25165824, // ~24MB
   emailVerified: true,
-  image: "/placeholder.svg?height=120&width=120",
+  image: "/placeholder-img.jpg?height=120&width=120",
   createdAt: new Date("2023-06-15"),
   updatedAt: new Date("2024-01-15"),
   // Additional jewelry marketplace stats

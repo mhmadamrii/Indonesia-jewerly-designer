@@ -121,7 +121,7 @@ function RouteComponent() {
                           <TabsContent value="thumbnail" className="mt-0">
                             <div className="relative h-48 w-full overflow-hidden rounded-lg bg-slate-100">
                               <img
-                                src={item.thumbnailUrl || "/placeholder.svg"}
+                                src={item.thumbnailUrl || "/placeholder-img.jpg"}
                                 alt={item.name}
                                 className="h-full w-full object-cover"
                               />

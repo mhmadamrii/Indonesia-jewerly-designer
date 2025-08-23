@@ -39,7 +39,7 @@ export function ArtistDashboard() {
       name: "Diamond Eternity Ring",
       price: 2500,
       category: "Rings",
-      thumbnailUrl: "/placeholder.svg?height=80&width=80",
+      thumbnailUrl: "/placeholder-img.jpg?height=80&width=80",
       boost: 5,
       views: 234,
       likes: 45,
@@ -49,7 +49,7 @@ export function ArtistDashboard() {
       name: "Pearl Drop Earrings",
       price: 450,
       category: "Earrings",
-      thumbnailUrl: "/placeholder.svg?height=80&width=80",
+      thumbnailUrl: "/placeholder-img.jpg?height=80&width=80",
       boost: 0,
       views: 156,
       likes: 23,
@@ -59,7 +59,7 @@ export function ArtistDashboard() {
       name: "Gold Chain Necklace",
       price: 890,
       category: "Necklaces",
-      thumbnailUrl: "/placeholder.svg?height=80&width=80",
+      thumbnailUrl: "/placeholder-img.jpg?height=80&width=80",
       boost: 3,
       views: 189,
       likes: 34,
@@ -196,7 +196,7 @@ export function ArtistDashboard() {
                   {recentProducts.map((product) => (
                     <div key={product.id} className="flex items-center space-x-4">
                       <img
-                        src={product.thumbnailUrl || "/placeholder.svg"}
+                        src={product.thumbnailUrl || "/placeholder-img.jpg"}
                         alt={product.name}
                         className="h-12 w-12 rounded-lg object-cover"
                       />
@@ -315,7 +315,7 @@ export function ArtistDashboard() {
                     <Card key={product.id}>
                       <CardContent className="p-4">
                         <img
-                          src={product.thumbnailUrl || "/placeholder.svg"}
+                          src={product.thumbnailUrl || "/placeholder-img.jpg"}
                           alt={product.name}
                           className="mb-3 h-32 w-full rounded-lg object-cover"
                         />

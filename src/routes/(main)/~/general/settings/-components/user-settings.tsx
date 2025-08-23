@@ -116,7 +116,7 @@ export function UserSettings() {
             <CardContent className="space-y-6">
               <div className="flex items-center gap-6">
                 <Avatar className="h-20 w-20">
-                  <AvatarImage src="/placeholder.svg?height=80&width=80" />
+                  <AvatarImage src="/placeholder-img.jpg?height=80&width=80" />
                   <AvatarFallback>SC</AvatarFallback>
                 </Avatar>
                 <div>

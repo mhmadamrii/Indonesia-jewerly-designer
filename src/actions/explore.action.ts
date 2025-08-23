@@ -74,7 +74,7 @@ export const getExploreAssetDatas = createServerFn({ method: "GET" })
       }
     }
 
-    const [categories, jewerlies, users] = await Promise.all([
+    const [categories, jewelries, users] = await Promise.all([
       db.select().from(category),
       db
         .select()
@@ -89,7 +89,7 @@ export const getExploreAssetDatas = createServerFn({ method: "GET" })
       success: true,
       data: {
         categories,
-        jewerlies: jewerlies,
+        jewelries: jewelries,
         users,
       },
     };

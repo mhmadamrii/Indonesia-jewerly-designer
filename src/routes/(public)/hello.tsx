@@ -1,12 +1,12 @@
 import { Await, createFileRoute, Link } from "@tanstack/react-router";
-import { getDashboard } from "~/actions/dashboard.action";
+import { getFeeds } from "~/actions/dashboard.action";
 
 export const Route = createFileRoute("/(public)/hello")({
   component: RouteComponent,
   loader: async ({ context }) => {
     const dashboard = context.queryClient.fetchQuery({
       queryKey: ["dashboard_home"],
-      queryFn: () => getDashboard(),
+      queryFn: () => getFeeds(),
     });
     return { dashboard };
   },

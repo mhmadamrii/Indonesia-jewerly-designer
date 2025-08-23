@@ -55,7 +55,7 @@ export function StatusSuccess() {
               <div className="space-y-3">
                 <div className="flex items-center gap-4 rounded-lg bg-gray-50 p-3">
                   <img
-                    src="/placeholder.svg?height=60&width=60"
+                    src="/placeholder-img.jpg?height=60&width=60"
                     alt="Sci-Fi Spaceship"
                     width={60}
                     height={60}
@@ -89,7 +89,7 @@ export function StatusSuccess() {
 
                 <div className="flex items-center gap-4 rounded-lg bg-gray-50 p-3">
                   <img
-                    src="/placeholder.svg?height=60&width=60"
+                    src="/placeholder-img.jpg?height=60&width=60"
                     alt="Medieval Castle"
                     width={60}
                     height={60}

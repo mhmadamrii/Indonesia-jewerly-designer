@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { Await, createFileRoute, Link } from "@tanstack/react-router";
-import { getDashboard } from "~/actions/dashboard.action";
+import { getFeeds } from "~/actions/dashboard.action";
 import { Button } from "~/components/ui/button";
 
 export const Route = createFileRoute("/(public)/playgrounds")({
   staleTime: 50_000,
   loader: async () => {
-    const dashboard = getDashboard();
+    const dashboard = getFeeds();
 
     return {
       title: "Playgrounds",
@@ -22,7 +22,7 @@ function RouteComponent() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["mewejkfda"],
-    queryFn: () => getDashboard({}),
+    queryFn: () => getFeeds({}),
     staleTime: 50_000,
   });
 
@@ -32,7 +32,7 @@ function RouteComponent() {
     <main className="flex h-screen flex-col items-center justify-center gap-2 border">
       <Link to="/hello">To Hello page</Link>
       {isLoading && <h1>Loading use query bro</h1>}
-      {/* {dashboard.data.jewerlies.map((item) => (
+      {/* {dashboard.data.jewelries.map((item) => (
         <div key={item.id} className="flex w-full flex-col gap-4">
           <h1>{item.name}</h1>
         </div>

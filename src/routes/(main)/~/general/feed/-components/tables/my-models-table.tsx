@@ -327,7 +327,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
   );
 }
 
-export function MyModelsTable({ jewerlies }: { jewerlies: jewelryAsset[] }) {
+export function MyModelsTable({ jewelries }: { jewelries: jewelryAsset[] }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const [sorting, setSorting] = useState<SortingState>([

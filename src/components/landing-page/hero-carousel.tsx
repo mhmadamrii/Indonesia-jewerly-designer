@@ -52,7 +52,7 @@ export function HeroCarousel() {
             <CarouselItem key={index}>
               <div className="relative h-[70vh] md:h-[80vh]">
                 <img
-                  src={image.src || "/placeholder.svg"}
+                  src={image.src || "/placeholder-img.jpg"}
                   alt={image.alt}
                   className="object-cover"
                 />

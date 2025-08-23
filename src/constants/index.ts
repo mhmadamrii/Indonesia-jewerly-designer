@@ -133,7 +133,7 @@ const purchasedAssetsData: PurchasedAsset[] = [
       id: "7v6rgzrvNXKO9HCWkLmJVd1U0bugjx4m",
       name: "Sarah Johnson",
       email: "sarah.johnson@example.com",
-      image: "/placeholder.svg?height=96&width=96",
+      image: "/placeholder-img.jpg?height=96&width=96",
       role: "designer",
     },
     category: {
@@ -157,7 +157,7 @@ const purchasedAssetsData: PurchasedAsset[] = [
       id: "8w7shzswOYLP0IDXlNnKWe2V1cvhky5n",
       name: "Alex Chen",
       email: "alex.chen@example.com",
-      image: "/placeholder.svg?height=96&width=96",
+      image: "/placeholder-img.jpg?height=96&width=96",
       role: "3d-artist",
     },
     category: {
@@ -181,7 +181,7 @@ const purchasedAssetsData: PurchasedAsset[] = [
       id: "9x8tiztyPZMQ1JEYmOoLXf3W2dxily6o",
       name: "Emma Rodriguez",
       email: "emma.rodriguez@example.com",
-      image: "/placeholder.svg?height=96&width=96",
+      image: "/placeholder-img.jpg?height=96&width=96",
       role: "jewelry-designer",
     },
     category: {
@@ -205,7 +205,7 @@ const purchasedAssetsData: PurchasedAsset[] = [
       id: "0y9ujzuzQANR2KFZnPpMYg4X3eyjmz7p",
       name: "David Kim",
       email: "david.kim@example.com",
-      image: "/placeholder.svg?height=96&width=96",
+      image: "/placeholder-img.jpg?height=96&width=96",
       role: "historian-artist",
     },
     category: {

@@ -2,15 +2,15 @@ import { useMutation } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
+import { TopArtistType } from "~/actions/dashboard.action";
 import { followUser } from "~/actions/follows.action";
 import { FlipButton } from "~/components/animate-ui/buttons/flip";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardTitle } from "~/components/ui/card";
-import { User } from "~/lib/db/types";
 
 type TopArtistsProps = {
-  users: User[];
+  users: TopArtistType;
 };
 
 export function TopArtists({ users }: TopArtistsProps) {
@@ -25,7 +25,7 @@ export function TopArtists({ users }: TopArtistsProps) {
   });
 
   const memoizedUsers = useMemo(() => {
-    return users.slice(0, 5).filter((item) => !followingIds.includes(item.id));
+    return users.slice(0, 5).filter((item) => !followingIds.includes(item.user.id));
   }, [users, followingIds]);
 
   return (
@@ -44,31 +44,33 @@ export function TopArtists({ users }: TopArtistsProps) {
         )}
         {memoizedUsers.map((item) => {
           return (
-            <div className="mb-4 w-full max-w-[300px]" key={item.id}>
+            <div className="mb-4 w-full max-w-[300px]" key={item.user.id}>
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage src={item.image ?? "https://github.com/shadcn.png"} />
-                    <AvatarFallback>{item.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage
+                      src={item.user.image ?? "https://github.com/shadcn.png"}
+                    />
+                    <AvatarFallback>{item.user.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
                     <Link
                       to="/~/general/u/$userId"
                       params={{
-                        userId: item.id,
+                        userId: item.user.id,
                       }}
                       className="truncate hover:cursor-pointer hover:underline"
                     >
-                      {item.name}
+                      {item.user.name}
                     </Link>
                     <span className="text-muted-foreground">
-                      {(Math.random() * 10).toFixed(1)}k Items sold
+                      {item.soldCount} Items sold
                     </span>
                   </div>
                 </div>
                 <div>
                   <FlipButton
-                    onClick={() => handleFollow({ data: { userId: item.id } })}
+                    onClick={() => handleFollow({ data: { userId: item.user.id } })}
                     frontText="Follow"
                     backText="😳"
                   />

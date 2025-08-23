@@ -87,7 +87,7 @@ export function JewelryShowcase() {
               >
                 <img
                   loading="lazy"
-                  src={item.src || "/placeholder.svg"}
+                  src={item.src || "/placeholder-img.jpg"}
                   alt={item.title}
                   width={400}
                   height={400}

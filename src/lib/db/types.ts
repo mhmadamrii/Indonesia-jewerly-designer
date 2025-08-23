@@ -35,7 +35,7 @@ export type DashboardReturnType = {
   success: boolean;
   data: {
     categories: Category[];
-    jewerlies: jewelryWithMeta[];
+    jewelries: jewelryWithMeta[];
     users: User[];
   };
 };
@@ -48,6 +48,6 @@ export type jewelryWithUser = {
 
 export type DashboardData = {
   categories: Category[];
-  jewerlies: jewelryWithUser[];
+  jewelries: jewelryWithUser[];
   users: User[];
 };

@@ -33,7 +33,7 @@
 //     price: 49.99,
 //     categoryId: "vehicles",
 //     typeAsset: "model",
-//     thumbnailUrl: "/placeholder.svg?height=200&width=200",
+//     thumbnailUrl: "/placeholder-img.jpg?height=200&width=200",
 //     assetUrl: "/assets/3d/duck.glb",
 //     previewUrl: "/preview/spaceship.jpg",
 //     tags: ["spaceship", "sci-fi", "vehicle", "animated"],
@@ -48,7 +48,7 @@
 //     price: 79.99,
 //     categoryId: "environments",
 //     typeAsset: "scene",
-//     thumbnailUrl: "/placeholder.svg?height=200&width=200",
+//     thumbnailUrl: "/placeholder-img.jpg?height=200&width=200",
 //     assetUrl: "/assets/3d/duck.glb",
 //     previewUrl: "/preview/castle.jpg",
 //     tags: ["castle", "medieval", "environment", "modular"],
@@ -63,7 +63,7 @@
 //     price: 89.99,
 //     categoryId: "characters",
 //     typeAsset: "character",
-//     thumbnailUrl: "/placeholder.svg?height=200&width=200",
+//     thumbnailUrl: "/placeholder-img.jpg?height=200&width=200",
 //     assetUrl: "/assets/3d/duck.glb",
 //     previewUrl: "/preview/character.jpg",
 //     tags: ["character", "cyberpunk", "rigged", "animated"],
@@ -162,7 +162,7 @@
 //                         <TabsContent value="thumbnail" className="mt-0">
 //                           <div className="relative h-48 w-full overflow-hidden rounded-lg bg-slate-100">
 //                             <Image
-//                               src={item.thumbnailUrl || "/placeholder.svg"}
+//                               src={item.thumbnailUrl || "/placeholder-img.jpg"}
 //                               alt={item.name}
 //                               fill
 //                               className="object-cover"

@@ -10,15 +10,15 @@ import {
 
 export function CarouselBanner() {
   const images = [
-    "/placeholder.svg?height=400&width=600",
-    "/placeholder.svg?height=400&width=600",
-    "/placeholder.svg?height=400&width=600",
-    "/placeholder.svg?height=400&width=600",
-    "/placeholder.svg?height=400&width=600",
+    "/placeholder-img.jpg?height=400&width=600",
+    "/placeholder-img.jpg?height=400&width=600",
+    "/placeholder-img.jpg?height=400&width=600",
+    "/placeholder-img.jpg?height=400&width=600",
+    "/placeholder-img.jpg?height=400&width=600",
   ];
 
   return (
-    <div className="bg-background flex items-center justify-center p-1">
+    <div className="bg-background flex max-h-[360px] items-center justify-center p-1">
       <div className="w-full">
         <Carousel
           plugins={[
@@ -29,14 +29,14 @@ export function CarouselBanner() {
           ]}
           className="group w-full"
         >
-          <CarouselContent>
+          <CarouselContent className="h-full">
             {images.map((src, index) => (
               <CarouselItem key={index}>
                 <div className="relative">
                   <img
                     src="/banner.svg"
                     alt={`Slide ${index + 1}`}
-                    className="h-96 w-full rounded-lg object-cover"
+                    className="h-full w-full rounded-lg object-cover"
                   />
                 </div>
               </CarouselItem>

@@ -1,20 +1,19 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Eye, LoaderIcon, ShoppingCart, Star, Zap } from "lucide-react";
+import { Eye, LoaderIcon, ShoppingCart } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { createCartItem } from "~/actions/cart.action";
+import { TrendingJewelriesType } from "~/actions/dashboard.action";
 import { ModelViewer } from "~/components/3D/model-viewer";
 import { AddWishlist } from "~/components/add-wishlist";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Badge } from "~/components/ui/badge";
-import { jewelryWithMeta } from "~/lib/db/types";
 
 type TrendingsProps = {
-  jewerlies: jewelryWithMeta[];
+  jewelries: TrendingJewelriesType;
 };
 
-export function Trendings({ jewerlies }: TrendingsProps) {
+export function Trendings({ jewelries }: TrendingsProps) {
   const queryClient = useQueryClient();
   const [selected3D, setSelected3D] = useState("");
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -43,106 +42,91 @@ export function Trendings({ jewerlies }: TrendingsProps) {
 
   return (
     <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
-      {jewerlies?.map((item, idx) => (
+      {jewelries?.map((item, idx) => (
         <motion.div
           layoutId={`card-${idx + 1}`}
           className="group bg-card overflow-hidden rounded-md border shadow-md transition-all duration-300 hover:shadow-xl"
-          key={item?.id}
+          key={idx}
         >
           <div className="relative overflow-hidden">
-            {item.thumbnail_url && (
-              <img
-                src={item?.thumbnail_url ?? ""}
-                className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                alt="Asset Image"
-              />
-            )}
+            <img
+              src={item.jewelry_assets.thumbnailUrl}
+              className="h-50 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              alt="Asset Image"
+            />
 
             <div className="absolute inset-0 flex items-center justify-center space-x-2 bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
               <button
                 onClick={() => {
-                  setSelected3D(item.preview_url);
+                  setSelected3D(item.jewelry_assets.previewUrl);
                   setSelectedId(idx + 1);
                 }}
                 className="cursor-pointer rounded-full bg-white/20 p-2 text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/30"
               >
                 <Eye className="h-4 w-4" />
               </button>
-              <AddWishlist imageUrl={item.thumbnail_url} jewelryAssetId={item.id} />
+              <AddWishlist
+                imageUrl={item.jewelry_assets.thumbnailUrl}
+                jewelryAssetId={item.jewelry_assets.id}
+              />
             </div>
 
             <div className="absolute top-3 left-3">
               <span className="rounded-full bg-white/90 px-2 py-1 text-xs font-medium text-gray-700 backdrop-blur-sm">
-                {item.category_name}
+                {item.category.name}
               </span>
             </div>
 
             <div className="absolute top-3 right-3">
               <span className="rounded-full bg-indigo-600 px-2 py-1 text-sm font-bold text-white">
-                ${item.price}
+                ${item.jewelry_assets.price}
               </span>
             </div>
           </div>
 
           <div className="p-4">
-            <h3 className="mb-2 line-clamp-1 font-semibold">{item.name}</h3>
+            <h3 className="mb-2 line-clamp-1 font-semibold">
+              {item.jewelry_assets.name}
+            </h3>
             <p className="text-muted-foreground mb-3 line-clamp-2 truncate text-sm">
-              {item.description}
+              {item.jewelry_assets.description}
             </p>
 
             <div className="mb-3 flex flex-wrap gap-1">
-              {item.tags
-                .split(",")
-                .map((tag) => tag.trim())
-                .map((tag, idx) => (
-                  <span
-                    key={idx}
-                    className="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600"
-                  >
-                    {tag}
-                  </span>
-                ))}
+              {item.tags.map((tag, idx) => (
+                <span
+                  key={idx}
+                  className="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600"
+                >
+                  {tag}
+                </span>
+              ))}
               <span className="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600">
                 +30
               </span>
             </div>
 
-            <div className="mb-3 flex items-center">
+            <div className="mb-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage
-                    src={item.creator_image ?? "https://github.com/shadcn.png"}
-                  />
-                  <AvatarFallback>{item.creator_name.charAt(0)}</AvatarFallback>
+                  <AvatarImage src={item.user.image ?? "https://github.com/shadcn.png"} />
+                  <AvatarFallback>{item?.user.name?.charAt(0)}</AvatarFallback>
                 </Avatar>
-                <span className="text-muted-foreground text-sm">{item.creator_name}</span>
+                <span className="text-muted-foreground text-sm">{item.user.name}</span>
               </div>
-
-              <div className="ml-auto flex items-center">
-                <Star className="h-3 w-3 fill-current text-yellow-400" />
-                <span className="ml-1 text-sm text-gray-600">{30}</span>
-              </div>
-            </div>
-
-            <div className="mb-4 flex items-center justify-between text-sm text-gray-500">
-              <div className="flex items-center">
-                <Badge className="bg-blue-500">
-                  <Zap className="h-3 w-3 text-white" />
-                  <span className="dark:text-white">Featured</span>
-                </Badge>
-              </div>
-              <div className="flex items-center">
-                <Star className="mr-1 h-4 w-4 fill-current text-yellow-400" />
-                <span>30</span>
+              <div>
+                <span className="text-muted-foreground text-sm">
+                  {item.reviewCount} Reviews
+                </span>
               </div>
             </div>
 
             <button
-              disabled={isPending && selected3D === item.id}
+              disabled={isPending && selected3D === item.jewelry_assets.id}
               className="flex w-full cursor-pointer items-center justify-center space-x-2 rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white transition-all duration-200 hover:scale-105 hover:bg-indigo-700"
-              onClick={() => handleAddToCart(item.id)}
+              onClick={() => handleAddToCart(item.jewelry_assets.id)}
             >
-              {isPending && selected3D === item.id ? (
+              {isPending && selected3D === item.jewelry_assets.id ? (
                 <LoaderIcon className="animate-spin" />
               ) : (
                 <>

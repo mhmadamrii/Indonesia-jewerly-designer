@@ -1,46 +1,66 @@
 import { createServerFn } from "@tanstack/react-start";
-import { count, sql } from "drizzle-orm";
+import { count, eq, sql } from "drizzle-orm";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { category, jewelryAssets, user } from "~/lib/db/schema";
-import { DashboardReturnType, jewelryWithMeta } from "~/lib/db/types";
-import { getFromCache } from "~/lib/redis/cachUtils";
+import {
+  category,
+  jewelryAssets,
+  jewelryAssetTags,
+  payments,
+  review,
+  tag,
+  user,
+} from "~/lib/db/schema";
 
-export const getDashboard = createServerFn({ method: "GET" })
+export type FeedsDataType = Awaited<ReturnType<(typeof getFeeds)>>["data"]; // prettier-ignore
+export type TrendingJewelriesType = Awaited<ReturnType<typeof getFeeds>>["data"]["trendingJewelries"]; // prettier-ignore
+export type TopArtistType = Awaited<ReturnType<typeof getFeeds>>["data"]["topArtists"]; // prettier-ignore
+
+export const getFeeds = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
-  .handler(async ({ context }): Promise<DashboardReturnType> => {
-    const cacheKey = `dashboard_data:${context.user.id}`;
-    const cached = await getFromCache<any>(cacheKey);
-
-    if (cached) {
-      return { success: true, data: cached };
-    }
-
-    const [categories, jewerlies, users] = await Promise.all([
+  .handler(async ({ context }) => {
+    const [categories, jewelries, users] = await Promise.all([
       db.select().from(category),
-      db.execute(sql`
-        SELECT ja.*, c.name AS category_name, u.name AS creator_name, u.image AS creator_image,
-        string_agg(t.name, ', ') AS tags
-        FROM jewelry_assets ja
-        JOIN category c ON ja.category_id = c.id
-        JOIN "user" u ON ja.user_id = u.id
-        LEFT JOIN jewelry_asset_tags jat ON ja.id = jat.jewelry_asset_id
-        LEFT JOIN tag t ON jat.tag_id = t.id
-        WHERE ja.boost = 100
-        GROUP BY ja.id, c.name, u.name, u.image
-      `),
-      db.select().from(user),
+      db
+        .select({
+          jewelry_assets: jewelryAssets,
+          category: category,
+          user: user,
+          tags: sql<
+            string[]
+          >`array_agg(${tag.name}) FILTER (WHERE ${tag.name} IS NOT NULL)`,
+          reviewCount: sql<number>`COUNT(${review.id})::int`,
+        })
+        .from(jewelryAssets)
+        .innerJoin(category, eq(jewelryAssets.categoryId, category.id))
+        .innerJoin(user, eq(jewelryAssets.userId, user.id))
+        .leftJoin(jewelryAssetTags, eq(jewelryAssets.id, jewelryAssetTags.jewelryAssetId))
+        .leftJoin(tag, eq(jewelryAssetTags.tagId, tag.id))
+        .where(eq(jewelryAssets.boost, 100))
+        .leftJoin(review, eq(review.jewelryAssetId, jewelryAssets.id))
+        .groupBy(jewelryAssets.id, category.id, user.id),
+      db
+        .select({
+          user: user, // all user info
+          soldCount: sql<number>`COUNT(${payments.id})::int`,
+        })
+        .from(payments)
+        .innerJoin(jewelryAssets, eq(payments.jewelryAssetId, jewelryAssets.id))
+        .innerJoin(user, eq(jewelryAssets.userId, user.id)) // link payment → jewelry → artist
+        .where(eq(payments.status, "capture")) // only count successful payments
+        .groupBy(user.id)
+        .orderBy(sql`COUNT(${payments.id}) DESC`)
+        .limit(5),
     ]);
-    console.log("jewerlies", jewerlies);
 
-    // await redis.set(cacheKey, JSON.stringify({ categories, jewerlies, users }));
+    console.log("jewelries", jewelries);
 
     return {
       success: true,
       data: {
         categories,
-        jewerlies: jewerlies as unknown as jewelryWithMeta[],
-        users,
+        trendingJewelries: jewelries,
+        topArtists: users,
       },
     };
   });
