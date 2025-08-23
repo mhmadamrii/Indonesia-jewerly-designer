@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { getReviewByAssetId } from "~/actions/review.action";
+import { createReview, getReviewByAssetId } from "~/actions/review.action";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -35,88 +35,18 @@ interface Review {
 
 interface ReviewSectionProps {
   jewelryAssetId: string;
-  reviews?: Review[];
   averageRating?: number;
   totalReviews?: number;
 }
 
-export function ReviewSection({
-  jewelryAssetId,
-  reviews = [],
-  averageRating = 0,
-  totalReviews = 0,
-}: ReviewSectionProps) {
-  console.log("jewelryAssetId", jewelryAssetId);
+export function ReviewSection({ jewelryAssetId }: ReviewSectionProps) {
+  const [hoveredRating, setHoveredRating] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isWritingReview, setIsWritingReview] = useState(false);
   const [newReview, setNewReview] = useState({
     rating: 0,
     comment: "",
   });
-  const [hoveredRating, setHoveredRating] = useState(0);
-
-  const mockReviews: Review[] = [
-    {
-      id: "rev_1",
-      userId: "user_456",
-      jewelryAssetId: jewelryAssetId,
-      rating: 5,
-      comment:
-        "Absolutely stunning piece! The craftsmanship is incredible and it arrived exactly as described. The packaging was beautiful too. Highly recommend this artist!",
-      createdAt: new Date("2024-01-10"),
-      updatedAt: new Date("2024-01-10"),
-      user: {
-        name: "Sarah Johnson",
-        image: "/placeholder.svg?height=40&width=40",
-      },
-    },
-    {
-      id: "rev_2",
-      userId: "user_789",
-      jewelryAssetId: jewelryAssetId,
-      rating: 4,
-      comment:
-        "Beautiful jewelry, very well made. Shipping was fast and the item was well protected. Only minor issue was that it was slightly smaller than I expected, but still gorgeous!",
-      createdAt: new Date("2024-01-08"),
-      updatedAt: new Date("2024-01-08"),
-      user: {
-        name: "Michael Chen",
-        image: "/placeholder.svg?height=40&width=40",
-      },
-    },
-    {
-      id: "rev_3",
-      userId: "user_321",
-      jewelryAssetId: jewelryAssetId,
-      rating: 5,
-      comment:
-        "Perfect for my anniversary gift! My wife absolutely loves it. The quality exceeded my expectations and the customer service was excellent.",
-      createdAt: new Date("2024-01-05"),
-      updatedAt: new Date("2024-01-05"),
-      user: {
-        name: "David Rodriguez",
-        image: "/placeholder.svg?height=40&width=40",
-      },
-    },
-    {
-      id: "rev_4",
-      userId: "user_654",
-      jewelryAssetId: jewelryAssetId,
-      rating: 5,
-      comment:
-        "This is my third purchase from this artist and I'm never disappointed. The attention to detail is amazing!",
-      createdAt: new Date("2024-01-03"),
-      updatedAt: new Date("2024-01-03"),
-      user: {
-        name: "Emma Wilson",
-        image: "/placeholder.svg?height=40&width=40",
-      },
-    },
-  ];
-
-  const displayReviews = reviews.length > 0 ? reviews : mockReviews;
-  const displayAverageRating = averageRating > 0 ? averageRating : 4.8;
-  const displayTotalReviews = totalReviews > 0 ? totalReviews : mockReviews.length;
 
   const { data: reviewsData, refetch: refetchReviews } = useQuery({
     queryKey: ["jewelry_reviews"],
@@ -126,10 +56,12 @@ export function ReviewSection({
           id: jewelryAssetId,
         },
       }),
-    enabled: false,
   });
 
-  console.log("reviewsData", reviewsData);
+  const { mutate } = useMutation({
+    mutationFn: createReview,
+    onSuccess: () => {},
+  });
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString("en-US", {
@@ -137,22 +69,6 @@ export function ReviewSection({
       month: "short",
       day: "numeric",
     });
-  };
-
-  const handleSubmitReview = () => {
-    if (newReview.rating > 0 && newReview.comment.trim()) {
-      // Here you would typically submit to your API
-      console.log("Submitting review:", {
-        jewelryAssetId,
-        rating: newReview.rating,
-        comment: newReview.comment,
-      });
-
-      // Reset form
-      setNewReview({ rating: 0, comment: "" });
-      setIsWritingReview(false);
-      // You might want to refresh the reviews list here
-    }
   };
 
   const renderStars = (
@@ -186,10 +102,10 @@ export function ReviewSection({
           <div className="flex flex-col">
             <CardTitle className="p-0 text-lg">Reviews & Comments</CardTitle>
             <div className="flex items-center space-x-2">
-              {renderStars(displayAverageRating)}
-              <span className="text-sm font-medium">{displayAverageRating}</span>
+              {renderStars(5)}
+              <span className="text-sm font-medium">{5}</span>
               <span className="text-muted-foreground text-sm">
-                ({displayTotalReviews} reviews)
+                ({reviewsData?.data.reviews.length || 0} reviews)
               </span>
             </div>
           </div>
@@ -214,7 +130,6 @@ export function ReviewSection({
 
       {isExpanded && (
         <CardContent className="space-y-6">
-          {/* Write Review Section */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-medium">Share your experience</h3>
@@ -260,9 +175,18 @@ export function ReviewSection({
 
                   <div className="flex items-center space-x-2">
                     <Button
-                      onClick={handleSubmitReview}
+                      className="cursor-pointer"
+                      onClick={() =>
+                        mutate({
+                          data: {
+                            title: "Review",
+                            description: newReview.comment,
+                            rating: newReview.rating,
+                            productId: jewelryAssetId,
+                          },
+                        })
+                      }
                       disabled={newReview.rating === 0 || !newReview.comment.trim()}
-                      className="gap-2"
                     >
                       <Send className="h-4 w-4" />
                       Submit Review
@@ -281,31 +205,29 @@ export function ReviewSection({
               </Card>
             )}
           </div>
-
           <Separator />
-
           <div className="space-y-6">
             <h3 className="text-base font-medium">
-              Customer Reviews ({displayTotalReviews})
+              Customer Reviews ({reviewsData?.data.reviews.length || 0})
             </h3>
 
-            {displayReviews.length === 0 ? (
+            {reviewsData?.data.reviews.length === 0 ? (
               <div className="text-muted-foreground py-8 text-center">
                 <MessageSquare className="mx-auto mb-4 h-12 w-12 opacity-50" />
                 <p>No reviews yet. Be the first to share your experience!</p>
               </div>
             ) : (
               <div className="space-y-6">
-                {displayReviews.map((review) => (
+                {reviewsData?.data.reviews.map((review) => (
                   <div key={review.id} className="space-y-3">
                     <div className="flex items-start space-x-4">
                       <Avatar className="h-10 w-10">
                         <AvatarImage
-                          src={review.user.image || "/placeholder.svg"}
-                          alt={review.user.name}
+                          src={review.userImage || "/placeholder-img.jpg"}
+                          alt="user"
                         />
                         <AvatarFallback>
-                          {review.user.name
+                          {review.user
                             .split(" ")
                             .map((n) => n[0])
                             .join("")}
@@ -315,16 +237,16 @@ export function ReviewSection({
                       <div className="flex-1 space-y-2">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-3">
-                            <h4 className="text-sm font-medium">{review.user.name}</h4>
+                            <h4 className="text-sm font-medium">{review.user}</h4>
                             {renderStars(review.rating)}
                           </div>
                           <span className="text-muted-foreground text-xs">
-                            {formatDate(review.createdAt)}
+                            {formatDate(review.reviewDate as Date)}
                           </span>
                         </div>
 
                         <p className="text-muted-foreground text-sm leading-relaxed">
-                          {review.comment}
+                          {review.description}
                         </p>
 
                         <div className="flex items-center pt-2">
@@ -339,10 +261,6 @@ export function ReviewSection({
                         </div>
                       </div>
                     </div>
-
-                    {review.id !== displayReviews[displayReviews.length - 1].id && (
-                      <Separator className="mt-4" />
-                    )}
                   </div>
                 ))}
               </div>

@@ -4,7 +4,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { and, eq } from "drizzle-orm";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { payments, review } from "~/lib/db/schema";
+import { payments, review, user } from "~/lib/db/schema";
 
 export const createReview = createServerFn({ method: "POST" })
   .validator(
@@ -51,11 +51,19 @@ export const getReviewByAssetId = createServerFn({ method: "GET" })
         .where(
           and(eq(payments.jewelryAssetId, data.id), eq(payments.userId, context.user.id)),
         ),
-      await db.select().from(review).where(eq(review.jewelryAssetId, data.id)),
+      await db
+        .select({
+          id: review.id,
+          user: user.name,
+          userImage: user.image,
+          description: review.description,
+          rating: review.rating,
+          reviewDate: review.createdAt,
+        })
+        .from(review)
+        .innerJoin(user, eq(review.userId, user.id))
+        .where(eq(review.jewelryAssetId, data.id)),
     ]);
-
-    console.log("reviews", reviews);
-    console.log("isUserOwnedProduct", isUserOwnedProduct);
 
     return {
       success: true,
