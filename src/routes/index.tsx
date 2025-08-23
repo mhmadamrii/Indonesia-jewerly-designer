@@ -6,6 +6,26 @@ import { JewelryShowcase } from "~/components/landing-page/jewelry-showcase";
 
 export const Route = createFileRoute("/")({
   component: Home,
+  ssr: false,
+  head: () => ({
+    meta: [
+      {
+        charSet: "utf-8",
+      },
+      {
+        name: "viewport",
+        content: "width=device-width, initial-scale=1",
+      },
+      {
+        title: "Indonesia jewelry Designer",
+      },
+      {
+        name: "description",
+        content:
+          "Indonesia jewelry Designer is a platform for showcasing and selling unique jewelry designs from Indonesian artisans.",
+      },
+    ],
+  }),
 });
 
 function Home() {
