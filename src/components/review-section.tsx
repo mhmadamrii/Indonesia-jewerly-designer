@@ -1,5 +1,5 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useOptimistic, useState } from "react";
 import { toast } from "sonner";
 import { createReview, getReviewByAssetId } from "~/actions/review.action";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
@@ -19,25 +19,20 @@ import {
   ThumbsUp,
 } from "lucide-react";
 
-interface Review {
-  id: string;
-  userId: string;
-  jewelryAssetId: string;
-  rating: number;
-  comment: string;
-  createdAt: Date;
-  updatedAt: Date;
-  user: {
-    name: string;
-    image?: string;
-  };
-}
-
 interface ReviewSectionProps {
   jewelryAssetId: string;
   averageRating?: number;
   totalReviews?: number;
 }
+
+type Review = {
+  id: string;
+  user: string;
+  userImage: string | null;
+  reviewDate: Date | string;
+  rating: number;
+  description: string;
+};
 
 export function ReviewSection({ jewelryAssetId }: ReviewSectionProps) {
   const [hoveredRating, setHoveredRating] = useState(0);
@@ -47,9 +42,10 @@ export function ReviewSection({ jewelryAssetId }: ReviewSectionProps) {
     rating: 0,
     comment: "",
   });
+  const queryClient = useQueryClient();
 
   const { data: reviewsData, refetch: refetchReviews } = useQuery({
-    queryKey: ["jewelry_reviews"],
+    queryKey: ["jewelry_reviews", jewelryAssetId],
     queryFn: () =>
       getReviewByAssetId({
         data: {
@@ -58,13 +54,57 @@ export function ReviewSection({ jewelryAssetId }: ReviewSectionProps) {
       }),
   });
 
+  const [optimisticReviews, addOptimisticReview] = useOptimistic(
+    reviewsData?.data.reviews ?? [],
+    (
+      state: Review[],
+      newReview: { description: string; rating: number },
+    ): Review[] => [
+      ...state,
+      {
+        ...newReview,
+        id: `optimistic-${Date.now()}`,
+        user: "You",
+        reviewDate: new Date(),
+        userImage: "/placeholder-img.jpg",
+      },
+    ],
+  );
+
   const { mutate } = useMutation({
     mutationFn: createReview,
-    onSuccess: () => {},
+    onMutate: async ({ data }) => {
+      await queryClient.cancelQueries({
+        queryKey: ["jewelry_reviews", jewelryAssetId],
+      });
+      const previousReviews = queryClient.getQueryData([
+        "jewelry_reviews",
+        jewelryAssetId,
+      ]);
+      addOptimisticReview(data);
+      setIsWritingReview(false);
+      setNewReview({ rating: 0, comment: "" });
+      return { previousReviews };
+    },
+    onError: (err, newReview, context) => {
+      if (context?.previousReviews) {
+        queryClient.setQueryData(
+          ["jewelry_reviews", jewelryAssetId],
+          context.previousReviews,
+        );
+      }
+      toast.error("Failed to submit review. Please try again.");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["jewelry_reviews", jewelryAssetId],
+      });
+    },
   });
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString("en-US", {
+  const formatDate = (date: Date | string) => {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -105,7 +145,7 @@ export function ReviewSection({ jewelryAssetId }: ReviewSectionProps) {
               {renderStars(5)}
               <span className="text-sm font-medium">{5}</span>
               <span className="text-muted-foreground text-sm">
-                ({reviewsData?.data.reviews.length || 0} reviews)
+                ({optimisticReviews.length || 0} reviews)
               </span>
             </div>
           </div>
@@ -208,17 +248,17 @@ export function ReviewSection({ jewelryAssetId }: ReviewSectionProps) {
           <Separator />
           <div className="space-y-6">
             <h3 className="text-base font-medium">
-              Customer Reviews ({reviewsData?.data.reviews.length || 0})
+              Customer Reviews ({optimisticReviews.length || 0})
             </h3>
 
-            {reviewsData?.data.reviews.length === 0 ? (
+            {optimisticReviews.length === 0 ? (
               <div className="text-muted-foreground py-8 text-center">
                 <MessageSquare className="mx-auto mb-4 h-12 w-12 opacity-50" />
                 <p>No reviews yet. Be the first to share your experience!</p>
               </div>
             ) : (
               <div className="space-y-6">
-                {reviewsData?.data.reviews.map((review) => (
+                {optimisticReviews.map((review) => (
                   <div key={review.id} className="space-y-3">
                     <div className="flex items-start space-x-4">
                       <Avatar className="h-10 w-10">
@@ -241,7 +281,7 @@ export function ReviewSection({ jewelryAssetId }: ReviewSectionProps) {
                             {renderStars(review.rating)}
                           </div>
                           <span className="text-muted-foreground text-xs">
-                            {formatDate(review.reviewDate as Date)}
+                            {formatDate(review.reviewDate)}
                           </span>
                         </div>
 
