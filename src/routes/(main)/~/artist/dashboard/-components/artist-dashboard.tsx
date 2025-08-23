@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { compareDesc, format, parseISO } from "date-fns";
+import { compareDesc, format } from "date-fns";
 import { ArtistDashboardAndAnalyticsType } from "~/actions/dashboard.action";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
@@ -94,8 +94,8 @@ export function ArtistDashboard({
     .slice()
     .sort((a, b) =>
       compareDesc(
-        parseISO(a.jewelry_assets.createdAt as unknown as string),
-        parseISO(b.jewelry_assets.createdAt as unknown as string),
+        a.jewelry_assets.createdAt ?? new Date(),
+        b.jewelry_assets.createdAt ?? new Date(),
       ),
     )
     .slice(0, 5);
@@ -130,7 +130,7 @@ export function ArtistDashboard({
               <Package className="text-muted-foreground h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.totalProducts}</div>
+              <div className="text-2xl font-bold">{dashboardData.productsInCart}</div>
               <p className="text-muted-foreground text-xs">
                 <span className="text-green-600">+3</span> this week
               </p>
@@ -259,29 +259,31 @@ export function ArtistDashboard({
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {recentReviews.map((review) => (
-                  <div key={review.id} className="border-b pb-4 last:border-b-0">
+                {dashboardData.assetReviews.map((item) => (
+                  <div key={item.review.id} className="border-b pb-4 last:border-b-0">
                     <div className="mb-2 flex items-start justify-between">
                       <div>
-                        <h4 className="text-sm font-medium">{review.title}</h4>
+                        <h4 className="text-sm font-medium">Stunning Design</h4>
                         <div className="mt-1 flex items-center space-x-1">
                           {[...Array(5)].map((_, i) => (
                             <Star
                               key={i}
-                              className={`h-3 w-3 ${i < review.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
+                              className={`h-3 w-3 ${i < item.review.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
                             />
                           ))}
                         </div>
                       </div>
-                      <span className="text-muted-foreground text-xs">{review.date}</span>
+                      <span className="text-muted-foreground text-xs">
+                        {format(item.review.createdAt as Date, "MMM dd, yyyy")}
+                      </span>
                     </div>
                     <p className="text-muted-foreground mb-2 text-sm">
-                      {review.description}
+                      {item.review.description}
                     </p>
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">by {review.customer}</span>
+                      <span className="text-muted-foreground">by {item.user.name}</span>
                       <span className="text-muted-foreground">
-                        for {review.productName}
+                        for {item.jewelry_assets.name}
                       </span>
                     </div>
                   </div>
@@ -387,34 +389,36 @@ export function ArtistDashboard({
                 <CardDescription>Manage and respond to customer feedback</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                {recentReviews.map((review) => (
-                  <div key={review.id} className="rounded-lg border p-4">
+                {dashboardData.assetReviews.map((item) => (
+                  <div key={item.review.id} className="rounded-lg border p-4">
                     <div className="mb-3 flex items-start justify-between">
                       <div className="flex items-center space-x-3">
                         <Avatar className="h-8 w-8">
-                          <AvatarFallback>{review.customer.charAt(0)}</AvatarFallback>
+                          <AvatarFallback>{item.user.name.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="text-sm font-medium">{review.customer}</p>
+                          <p className="text-sm font-medium">{item.user.name}</p>
                           <div className="flex items-center space-x-1">
                             {[...Array(5)].map((_, i) => (
                               <Star
                                 key={i}
-                                className={`h-3 w-3 ${i < review.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
+                                className={`h-3 w-3 ${i < item.review.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
                               />
                             ))}
                           </div>
                         </div>
                       </div>
-                      <span className="text-muted-foreground text-xs">{review.date}</span>
+                      <span className="text-muted-foreground text-xs">
+                        {format(item.review.createdAt as Date, "MMM dd, yyyy")}
+                      </span>
                     </div>
-                    <h4 className="mb-2 font-medium">{review.title}</h4>
+                    <h4 className="mb-2 font-medium">Beautiful piece</h4>
                     <p className="text-muted-foreground mb-3 text-sm">
-                      {review.description}
+                      {item.review.description}
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-muted-foreground text-xs">
-                        Product: {review.productName}
+                        Product: {item.jewelry_assets.name}
                       </span>
                       <Button variant="outline" size="sm">
                         Reply

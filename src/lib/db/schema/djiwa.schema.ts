@@ -154,6 +154,14 @@ export const follow = pgTable(
   }),
 );
 
+export const feedback = pgTable("feedback", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  message: text("message").notNull(),
+  emote: text("emote").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 /**
  * Relations
  */

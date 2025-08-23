@@ -4,7 +4,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { and, eq } from "drizzle-orm";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { payments, review, user } from "~/lib/db/schema";
+import { feedback, payments, review, user } from "~/lib/db/schema";
 
 export const createReview = createServerFn({ method: "POST" })
   .validator(
@@ -71,5 +71,30 @@ export const getReviewByAssetId = createServerFn({ method: "GET" })
         reviews,
         isUserOwnedProduct: isUserOwnedProduct.length > 0,
       },
+    };
+  });
+
+export const createFeedback = createServerFn({ method: "POST" })
+  .validator(
+    z.object({
+      message: z.string().min(1).max(200),
+      emote: z.string().min(1).max(50),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data, context }) => {
+    const { message, emote } = data;
+
+    const newFeedback = await db
+      .insert(feedback)
+      .values({
+        message,
+        emote,
+      })
+      .returning({ id: review.id });
+
+    return {
+      success: true,
+      data: newFeedback[0],
     };
   });

@@ -3,6 +3,7 @@ import { and, count, eq, sql } from "drizzle-orm";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
 import {
+  cartItem,
   category,
   follow,
   jewelryAssets,
@@ -99,42 +100,51 @@ export const getArtistDashboardAndAnalytics = createServerFn({ method: "GET" })
     // get user average rating from all products
     // get user followers count
 
-    const [totalRevenue, productsInCart, followers, artistProducts] = await Promise.all([
-      await db
-        .select({
-          amount: payments.amount,
-        })
-        .from(payments)
-        .where(
-          and(eq(payments.userId, context.user.id), eq(payments.isPaidToUser, true)),
-        ),
-      await db
-        .select({
-          count: count(),
-        })
-        .from(user)
-        .where(sql`role = 'user'`),
-      await db
-        .select({
-          count: count(),
-        })
-        .from(follow)
-        .where(eq(follow.followingId, context.user.id)),
-      await db
-        .select()
-        .from(jewelryAssets)
-        .innerJoin(category, eq(category.id, jewelryAssets.categoryId))
-        .where(eq(jewelryAssets.userId, context.user.id)),
-    ]);
+    const [totalRevenue, productsInCart, followers, artistProducts, assetReviews] =
+      await Promise.all([
+        await db
+          .select({
+            amount: payments.amount,
+          })
+          .from(payments)
+          .where(
+            and(eq(payments.userId, context.user.id), eq(payments.isPaidToUser, true)),
+          ),
+        await db
+          .select({
+            count: count(),
+          })
+          .from(cartItem)
+          .innerJoin(jewelryAssets, eq(cartItem.jewelryAssetId, jewelryAssets.id))
+          .where(eq(jewelryAssets.userId, context.user.id)),
+        await db
+          .select({
+            count: count(),
+          })
+          .from(follow)
+          .where(eq(follow.followingId, context.user.id)),
+        await db
+          .select()
+          .from(jewelryAssets)
+          .innerJoin(category, eq(category.id, jewelryAssets.categoryId))
+          .where(eq(jewelryAssets.userId, context.user.id)),
+        await db
+          .select()
+          .from(review)
+          .innerJoin(user, eq(review.userId, user.id))
+          .innerJoin(jewelryAssets, eq(review.jewelryAssetId, jewelryAssets.id))
+          .where(eq(jewelryAssets.userId, context.user.id)),
+      ]);
 
     return {
       success: true,
       data: {
         totalRevenue,
-        productsInCart,
+        productsInCart: productsInCart[0].count,
         averageRatings: 5,
         followers: followers[0].count,
         artistProducts,
+        assetReviews,
       },
     };
   });

@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { getUserBoostCredits } from "~/actions/user.action";
+import { FeedbackModal } from "~/components/feedback-modal";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
@@ -57,6 +58,7 @@ import {
   CollapsibleTrigger,
 } from "~/components/animate-ui/radix/collapsible";
 
+import { createFeedback } from "~/actions/review.action";
 import {
   Select,
   SelectContent,
@@ -112,6 +114,8 @@ export function AssetPublish() {
 
   const { addDraft } = useFormStorage();
 
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+
   const [isUsingBoost, setIsUsingBoost] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [totalStorageLimitToUpdate, setTotalStorageLimitToUpdate] = useState(0);
@@ -132,15 +136,29 @@ export function AssetPublish() {
     queryFn: () => getUserBoostCredits(),
   });
 
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: createjewelryAsset,
-    onSuccess: (res) => {
-      toast.success("Data saved successfully");
+  const { mutate: feedbackFn, isPending: isCreatingFeedback } = useMutation({
+    mutationFn: createFeedback,
+    onSuccess: () => {
+      toast.success("Feedback submitted successfully, thank you!");
       navigate({
         to: "/~/artist/my-models",
       });
     },
   });
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: createjewelryAsset,
+    onSuccess: () => {
+      toast.success("Data saved successfully");
+      setIsFeedbackModalOpen(true);
+    },
+  });
+
+  const handleFeedbackSubmit = (feedback: { emote: string; message: string }) => {
+    feedbackFn({
+      data: feedback,
+    });
+  };
 
   const getTotalBoostToUpdate = (val: number): number => {
     if (!isUsingBoost) return 0;
@@ -160,8 +178,6 @@ export function AssetPublish() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("tags values", tagsValue);
-    return console.log("values", values);
     if (currentCredit?.data?.boostCredit! < parseInt(values.boost) && isUsingBoost) {
       return toast.error("You don't have enough credits to boost this product.");
     }
@@ -496,6 +512,7 @@ export function AssetPublish() {
                     formValues: stringifiedForm,
                     tagsValue: stringifiedTags,
                     imageUrl: stringifiedImageUrl,
+                    id: Math.random().toString(36).substring(2, 9),
                   });
 
                   toast.success("Draft saved successfully");
@@ -507,12 +524,12 @@ export function AssetPublish() {
               <Button
                 className="w-[100px] cursor-pointer"
                 type="submit"
-                // disabled={
-                //   isPending ||
-                //   isUploadingImage ||
-                //   assetStorageUrl.asset_url === "" ||
-                //   tagsValue.length === 0
-                // }
+                disabled={
+                  isPending ||
+                  isUploadingImage ||
+                  assetStorageUrl.asset_url === "" ||
+                  tagsValue.length === 0
+                }
               >
                 {isPending ? <LoaderIcon className="animate-spin" /> : "Submit"}
               </Button>
@@ -520,6 +537,17 @@ export function AssetPublish() {
           </form>
         </Form>
       </CardContent>
+      <FeedbackModal
+        isOpen={isFeedbackModalOpen}
+        onClose={() => {
+          setIsFeedbackModalOpen(false);
+          navigate({
+            to: "/~/artist/my-models",
+          });
+        }}
+        onSubmit={handleFeedbackSubmit}
+        isCreatingFeedback={isCreatingFeedback}
+      />
     </Card>
   );
 }
