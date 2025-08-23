@@ -1,4 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
+import { compareDesc, format, parseISO } from "date-fns";
+import { ArtistDashboardAndAnalyticsType } from "~/actions/dashboard.action";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -24,7 +26,13 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
-export function ArtistDashboard() {
+export function ArtistDashboard({
+  dashboardData,
+}: {
+  dashboardData: ArtistDashboardAndAnalyticsType;
+}) {
+  console.log("dashboardData", dashboardData);
+
   const navigate = useNavigate();
   const stats = {
     totalRevenue: 12450,
@@ -32,39 +40,6 @@ export function ArtistDashboard() {
     averageRating: 4.8,
     totalFollowers: 1250,
   };
-
-  const recentProducts = [
-    {
-      id: "1",
-      name: "Diamond Eternity Ring",
-      price: 2500,
-      category: "Rings",
-      thumbnailUrl: "/placeholder-img.jpg?height=80&width=80",
-      boost: 5,
-      views: 234,
-      likes: 45,
-    },
-    {
-      id: "2",
-      name: "Pearl Drop Earrings",
-      price: 450,
-      category: "Earrings",
-      thumbnailUrl: "/placeholder-img.jpg?height=80&width=80",
-      boost: 0,
-      views: 156,
-      likes: 23,
-    },
-    {
-      id: "3",
-      name: "Gold Chain Necklace",
-      price: 890,
-      category: "Necklaces",
-      thumbnailUrl: "/placeholder-img.jpg?height=80&width=80",
-      boost: 3,
-      views: 189,
-      likes: 34,
-    },
-  ];
 
   const recentSales = [
     {
@@ -115,6 +90,16 @@ export function ArtistDashboard() {
     },
   ];
 
+  const recentProducts = dashboardData.artistProducts
+    .slice()
+    .sort((a, b) =>
+      compareDesc(
+        parseISO(a.jewelry_assets.createdAt as unknown as string),
+        parseISO(b.jewelry_assets.createdAt as unknown as string),
+      ),
+    )
+    .slice(0, 5);
+
   return (
     <div className="bg-background min-h-screen">
       <main>
@@ -127,7 +112,11 @@ export function ArtistDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                ${stats.totalRevenue.toLocaleString()}
+                $
+                {dashboardData.totalRevenue.reduce(
+                  (sum, payment) => sum + parseInt(payment.amount),
+                  0,
+                )}
               </div>
               <p className="text-muted-foreground text-xs">
                 <span className="text-green-600">+12%</span> from last month
@@ -165,9 +154,7 @@ export function ArtistDashboard() {
               <Users className="text-muted-foreground h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
-                {stats.totalFollowers.toLocaleString()}
-              </div>
+              <div className="text-2xl font-bold">{dashboardData.followers}</div>
               <p className="text-muted-foreground text-xs">
                 <span className="text-green-600">+45</span> this month
               </p>
@@ -194,23 +181,36 @@ export function ArtistDashboard() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {recentProducts.map((product) => (
-                    <div key={product.id} className="flex items-center space-x-4">
+                    <div
+                      key={product.jewelry_assets.id}
+                      className="flex items-center space-x-4"
+                    >
                       <img
-                        src={product.thumbnailUrl || "/placeholder-img.jpg"}
-                        alt={product.name}
+                        src={
+                          product.jewelry_assets.thumbnailUrl || "/placeholder-img.jpg"
+                        }
+                        alt={product.jewelry_assets.name}
                         className="h-12 w-12 rounded-lg object-cover"
                       />
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium">{product.name}</p>
-                        <p className="text-muted-foreground text-sm">${product.price}</p>
+                        <p className="truncate text-sm font-medium">
+                          {product.jewelry_assets.name} -{" "}
+                          {format(
+                            product.jewelry_assets.createdAt as unknown as string,
+                            "MMM dd, yyyy",
+                          )}
+                        </p>
+                        <p className="text-muted-foreground text-sm">
+                          ${product.jewelry_assets.price}
+                        </p>
                       </div>
                       <div className="text-muted-foreground flex items-center space-x-2 text-xs">
                         <Eye className="h-3 w-3" />
-                        <span>{product.views}</span>
+                        <span>5</span>
                         <Heart className="h-3 w-3" />
-                        <span>{product.likes}</span>
+                        <span>10</span>
                       </div>
-                      {product.boost > 0 && (
+                      {product!.jewelry_assets!.boost! > 0 && (
                         <Badge variant="secondary">
                           <TrendingUp className="mr-1 h-3 w-3" />
                           Boosted
@@ -311,23 +311,29 @@ export function ArtistDashboard() {
                   <Badge variant="outline">All Categories</Badge>
                 </div>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {recentProducts.map((product) => (
-                    <Card key={product.id}>
+                  {dashboardData.artistProducts.map((product) => (
+                    <Card key={product.jewelry_assets.id}>
                       <CardContent className="p-4">
                         <img
-                          src={product.thumbnailUrl || "/placeholder-img.jpg"}
-                          alt={product.name}
+                          src={
+                            product.jewelry_assets.thumbnailUrl || "/placeholder-img.jpg"
+                          }
+                          alt={product.jewelry_assets.name}
                           className="mb-3 h-32 w-full rounded-lg object-cover"
                         />
-                        <h3 className="mb-1 font-medium">{product.name}</h3>
+                        <h3 className="mb-1 font-medium">
+                          {product.jewelry_assets.name}
+                        </h3>
                         <p className="text-muted-foreground mb-2 text-sm">
-                          {product.category}
+                          {product.category.name}
                         </p>
                         <div className="flex items-center justify-between">
-                          <span className="font-bold">${product.price}</span>
+                          <span className="font-bold">
+                            ${product.jewelry_assets.price}
+                          </span>
                           <div className="text-muted-foreground flex items-center space-x-1 text-xs">
                             <Eye className="h-3 w-3" />
-                            <span>{product.views}</span>
+                            <span>{10}</span>
                           </div>
                         </div>
                       </CardContent>

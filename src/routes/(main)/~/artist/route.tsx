@@ -111,7 +111,7 @@ const ARTIST_SIDEBAR = [
     items: [
       {
         label: "Artist Forum",
-        link: "/~/artist/dashboard",
+        link: "/~/artist/community",
         icon: Users,
       },
     ],

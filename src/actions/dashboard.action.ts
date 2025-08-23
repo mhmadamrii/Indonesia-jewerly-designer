@@ -1,9 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
-import { count, eq, sql } from "drizzle-orm";
+import { and, count, eq, sql } from "drizzle-orm";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
 import {
   category,
+  follow,
   jewelryAssets,
   jewelryAssetTags,
   payments,
@@ -15,10 +16,11 @@ import {
 export type FeedsDataType = Awaited<ReturnType<(typeof getFeeds)>>["data"]; // prettier-ignore
 export type TrendingJewelriesType = Awaited<ReturnType<typeof getFeeds>>["data"]["trendingJewelries"]; // prettier-ignore
 export type TopArtistType = Awaited<ReturnType<typeof getFeeds>>["data"]["topArtists"]; // prettier-ignore
+export type ArtistDashboardAndAnalyticsType = Awaited<ReturnType<typeof getArtistDashboardAndAnalytics>>["data"] // prettier-ignore
 
 export const getFeeds = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
-  .handler(async ({ context }) => {
+  .handler(async ({}) => {
     const [categories, jewelries, users] = await Promise.all([
       db.select().from(category),
       db
@@ -89,26 +91,57 @@ export const getFeedSummary = createServerFn({ method: "GET" }).handler(async ()
   };
 });
 
-export const getArtistDashboard = createServerFn({ method: "GET" }).handler(async () => {
-  const [totalAssets, totalArtists] = await Promise.all([
-    await db
-      .select({
-        count: count(),
-      })
-      .from(jewelryAssets),
-    await db
-      .select({
-        count: count(),
-      })
-      .from(user)
-      .where(sql`role = 'user'`),
-  ]);
+export const getArtistDashboardAndAnalytics = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    // get current user amount payments where is paid to user is true (total revenues)
+    // get current user products where in cart
+    // get user average rating from all products
+    // get user followers count
 
-  return {
-    success: true,
-    data: {
-      totalAssets: totalAssets[0].count,
-      totalArtists: totalArtists[0].count,
-    },
-  };
-});
+    const [totalRevenue, productsInCart, followers, artistProducts] = await Promise.all([
+      await db
+        .select({
+          amount: payments.amount,
+        })
+        .from(payments)
+        .where(
+          and(eq(payments.userId, context.user.id), eq(payments.isPaidToUser, true)),
+        ),
+      await db
+        .select({
+          count: count(),
+        })
+        .from(user)
+        .where(sql`role = 'user'`),
+      await db
+        .select({
+          count: count(),
+        })
+        .from(follow)
+        .where(eq(follow.followingId, context.user.id)),
+      await db
+        .select()
+        .from(jewelryAssets)
+        .innerJoin(category, eq(category.id, jewelryAssets.categoryId))
+        .where(eq(jewelryAssets.userId, context.user.id)),
+    ]);
+
+    return {
+      success: true,
+      data: {
+        totalRevenue,
+        productsInCart,
+        averageRatings: 5,
+        followers: followers[0].count,
+        artistProducts,
+      },
+    };
+  });
+
+/**
+ * todo: earnings and payouts
+ */
+// get current user amount payments where is paid to user is true (total earnings)
+// get current user amount payments where is paid to user is false (pending earnings)
+// get current user total payments length (confirmed sales)

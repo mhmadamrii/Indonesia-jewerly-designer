@@ -126,6 +126,7 @@ export const payments = pgTable("payments", {
     .references(() => jewelryAssets.id, { onDelete: "cascade" }),
   amount: text("amount").notNull(),
   status: text("status").notNull(),
+  isPaidToUser: boolean("is_paid_to_user").default(false).notNull(),
   currency: varchar("currency", { length: 100 }).notNull(),
   provider: varchar("provider", { length: 100 }).notNull(),
   providerId: varchar("provider_id", { length: 100 }).notNull(),
