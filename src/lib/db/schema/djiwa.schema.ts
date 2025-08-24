@@ -80,9 +80,16 @@ export const review = pgTable("review", {
 
 export const notification = pgTable("notification", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: text("user_id")
+  toUserId: text("to_user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
+  fromUserId: text("from_user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  jewelryAssetId: uuid("jewelry_asset_id").references(() => jewelryAssets.id, {
+    onDelete: "cascade",
+  }),
+  reviewId: uuid("review_id").references(() => review.id, { onDelete: "cascade" }),
   message: text("message").notNull(),
   isRead: boolean("is_read").default(false).notNull(),
   type: text("type"),
@@ -225,7 +232,7 @@ export const reviewRelations = relations(review, ({ one }) => ({
 
 export const notificationRelations = relations(notification, ({ one }) => ({
   user: one(user, {
-    fields: [notification.userId],
+    fields: [notification.fromUserId],
     references: [user.id],
   }),
 }));

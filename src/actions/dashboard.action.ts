@@ -21,7 +21,7 @@ export type ArtistDashboardAndAnalyticsType = Awaited<ReturnType<typeof getArtis
 
 export const getFeeds = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
-  .handler(async ({}) => {
+  .handler(async () => {
     const [categories, jewelries, users] = await Promise.all([
       db.select().from(category),
       db
@@ -44,7 +44,7 @@ export const getFeeds = createServerFn({ method: "GET" })
         .groupBy(jewelryAssets.id, category.id, user.id),
       db
         .select({
-          user: user, // all user info
+          user: user,
           soldCount: sql<number>`COUNT(${payments.id})::int`,
         })
         .from(payments)
@@ -55,8 +55,6 @@ export const getFeeds = createServerFn({ method: "GET" })
         .orderBy(sql`COUNT(${payments.id}) DESC`)
         .limit(5),
     ]);
-
-    console.log("jewelries", jewelries);
 
     return {
       success: true,
@@ -80,7 +78,7 @@ export const getFeedSummary = createServerFn({ method: "GET" }).handler(async ()
         count: count(),
       })
       .from(user)
-      .where(sql`role = 'user'`),
+      .where(sql`role = 'artist'`),
   ]);
 
   return {
