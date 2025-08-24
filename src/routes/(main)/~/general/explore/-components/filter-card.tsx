@@ -182,8 +182,8 @@ export function FilterCard() {
 
         <CardFooter className="flex justify-center gap-2 px-2">
           <Button
-            className={cn("w-full", {
-              "w-[80%]": Object.keys(search).length > 0,
+            className={cn("w-[90%] cursor-pointer", {
+              "w-[76%]": Object.keys(search).length > 0,
             })}
             onClick={handleApply}
           >
@@ -192,7 +192,7 @@ export function FilterCard() {
           <Button
             onClick={resetFilters}
             variant="destructive"
-            className={cn("flex", {
+            className={cn("flex cursor-pointer", {
               hidden: Object.keys(search).length == 0,
             })}
             size="icon"

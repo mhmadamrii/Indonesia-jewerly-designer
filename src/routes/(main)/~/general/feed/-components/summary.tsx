@@ -3,24 +3,16 @@ import { CreditCard, ListOrdered, Paintbrush, TrendingUp } from "lucide-react";
 import { getFeedSummary } from "~/actions/dashboard.action";
 import { SlidingNumber } from "~/components/animate-ui/text/sliding-number";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { authClient } from "~/lib/auth/auth-client";
 import { cn } from "~/lib/utils";
 
 export function Summary() {
-  const { data: session } = authClient.useSession();
-
   const { data } = useQuery({
     queryKey: ["dashboard_summary"],
     queryFn: getFeedSummary,
   });
 
   return (
-    <div
-      className={cn("min-h-[350px]", {
-        // @ts-expect-error
-        hidden: session?.user?.role == "user",
-      })}
-    >
+    <div className={cn("min-h-[350px]", {})}>
       <div className="grid h-[350px] grid-cols-2 gap-2">
         <Card className="h-full rounded-sm py-2">
           <CardHeader className="px-2">

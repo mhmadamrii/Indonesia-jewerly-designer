@@ -1,4 +1,3 @@
-import { useNavigate } from "@tanstack/react-router";
 import { compareDesc, format } from "date-fns";
 import { ArtistDashboardAndAnalyticsType } from "~/actions/dashboard.action";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
@@ -31,64 +30,12 @@ export function ArtistDashboard({
 }: {
   dashboardData: ArtistDashboardAndAnalyticsType;
 }) {
-  console.log("dashboardData", dashboardData);
-
-  const navigate = useNavigate();
   const stats = {
     totalRevenue: 12450,
     totalProducts: 24,
     averageRating: 4.8,
     totalFollowers: 1250,
   };
-
-  const recentSales = [
-    {
-      id: "1",
-      productName: "Silver Bracelet Set",
-      amount: 320,
-      customer: "Sarah M.",
-      date: "2024-01-15",
-      status: "completed",
-    },
-    {
-      id: "2",
-      productName: "Emerald Pendant",
-      amount: 1200,
-      customer: "Michael R.",
-      date: "2024-01-14",
-      status: "completed",
-    },
-    {
-      id: "3",
-      productName: "Rose Gold Ring",
-      amount: 680,
-      customer: "Emma L.",
-      date: "2024-01-13",
-      status: "processing",
-    },
-  ];
-
-  const recentReviews = [
-    {
-      id: "1",
-      title: "Absolutely stunning!",
-      description:
-        "The craftsmanship is incredible. Exactly as described and shipped quickly.",
-      rating: 5,
-      customer: "Jennifer K.",
-      productName: "Diamond Stud Earrings",
-      date: "2024-01-15",
-    },
-    {
-      id: "2",
-      title: "Beautiful piece",
-      description: "Love the design and quality. Will definitely order again.",
-      rating: 5,
-      customer: "David P.",
-      productName: "Custom Wedding Band",
-      date: "2024-01-14",
-    },
-  ];
 
   const recentProducts = dashboardData.artistProducts
     .slice()
@@ -228,20 +175,26 @@ export function ArtistDashboard({
                   <CardDescription>Your latest transactions</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {recentSales.map((sale) => (
-                    <div key={sale.id} className="flex items-center justify-between">
+                  {dashboardData.recentSales.map((sale) => (
+                    <div
+                      key={sale.payments.id}
+                      className="flex items-center justify-between"
+                    >
                       <div>
-                        <p className="text-sm font-medium">{sale.productName}</p>
+                        <p className="text-sm font-medium">{sale.jewelry_assets.name}</p>
                         <p className="text-muted-foreground text-xs">
-                          {sale.customer} • {sale.date}
+                          {sale.user.name} •{" "}
+                          {format(sale.payments.createdAt as Date, "MMM dd, yyyy")}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm font-medium">${sale.amount}</p>
+                        <p className="text-sm font-medium">${sale.payments.amount}</p>
                         <Badge
-                          variant={sale.status === "completed" ? "default" : "secondary"}
+                          variant={
+                            sale.payments.status === "capture" ? "default" : "secondary"
+                          }
                         >
-                          {sale.status}
+                          {sale.payments.status}
                         </Badge>
                       </div>
                     </div>

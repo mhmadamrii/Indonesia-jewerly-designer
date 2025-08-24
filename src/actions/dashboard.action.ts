@@ -100,41 +100,54 @@ export const getArtistDashboardAndAnalytics = createServerFn({ method: "GET" })
     // get user average rating from all products
     // get user followers count
 
-    const [totalRevenue, productsInCart, followers, artistProducts, assetReviews] =
-      await Promise.all([
-        await db
-          .select({
-            amount: payments.amount,
-          })
-          .from(payments)
-          .where(
-            and(eq(payments.userId, context.user.id), eq(payments.isPaidToUser, true)),
-          ),
-        await db
-          .select({
-            count: count(),
-          })
-          .from(cartItem)
-          .innerJoin(jewelryAssets, eq(cartItem.jewelryAssetId, jewelryAssets.id))
-          .where(eq(jewelryAssets.userId, context.user.id)),
-        await db
-          .select({
-            count: count(),
-          })
-          .from(follow)
-          .where(eq(follow.followingId, context.user.id)),
-        await db
-          .select()
-          .from(jewelryAssets)
-          .innerJoin(category, eq(category.id, jewelryAssets.categoryId))
-          .where(eq(jewelryAssets.userId, context.user.id)),
-        await db
-          .select()
-          .from(review)
-          .innerJoin(user, eq(review.userId, user.id))
-          .innerJoin(jewelryAssets, eq(review.jewelryAssetId, jewelryAssets.id))
-          .where(eq(jewelryAssets.userId, context.user.id)),
-      ]);
+    const [
+      totalRevenue,
+      productsInCart,
+      followers,
+      artistProducts,
+      assetReviews,
+      recentSales,
+    ] = await Promise.all([
+      await db
+        .select({
+          amount: payments.amount,
+        })
+        .from(payments)
+        .where(
+          and(eq(payments.userId, context.user.id), eq(payments.isPaidToUser, true)),
+        ),
+      await db
+        .select({
+          count: count(),
+        })
+        .from(cartItem)
+        .innerJoin(jewelryAssets, eq(cartItem.jewelryAssetId, jewelryAssets.id))
+        .where(eq(jewelryAssets.userId, context.user.id)),
+      await db
+        .select({
+          count: count(),
+        })
+        .from(follow)
+        .where(eq(follow.followingId, context.user.id)),
+      await db
+        .select()
+        .from(jewelryAssets)
+        .innerJoin(category, eq(category.id, jewelryAssets.categoryId))
+        .where(eq(jewelryAssets.userId, context.user.id)),
+      await db
+        .select()
+        .from(review)
+        .innerJoin(user, eq(review.userId, user.id))
+        .innerJoin(jewelryAssets, eq(review.jewelryAssetId, jewelryAssets.id))
+        .where(eq(jewelryAssets.userId, context.user.id)),
+      await db
+        .select()
+        .from(payments)
+        .innerJoin(user, eq(payments.userId, user.id))
+        .innerJoin(jewelryAssets, eq(payments.jewelryAssetId, jewelryAssets.id))
+        .where(eq(jewelryAssets.userId, context.user.id))
+        .limit(5),
+    ]);
 
     return {
       success: true,
@@ -145,6 +158,7 @@ export const getArtistDashboardAndAnalytics = createServerFn({ method: "GET" })
         followers: followers[0].count,
         artistProducts,
         assetReviews,
+        recentSales,
       },
     };
   });
