@@ -10,16 +10,17 @@ import { UserAvatar } from "../user-avatar";
 
 export function HeaderLandingPage() {
   const navigate = useNavigate();
-  const { setIsRoleChanging } = useRoleStore();
+  const { setIsRoleChanging, setRole } = useRoleStore();
   const { theme } = useTheme();
   const { data: session } = authClient.useSession();
 
   useEffect(() => {
     setIsRoleChanging(false);
+    setRole("user");
   }, []);
 
   return (
-    <header className="fixed top-0 z-50 w-full border-b backdrop-blur-md">
+    <header className="fixed top-0 z-50 w-full border-b bg-gradient-to-b from-slate-50 to-white backdrop-blur-md dark:from-slate-900 dark:to-slate-800">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <ClientOnly fallback={<div>Loading...</div>}>

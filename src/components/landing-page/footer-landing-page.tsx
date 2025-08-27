@@ -35,7 +35,7 @@ const footerLinks = [
 export function FooterLandingPage() {
   const { theme } = useTheme();
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800">
       <div className="bg-muted grow" />
       <footer>
         <div className="mx-auto max-w-screen-xl">

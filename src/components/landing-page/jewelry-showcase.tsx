@@ -63,18 +63,8 @@ const jewelryItems = [
 
 export function JewelryShowcase() {
   return (
-    <section className="px-4 py-20">
+    <section className="px-4">
       <div className="container mx-auto">
-        <div className="mb-16 text-center">
-          <h2 className="mb-8 text-3xl font-light text-gray-800 md:text-5xl">
-            Featured Collections
-          </h2>
-          <p className="text-muted-foreground mx-auto max-w-2xl text-xl">
-            Explore our curated selection of extraordinary jewelry pieces, each crafted
-            with precision and passion by Indonesian master artisans.
-          </p>
-        </div>
-
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {jewelryItems.map((item) => (
             <Card
