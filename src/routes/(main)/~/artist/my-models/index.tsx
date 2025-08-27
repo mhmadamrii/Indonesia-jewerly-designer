@@ -7,15 +7,20 @@ import { Button } from "~/components/ui/button";
 import { JewelryAssetTable } from "./-components/jewelry-asset-table";
 
 export const Route = createFileRoute("/(main)/~/artist/my-models/")({
-  loader: async () => {
-    const myJewerlies = getMyjewelryAssets();
-    return { myJewerlies };
+  loader: async ({ context }) => {
+    const myJewelries = context.queryClient.fetchQuery({
+      queryKey: ["my_jewerleries_artist"],
+      queryFn: getMyjewelryAssets,
+      staleTime: 20_000,
+    });
+
+    return { myJewelries };
   },
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { myJewerlies } = Route.useLoaderData();
+  const { myJewelries } = Route.useLoaderData();
   return (
     <section className="flex h-full w-full flex-col gap-3 px-5 py-3">
       <div className="container mx-auto space-y-6 p-3">
@@ -31,9 +36,8 @@ function RouteComponent() {
             Export Data
           </Button>
         </div>
-        <Await promise={myJewerlies} fallback={<div>Loading...</div>}>
+        <Await promise={myJewelries} fallback={<div>Loading...</div>}>
           {({ data }) => {
-            console.log("data", data);
             return (
               <JewelryAssetTable
                 // @ts-expect-error

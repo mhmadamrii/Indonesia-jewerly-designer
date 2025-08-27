@@ -24,7 +24,6 @@ export const Route = createFileRoute("/(main)/~/general/feed/")({
 function RouteComponent() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const { feeds } = Route.useLoaderData();
-  console.log("selectedCategory", selectedCategory);
 
   return (
     <section className="flex h-full w-full flex-col px-5 py-8">

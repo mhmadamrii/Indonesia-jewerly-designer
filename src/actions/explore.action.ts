@@ -1,10 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 import { endOfMonth, startOfMonth, subMonths } from "date-fns";
-import { and, eq, gte, InferSelectModel, lte } from "drizzle-orm";
+import { and, eq, gte, InferSelectModel, lte, sql } from "drizzle-orm";
 import { z } from "zod";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { category, jewelryAssets, user } from "~/lib/db/schema";
+import { category, jewelryAssets, review, user } from "~/lib/db/schema";
 
 export const exploreSearchParamSchema = z.object({
   artist: z.string().optional(),
@@ -18,6 +18,7 @@ export type jewelryWithJoins = {
   jewelry_assets: InferSelectModel<typeof jewelryAssets>;
   category: InferSelectModel<typeof category>;
   user: InferSelectModel<typeof user>;
+  reviewCount: number;
 };
 
 export interface IExploreProps {
@@ -77,11 +78,18 @@ export const getExploreAssetDatas = createServerFn({ method: "GET" })
     const [categories, jewelries, users] = await Promise.all([
       db.select().from(category),
       db
-        .select()
+        .select({
+          jewelry_assets: jewelryAssets,
+          category,
+          user,
+          reviewCount: sql<number>`COUNT(${review.id})`,
+        })
         .from(jewelryAssets)
         .innerJoin(category, eq(jewelryAssets.categoryId, category.id))
         .innerJoin(user, eq(jewelryAssets.userId, user.id))
-        .where(filters.length > 0 ? and(...filters) : undefined),
+        .leftJoin(review, eq(jewelryAssets.id, review.jewelryAssetId))
+        .where(filters.length > 0 ? and(...filters) : undefined)
+        .groupBy(jewelryAssets.id, category.id, user.id),
       db.select().from(user),
     ]);
 

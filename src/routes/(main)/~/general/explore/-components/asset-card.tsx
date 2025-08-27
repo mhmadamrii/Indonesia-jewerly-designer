@@ -31,6 +31,9 @@ export function AssetCard({
       toast.success("Item added to cart successfully");
       queryClient.invalidateQueries();
     },
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
   const handleAddToCart = (id: string) => {

@@ -34,6 +34,22 @@ export const createCartItem = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { jewelryAssetId, quantity } = data;
 
+    const itemsAlreadyInCart = await db
+      .select({ id: cartItem.id })
+      .from(cartItem)
+      .where(
+        and(
+          eq(cartItem.userId, context.user.id),
+          eq(cartItem.jewelryAssetId, jewelryAssetId),
+        ),
+      )
+      .execute();
+    console.log("itemsAlreadyInCart", itemsAlreadyInCart);
+
+    if (itemsAlreadyInCart.length > 0) {
+      throw new Error("Item already in cart");
+    }
+
     const res = await db
       .insert(cartItem)
       .values({

@@ -1,13 +1,16 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Eye, Heart, MessageCircle } from "lucide-react";
-import { useState } from "react";
 import { jewelryWithJoins } from "~/actions/explore.action";
 import { AddWishlist } from "~/components/add-wishlist";
 import { PaymentButton } from "~/components/payment-button";
 
-export function AssetGrid({ jewelry_assets, category, user }: jewelryWithJoins) {
+export function AssetGrid({
+  jewelry_assets,
+  category,
+  user,
+  reviewCount,
+}: jewelryWithJoins) {
   const navigate = useNavigate();
-  const [selected3D, setSelected3D] = useState("");
 
   return (
     <div className="group bg-card h-[400px] max-w-4xl overflow-hidden rounded-md shadow-md transition-all duration-300 hover:shadow-xl">
@@ -98,18 +101,14 @@ export function AssetGrid({ jewelry_assets, category, user }: jewelryWithJoins) 
               </Link>
             </div>
 
-            <div className="text-muted-foreground mb-4 grid grid-cols-3 gap-2 text-sm">
-              <button className="hover:text-primary flex items-center transition-colors">
-                <Eye className="mr-1 h-4 w-4" />
-                <span>{0} views</span>
-              </button>
+            <div className="text-muted-foreground mb-4 flex justify-between gap-2 text-sm">
               <button className="hover:text-primary flex items-center transition-colors">
                 <Heart className="mr-1 h-4 w-4 text-red-500" />
                 <span>{0} likes</span>
               </button>
               <button className="hover:text-primary flex items-center transition-colors">
                 <MessageCircle className="mr-1 h-4 w-4" />
-                <span>{0} comments</span>
+                <span>{reviewCount > 0 ? `${reviewCount} reviews` : "No reviews"}</span>
               </button>
             </div>
           </div>
