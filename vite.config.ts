@@ -10,7 +10,21 @@ export default defineConfig({
     }),
     tailwindcss(),
     tanstackStart({
-      // https://react.dev/learn/react-compiler
+      prerender: {
+        enabled: true,
+        onSuccess: ({ page }) => {
+          console.log(`Rendered ${page.path}!`);
+        },
+      },
+      pages: [
+        {
+          path: "/",
+          prerender: {
+            enabled: true,
+            outputPath: "/index.html",
+          },
+        },
+      ],
       react: {
         babel: {
           plugins: [

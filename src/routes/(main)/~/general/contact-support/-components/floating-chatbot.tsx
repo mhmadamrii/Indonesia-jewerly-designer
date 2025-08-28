@@ -1,4 +1,6 @@
+import { useMutation } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
+import { sendMessageToVAI } from "~/actions/ai.action";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -46,10 +48,6 @@ export function FloatingChatbot() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
   const botResponses = [
     "Terima kasih atas pertanyaan Anda! Untuk perhiasan custom, kami membutuhkan waktu 2-4 minggu. Apakah Anda ingin konsultasi dengan designer kami?",
     "Kami menggunakan emas 18K dan 22K berkualitas tinggi. Semua perhiasan dilengkapi sertifikat. Apakah ada desain khusus yang Anda inginkan?",
@@ -59,8 +57,18 @@ export function FloatingChatbot() {
     "Untuk konsultasi lebih detail, saya akan menghubungkan Anda dengan customer service kami. Mohon tunggu sebentar...",
   ];
 
+  const { mutate: sendToAI } = useMutation({
+    mutationFn: sendMessageToVAI,
+    onSuccess: (data) => {
+      console.log("data", data);
+    },
+  });
+
+  const handleAIAssistant = () => {};
+
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return;
+    sendToAI({ data: { message: inputMessage } });
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -73,7 +81,6 @@ export function FloatingChatbot() {
     setInputMessage("");
     setIsTyping(true);
 
-    // Simulate bot response
     setTimeout(() => {
       const randomResponse =
         botResponses[Math.floor(Math.random() * botResponses.length)];
@@ -111,15 +118,19 @@ export function FloatingChatbot() {
     }
   };
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   if (!isOpen) {
     return (
       <div className="fixed right-6 bottom-6 z-50">
         <Button
           onClick={() => setIsOpen(true)}
-          className="h-14 w-14 rounded-full bg-blue-600 shadow-lg transition-all duration-300 hover:bg-blue-700 hover:shadow-xl"
+          className="h-14 w-14 cursor-pointer rounded-full bg-blue-600 shadow-lg transition-all duration-300 hover:bg-blue-700 hover:shadow-xl"
           size="icon"
         >
-          <MessageCircle className="h-6 w-6" />
+          <MessageCircle className="h-6 w-6 text-white" />
         </Button>
         <div className="absolute -top-2 -left-2">
           <div className="h-4 w-4 animate-pulse rounded-full bg-green-500"></div>
@@ -131,10 +142,9 @@ export function FloatingChatbot() {
   return (
     <div className="fixed right-6 bottom-20 z-50 w-[400px] max-w-full">
       <Card
-        className={`pt-0 shadow-2xl transition-all duration-300 ${isMinimized ? "h-16" : "h-[500px]"}`}
+        className={`gap-0 pt-0 shadow-2xl transition-all duration-300 ${isMinimized ? "h-16" : "h-[500px]"}`}
       >
-        {/* Header */}
-        <CardHeader className="rounded-t-lg bg-gradient-to-r from-blue-600 to-blue-700 p-4 text-white">
+        <CardHeader className="my-0 rounded-t-lg bg-gradient-to-r from-blue-600 to-blue-700 p-4 text-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="relative">
@@ -176,10 +186,8 @@ export function FloatingChatbot() {
           </div>
         </CardHeader>
 
-        {/* Content */}
         {!isMinimized && (
           <CardContent className="mt-0 flex h-full flex-col p-0">
-            {/* Status */}
             <div className="border-b bg-gray-50 px-2 py-0 text-xs text-gray-700">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -202,8 +210,7 @@ export function FloatingChatbot() {
               </div>
             </div>
 
-            {/* Chat Messages */}
-            <ScrollArea className="h-[280px] flex-1 p-4 pr-2">
+            <ScrollArea className="h-[280px] flex-1 pt-1 pr-2 pl-1">
               <div className="space-y-4">
                 {messages.map((message) => (
                   <div
@@ -290,15 +297,16 @@ export function FloatingChatbot() {
                   size="icon"
                   className="bg-blue-600 hover:bg-blue-700"
                 >
-                  <Send className="h-4 w-4" />
+                  <Send className="h-4 w-4 text-white" />
                 </Button>
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
                 {["Harga perhiasan", "Custom design", "Garansi"].map((label) => (
                   <Badge
+                    onClick={() => setInputMessage(label)}
                     key={label}
                     variant="outline"
-                    className="cursor-pointer text-xs hover:bg-gray-100"
+                    className="cursor-pointer text-xs"
                   >
                     {label}
                   </Badge>
