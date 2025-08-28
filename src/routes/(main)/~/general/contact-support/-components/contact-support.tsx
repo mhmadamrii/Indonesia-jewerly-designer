@@ -15,9 +15,6 @@ export function ContactSupport() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log("Form submitted:", formData);
-    // Reset form
     setFormData({
       name: "",
       email: "",
@@ -37,7 +34,7 @@ export function ContactSupport() {
   };
 
   return (
-    <div className="relative mx-10 min-h-screen">
+    <div className="relative min-h-screen">
       <div className="container mx-auto px-4 py-12">
         <div className="mb-12 text-center">
           <div className="mb-4 flex justify-center">

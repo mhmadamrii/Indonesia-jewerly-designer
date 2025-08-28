@@ -47,6 +47,14 @@ export function ArtistDashboard({
     )
     .slice(0, 5);
 
+  const formatPrice = (price: number) => {
+    const formatted = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(price);
+    return formatted;
+  };
+
   return (
     <div className="bg-background min-h-screen">
       <main>
@@ -59,10 +67,11 @@ export function ArtistDashboard({
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                $
-                {dashboardData.totalRevenue.reduce(
-                  (sum, payment) => sum + parseInt(payment.amount),
-                  0,
+                {formatPrice(
+                  dashboardData.totalRevenue.reduce(
+                    (sum, payment) => sum + parseInt(payment.amount),
+                    0,
+                  ),
                 )}
               </div>
               <p className="text-muted-foreground text-xs">

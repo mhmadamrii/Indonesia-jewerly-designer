@@ -33,10 +33,10 @@ export function FloatingChatbot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Halo! Selamat datang di Indonesia Jewelry Designer. Saya Sari, asisten virtual Anda. Ada yang bisa saya bantu hari ini?",
+      text: "Hi! Welcome to Indonesia Jewelry Designer. I am mark, your virtual assistant. What can I help you with today?",
       sender: "bot",
       timestamp: new Date(),
-      senderName: "Sari - AI Assistant",
+      senderName: "Mark - AI Assistant",
     },
   ]);
   const [inputMessage, setInputMessage] = useState("");
@@ -48,23 +48,13 @@ export function FloatingChatbot() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const botResponses = [
-    "Terima kasih atas pertanyaan Anda! Untuk perhiasan custom, kami membutuhkan waktu 2-4 minggu. Apakah Anda ingin konsultasi dengan designer kami?",
-    "Kami menggunakan emas 18K dan 22K berkualitas tinggi. Semua perhiasan dilengkapi sertifikat. Apakah ada desain khusus yang Anda inginkan?",
-    "Harga perhiasan bervariasi tergantung material dan kompleksitas desain. Mulai dari Rp 2 juta untuk cincin sederhana. Ingin saya hubungkan dengan tim sales?",
-    "Kami melayani pengiriman ke seluruh Indonesia dengan asuransi penuh. Gratis ongkir untuk pembelian di atas Rp 5 juta. Ada alamat khusus?",
-    "Garansi kami mencakup 1 tahun untuk kerusakan manufaktur dan service gratis seumur hidup. Apakah ada perhiasan yang perlu diperbaiki?",
-    "Untuk konsultasi lebih detail, saya akan menghubungkan Anda dengan customer service kami. Mohon tunggu sebentar...",
-  ];
-
   const { mutate: sendToAI } = useMutation({
     mutationFn: sendMessageToVAI,
     onSuccess: (data) => {
-      console.log("data", data);
+      setMessages((prev) => [...prev, data.response]);
+      setIsTyping(false);
     },
   });
-
-  const handleAIAssistant = () => {};
 
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return;
@@ -80,36 +70,6 @@ export function FloatingChatbot() {
     setMessages((prev) => [...prev, userMessage]);
     setInputMessage("");
     setIsTyping(true);
-
-    setTimeout(() => {
-      const randomResponse =
-        botResponses[Math.floor(Math.random() * botResponses.length)];
-      const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: randomResponse,
-        sender: "bot",
-        timestamp: new Date(),
-        senderName: "Sari - AI Assistant",
-      };
-
-      setMessages((prev) => [...prev, botMessage]);
-      setIsTyping(false);
-
-      // Sometimes connect to admin
-      if (Math.random() > 0.7 && !isConnectedToAdmin) {
-        setTimeout(() => {
-          setIsConnectedToAdmin(true);
-          const adminMessage: Message = {
-            id: (Date.now() + 2).toString(),
-            text: "Halo, saya Rina dari customer service. Saya akan membantu Anda lebih lanjut. Ada yang bisa saya bantu?",
-            sender: "admin",
-            timestamp: new Date(),
-            senderName: "Rina - Customer Service",
-          };
-          setMessages((prev) => [...prev, adminMessage]);
-        }, 2000);
-      }
-    }, 1500);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
