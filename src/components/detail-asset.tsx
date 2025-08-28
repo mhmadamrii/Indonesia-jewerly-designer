@@ -27,13 +27,14 @@ import {
 } from "lucide-react";
 
 export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
+  console.log("data detail", data);
   const queryClient = useQueryClient();
 
   const [isLiked, setIsLiked] = useState(false);
   const [viewMode, setViewMode] = useState<"image" | "3d">("image");
   const { jewelry_assets: asset, user, category } = data;
 
-  const { mutate, isPending } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: createCartItem,
     onSuccess: () => {
       toast.success("Item added to cart successfully");
@@ -78,9 +79,10 @@ export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
                 <img
                   src={asset.thumbnailUrl || "/placeholder-img.jpg"}
                   alt={asset.name}
+                  className="h-[400px]"
                 />
               ) : (
-                <div className="h-[500px]">
+                <div className="h-[400px]">
                   <ModelViewer src={asset.previewUrl} />
                 </div>
               )}
@@ -218,6 +220,7 @@ export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
                   Boost Asset
                 </Button>
                 <Button
+                  className="cursor-pointer"
                   onClick={() => handleAddToCart(asset.id)}
                   variant="outline"
                   size="lg"
@@ -233,8 +236,8 @@ export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
               <h3 className="text-lg font-semibold">Asset Details</h3>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-muted-foreground">Asset ID:</span>
-                  <p className="font-mono text-xs break-all">{asset.id}</p>
+                  <span className="text-muted-foreground">Creator:</span>
+                  <p className="font-mono text-xs break-all">{user?.name}</p>
                 </div>
                 <div>
                   <span className="text-muted-foreground">Category:</span>

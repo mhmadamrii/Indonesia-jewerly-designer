@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useOptimistic, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { createReview, getReviewByAssetId } from "~/actions/review.action";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Label } from "~/components/ui/label";
 import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
+import { cn } from "~/lib/utils";
 
 import {
   ChevronDown,
@@ -25,24 +26,16 @@ interface ReviewSectionProps {
   totalReviews?: number;
 }
 
-type Review = {
-  id: string;
-  user: string;
-  userImage: string | null;
-  reviewDate: Date | string;
-  rating: number;
-  description: string;
-};
-
 export function ReviewSection({ jewelryAssetId }: ReviewSectionProps) {
-  const [hoveredRating, setHoveredRating] = useState(0);
+  const queryClient = useQueryClient();
+
+  const [hoveredRating, setHoveredRating] = useState<number>(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isWritingReview, setIsWritingReview] = useState(false);
   const [newReview, setNewReview] = useState({
     rating: 0,
     comment: "",
   });
-  const queryClient = useQueryClient();
 
   const { data: reviewsData, refetch: refetchReviews } = useQuery({
     queryKey: ["jewelry_reviews", jewelryAssetId],
@@ -54,56 +47,22 @@ export function ReviewSection({ jewelryAssetId }: ReviewSectionProps) {
       }),
   });
 
-  const [optimisticReviews, addOptimisticReview] = useOptimistic(
-    reviewsData?.data.reviews ?? [],
-    (
-      state: Review[],
-      newReview: { description: string; rating: number },
-    ): Review[] => [
-      ...state,
-      {
-        ...newReview,
-        id: `optimistic-${Date.now()}`,
-        user: "You",
-        reviewDate: new Date(),
-        userImage: "/placeholder-img.jpg",
-      },
-    ],
-  );
-
-  const { mutate } = useMutation({
+  const { mutate, isPending: isReviewing } = useMutation({
     mutationFn: createReview,
-    onMutate: async ({ data }) => {
-      await queryClient.cancelQueries({
-        queryKey: ["jewelry_reviews", jewelryAssetId],
-      });
-      const previousReviews = queryClient.getQueryData([
-        "jewelry_reviews",
-        jewelryAssetId,
-      ]);
-      addOptimisticReview(data);
+    onSuccess: () => {
       setIsWritingReview(false);
       setNewReview({ rating: 0, comment: "" });
-      return { previousReviews };
-    },
-    onError: (err, newReview, context) => {
-      if (context?.previousReviews) {
-        queryClient.setQueryData(
-          ["jewelry_reviews", jewelryAssetId],
-          context.previousReviews,
-        );
-      }
-      toast.error("Failed to submit review. Please try again.");
-    },
-    onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: ["jewelry_reviews", jewelryAssetId],
       });
     },
+    onError: (err) => {
+      toast.error("Failed to submit review. Please try again.");
+    },
   });
 
   const formatDate = (date: Date | string) => {
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    const dateObj = typeof date === "string" ? new Date(date) : date;
     return dateObj.toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
@@ -145,7 +104,7 @@ export function ReviewSection({ jewelryAssetId }: ReviewSectionProps) {
               {renderStars(5)}
               <span className="text-sm font-medium">{5}</span>
               <span className="text-muted-foreground text-sm">
-                ({optimisticReviews.length || 0} reviews)
+                ({reviewsData?.data.reviews.length || 0} reviews)
               </span>
             </div>
           </div>
@@ -155,7 +114,7 @@ export function ReviewSection({ jewelryAssetId }: ReviewSectionProps) {
               refetchReviews();
               setIsExpanded(!isExpanded);
             }}
-            className="flex items-center space-x-2"
+            className="flex cursor-pointer items-center space-x-2"
           >
             <MessageSquare className="h-4 w-4" />
             <span>{isExpanded ? "Hide" : "See"} reviews & comments</span>
@@ -173,92 +132,94 @@ export function ReviewSection({ jewelryAssetId }: ReviewSectionProps) {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-medium">Share your experience</h3>
-              {!isWritingReview && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    if (reviewsData?.data.isUserOwnedProduct) {
-                      setIsWritingReview(true);
-                    } else {
-                      toast.error("You don't own this product");
-                    }
-                  }}
-                >
-                  Write a Review
-                </Button>
-              )}
+              <Button
+                className="cursor-pointer"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  if (reviewsData?.data.isUserOwnedProduct) {
+                    setIsWritingReview(true);
+                  } else {
+                    toast.error("You don't own this product");
+                  }
+                }}
+              >
+                Write a Review
+              </Button>
             </div>
+            <Card
+              className={cn("border-dashed", {
+                hidden: !isWritingReview,
+              })}
+            >
+              <CardContent className="space-y-4 p-4">
+                <div className="space-y-2">
+                  <Label>Your Rating</Label>
+                  {renderStars(newReview.rating, true, (rating) =>
+                    setNewReview({ ...newReview, rating }),
+                  )}
+                </div>
 
-            {isWritingReview && (
-              <Card className="border-dashed">
-                <CardContent className="space-y-4 p-4">
-                  <div className="space-y-2">
-                    <Label>Your Rating</Label>
-                    {renderStars(newReview.rating, true, (rating) =>
-                      setNewReview({ ...newReview, rating }),
-                    )}
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor="review-comment">Your Review</Label>
+                  <Textarea
+                    id="review-comment"
+                    placeholder="Share your thoughts about this jewelry piece..."
+                    value={newReview.comment}
+                    onChange={(e) =>
+                      setNewReview({ ...newReview, comment: e.target.value })
+                    }
+                    className="min-h-[100px]"
+                  />
+                </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="review-comment">Your Review</Label>
-                    <Textarea
-                      id="review-comment"
-                      placeholder="Share your thoughts about this jewelry piece..."
-                      value={newReview.comment}
-                      onChange={(e) =>
-                        setNewReview({ ...newReview, comment: e.target.value })
-                      }
-                      className="min-h-[100px]"
-                    />
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      className="cursor-pointer"
-                      onClick={() =>
-                        mutate({
-                          data: {
-                            title: "Review",
-                            description: newReview.comment,
-                            rating: newReview.rating,
-                            productId: jewelryAssetId,
-                          },
-                        })
-                      }
-                      disabled={newReview.rating === 0 || !newReview.comment.trim()}
-                    >
-                      <Send className="h-4 w-4" />
-                      Submit Review
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      onClick={() => {
-                        setIsWritingReview(false);
-                        setNewReview({ rating: 0, comment: "" });
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+                <div className="flex items-center space-x-2">
+                  <Button
+                    className="cursor-pointer"
+                    onClick={() =>
+                      mutate({
+                        data: {
+                          title: "Review",
+                          description: newReview.comment,
+                          rating: newReview.rating,
+                          productId: jewelryAssetId,
+                        },
+                      })
+                    }
+                    disabled={
+                      newReview.rating === 0 || !newReview.comment.trim() || isReviewing
+                    }
+                  >
+                    <Send className="h-4 w-4" />
+                    Submit Review
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      setIsWritingReview(false);
+                      setNewReview({ rating: 0, comment: "" });
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
           <Separator />
           <div className="space-y-6">
             <h3 className="text-base font-medium">
-              Customer Reviews ({optimisticReviews.length || 0})
+              Customer Reviews ({reviewsData?.data.reviews.length || 0})
             </h3>
 
-            {optimisticReviews.length === 0 ? (
+            {reviewsData?.data?.reviews.length === 0 ? (
               <div className="text-muted-foreground py-8 text-center">
                 <MessageSquare className="mx-auto mb-4 h-12 w-12 opacity-50" />
                 <p>No reviews yet. Be the first to share your experience!</p>
               </div>
             ) : (
               <div className="space-y-6">
-                {optimisticReviews.map((review) => (
+                {reviewsData?.data?.reviews.map((review, idx) => (
                   <div key={review.id} className="space-y-3">
                     <div className="flex items-start space-x-4">
                       <Avatar className="h-10 w-10">
@@ -281,7 +242,7 @@ export function ReviewSection({ jewelryAssetId }: ReviewSectionProps) {
                             {renderStars(review.rating)}
                           </div>
                           <span className="text-muted-foreground text-xs">
-                            {formatDate(review.reviewDate)}
+                            {formatDate(review.reviewDate ?? new Date())}
                           </span>
                         </div>
 
@@ -301,6 +262,11 @@ export function ReviewSection({ jewelryAssetId }: ReviewSectionProps) {
                         </div>
                       </div>
                     </div>
+                    <Separator
+                      className={cn({
+                        hidden: idx === reviewsData?.data?.reviews.length - 1,
+                      })}
+                    />
                   </div>
                 ))}
               </div>

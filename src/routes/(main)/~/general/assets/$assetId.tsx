@@ -20,7 +20,7 @@ function RouteComponent() {
   const { assetById } = Route.useLoaderData();
 
   return (
-    <div className="container mx-auto min-h-screen p-4">
+    <div className="min-h-screen">
       <Await promise={assetById} fallback={<AssetDetailSkeleton />}>
         {({ data }) => <AssetDetail data={data} />}
       </Await>

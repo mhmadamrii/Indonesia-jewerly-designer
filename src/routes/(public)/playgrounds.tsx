@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Await, createFileRoute, useRouter } from "@tanstack/react-router";
 import { Trash } from "lucide-react";
-import { useState } from "react";
+import { useOptimistic, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { createReview, deleteReview, getReviewByAssetId } from "~/actions/review.action";
 import { Button } from "~/components/ui/button";
@@ -27,11 +27,37 @@ export const Route = createFileRoute("/(public)/playgrounds")({
   component: RouteComponent,
 });
 
+type Person = {
+  name: string;
+  age: number;
+};
+
 function RouteComponent() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
+  const usersFromServer = [
+    {
+      name: "David",
+      age: 40,
+    },
+  ];
+
+  const [isPending, startTransition] = useTransition();
+
+  const [optimisticUsers, addOptimisticUser] = useOptimistic<Person[], string>(
+    usersFromServer,
+    (prev, newUser) => [
+      {
+        name: newUser,
+        age: 20,
+      },
+      ...prev,
+    ],
+  );
+
   const { reviews } = Route.useLoaderData();
+
   const [reviewMessage, setReviewMessage] = useState({
     title: "",
     description: "",
@@ -62,6 +88,20 @@ function RouteComponent() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-3">
+      <div className="border border-blue-500">
+        <Button
+          onClick={() => {
+            startTransition(() => {
+              addOptimisticUser(Math.random().toString());
+            });
+          }}
+        >
+          Add User
+        </Button>
+        {optimisticUsers.map((user, idx) => (
+          <h1 key={idx}>{user.name}</h1>
+        ))}
+      </div>
       <div className="flex w-4xl flex-col items-center justify-center gap-4 rounded-md border border-red-500 p-4">
         <Input
           onChange={(e) => setReviewMessage({ ...reviewMessage, title: e.target.value })}

@@ -18,7 +18,7 @@ export function CarouselBanner() {
   ];
 
   return (
-    <div className="bg-background flex max-h-[360px] items-center justify-center p-1">
+    <div className="bg-background flex items-center justify-center p-1">
       <div className="w-full">
         <Carousel
           plugins={[
