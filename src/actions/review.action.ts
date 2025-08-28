@@ -36,6 +36,27 @@ export const createReview = createServerFn({ method: "POST" })
     };
   });
 
+export const deleteReview = createServerFn({ method: "POST" })
+  .validator(
+    z.object({
+      reviewId: z.string(),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data, context }) => {
+    const { reviewId } = data;
+
+    const deletedReview = await db
+      .delete(review)
+      .where(eq(review.id, reviewId))
+      .returning({ id: review.id });
+
+    return {
+      success: true,
+      data: deletedReview,
+    };
+  });
+
 export const getReviewByAssetId = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .validator(

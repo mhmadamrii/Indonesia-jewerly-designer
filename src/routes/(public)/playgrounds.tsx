@@ -1,61 +1,125 @@
-import { useQuery } from "@tanstack/react-query";
-import { Await, createFileRoute, Link } from "@tanstack/react-router";
-import { getFeeds } from "~/actions/dashboard.action";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Await, createFileRoute, useRouter } from "@tanstack/react-router";
+import { Trash } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { createReview, deleteReview, getReviewByAssetId } from "~/actions/review.action";
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { ScrollArea } from "~/components/ui/scroll-area";
+
+const PRODUCT_ID = "3c40944f-a1b8-4899-8482-c228e6d48906";
 
 export const Route = createFileRoute("/(public)/playgrounds")({
-  staleTime: 50_000,
-  loader: async () => {
-    const dashboard = getFeeds();
-
-    return {
-      title: "Playgrounds",
-      data: "testing",
-      dashboard,
-    };
+  loader: ({ context }) => {
+    console.log("trigger loader server");
+    const reviews = context.queryClient.fetchQuery({
+      queryKey: ["playgrounds"],
+      queryFn: () =>
+        getReviewByAssetId({
+          data: {
+            id: PRODUCT_ID,
+          },
+        }),
+    });
+    return { reviews };
   },
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { dashboard } = Route.useLoaderData();
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["mewejkfda"],
-    queryFn: () => getFeeds({}),
-    staleTime: 50_000,
+  const { reviews } = Route.useLoaderData();
+  const [reviewMessage, setReviewMessage] = useState({
+    title: "",
+    description: "",
+    rating: 0,
   });
 
-  console.log("data query", data);
+  const { mutate: handleCreateReview, isPending: isCreatingReview } = useMutation({
+    mutationFn: createReview,
+    onSuccess: (data) => {
+      toast.success("Review created successfully");
+      router.invalidate();
+      queryClient.invalidateQueries({
+        queryKey: ["playgrounds"],
+      });
+    },
+  });
+
+  const { mutate: handleDeleteReview, isPending: isDeletingReview } = useMutation({
+    mutationFn: deleteReview,
+    onSuccess: () => {
+      toast.success("Review deleted successfully");
+      router.invalidate();
+      queryClient.invalidateQueries({
+        queryKey: ["playgrounds"],
+      });
+    },
+  });
 
   return (
-    <main className="flex h-screen flex-col items-center justify-center gap-2 border">
-      <Link to="/hello">To Hello page</Link>
-      {isLoading && <h1>Loading use query bro</h1>}
-      {/* {dashboard.data.jewelries.map((item) => (
-        <div key={item.id} className="flex w-full flex-col gap-4">
-          <h1>{item.name}</h1>
-        </div>
-      ))} */}
-      <Await promise={dashboard} fallback={<div>Loading...</div>}>
-        {({ data }) =>
-          data.users.map((user) => (
-            <div key={user.id} className="flex w-full flex-col gap-4">
-              <h1>{user.name}</h1>
+    <div className="flex min-h-screen flex-col items-center justify-center gap-3">
+      <div className="flex w-4xl flex-col items-center justify-center gap-4 rounded-md border border-red-500 p-4">
+        <Input
+          onChange={(e) => setReviewMessage({ ...reviewMessage, title: e.target.value })}
+          placeholder="title"
+        />
+        <Input
+          onChange={(e) =>
+            setReviewMessage({ ...reviewMessage, description: e.target.value })
+          }
+          placeholder="description"
+        />
+        <Input
+          onChange={(e) =>
+            setReviewMessage({ ...reviewMessage, rating: parseInt(e.target.value) })
+          }
+          placeholder="rating"
+          type="number"
+        />
+        <Button
+          className="w-1/2 cursor-pointer"
+          disabled={isCreatingReview}
+          onClick={() =>
+            handleCreateReview({
+              data: {
+                title: reviewMessage.title,
+                description: reviewMessage.description,
+                rating: reviewMessage.rating,
+                productId: PRODUCT_ID,
+              },
+            })
+          }
+        >
+          {isCreatingReview ? "Creating..." : "Create Review"}
+        </Button>
+      </div>
+      <Button onClick={() => router.invalidate()}>Hard Invalidate</Button>
+      <ScrollArea className="h-[400px]">
+        <Await promise={reviews} fallback={<span>Loading...</span>}>
+          {({ data }) => (
+            <div className="w-4xl">
+              {data?.reviews.map((item) => (
+                <div key={item.id} className="h-full w-full truncate border">
+                  <pre>{JSON.stringify(item, null, 2)}</pre>
+                  <Button
+                    variant="destructive"
+                    className="cursor-pointer"
+                    disabled={isDeletingReview}
+                    onClick={() => handleDeleteReview({ data: { reviewId: item.id } })}
+                    size="icon"
+                  >
+                    <Trash />
+                  </Button>
+                </div>
+              ))}
             </div>
-          ))
-        }
-      </Await>
-      <Button
-        onClick={async () => {
-          const res = await fetch("/api/midtrans/notification", {
-            method: "GET",
-          });
-          console.log("Notification sent", res);
-        }}
-      >
-        Get notification
-      </Button>
-    </main>
+          )}
+        </Await>
+      </ScrollArea>
+    </div>
   );
 }
