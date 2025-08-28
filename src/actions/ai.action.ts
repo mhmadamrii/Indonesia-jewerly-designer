@@ -16,6 +16,7 @@ export const sendMessageToVAI = createServerFn({ method: "POST" })
   )
   .middleware([authMiddleware])
   .handler(async ({ data, context }) => {
+    console.log();
     const chatCompletion = await groq.chat.completions.create({
       messages: [
         {
