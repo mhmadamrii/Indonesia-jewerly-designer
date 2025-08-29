@@ -151,7 +151,7 @@ export function FileUploadCenter({
         signature,
         publicKey: import.meta.env.VITE_IMAGE_KIT_PUBLIC_KEY,
         file,
-        fileName: `${session?.user?.email.split("@")[0]}c=${category}f=${files[0].name}`,
+        fileName: `${session?.user?.email.split("@")[0]}_c=${category}_f=${files[0].name}_size=${files[0].size}`,
         folder: getCategoryFolder(category),
         onProgress: (event) => {
           currentProgress = Math.round((event.loaded / event.total) * 100);
@@ -202,14 +202,16 @@ export function FileUploadCenter({
         }
       }
 
-      const newFiles: UploadedFile[] = Array.from(files).map((file) => ({
-        id: res.fileId,
-        name: `${file.name}-${session?.user?.email.split("@")[0]}`,
-        size: file.size,
-        type: file.type,
-        url: res.url ?? "",
-        uploadedAt: new Date(),
-      }));
+      const newFiles: UploadedFile[] = Array.from(files).map((file) => {
+        return {
+          id: res.fileId,
+          name: `${file.name}-${session?.user?.email.split("@")[0]}`,
+          size: file.size,
+          type: file.type,
+          url: res.url ?? "",
+          uploadedAt: new Date(),
+        };
+      });
 
       setUploadedFiles((prev) => ({
         ...prev,

@@ -76,7 +76,9 @@ const formSchema = z.object({
 export function AssetEdit({ initialData }: { initialData: TypejewelryAssetById }) {
   const navigate = useNavigate();
 
-  const [isUsingBoost, setIsUsingBoost] = useState(false);
+  const [isUsingBoost, setIsUsingBoost] = useState(
+    initialData!.jewelry_assets!.boost! > 0,
+  );
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [totalStorageLimitToUpdate, setTotalStorageLimitToUpdate] = useState(0);
   const [tagsValue, setTagsValue] = useState<{ value: string; label: string }[]>([]);
@@ -124,7 +126,6 @@ export function AssetEdit({ initialData }: { initialData: TypejewelryAssetById }
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("values", values);
     if (
       currentCredit?.data?.boostCredit! < parseInt(values.boost.toString()) &&
       isUsingBoost

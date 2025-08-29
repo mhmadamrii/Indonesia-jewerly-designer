@@ -37,10 +37,10 @@ export const jewelryAssets = pgTable("jewelry_assets", {
   assetUrl: text("asset_url").notNull(),
   typeAsset: text("type_asset").notNull(),
   likes: integer("likes").default(0),
+  boost: integer("boost").default(0),
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  boost: integer("boost").default(0),
   categoryId: uuid("category_id")
     .notNull()
     .references(() => category.id, { onDelete: "cascade" }),

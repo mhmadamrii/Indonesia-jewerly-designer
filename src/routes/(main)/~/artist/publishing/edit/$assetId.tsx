@@ -15,7 +15,6 @@ function RouteComponent() {
     queryKey: ["jewelry_asset", assetId],
     queryFn: () => getjewelryById({ data: { id: assetId } }),
   });
-  console.log("data", data);
 
   if (!data) return <div>Loading...</div>;
 

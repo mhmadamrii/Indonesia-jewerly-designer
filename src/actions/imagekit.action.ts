@@ -43,3 +43,26 @@ export const deleteImageServer = createServerFn({ method: "POST" })
       data: res.status,
     };
   });
+
+export const getDetailImageServer = createServerFn({ method: "GET" })
+  .validator(
+    z.object({
+      fileId: z.string(),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data }): Promise<{ success: boolean; data: string }> => {
+    const res = await fetch(`https://api.imagekit.io/v1/files/${data.fileId}/details`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Basic ${process.env.VITE_BASIC_AUTH}`,
+      },
+    });
+    console.log("res", res);
+
+    return {
+      success: true,
+      data: "something",
+    };
+  });
