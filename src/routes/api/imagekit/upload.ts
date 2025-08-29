@@ -1,4 +1,3 @@
-// routes/hello.ts
 import ImageKit from "imagekit";
 
 import { createServerFileRoute } from "@tanstack/react-start/server";

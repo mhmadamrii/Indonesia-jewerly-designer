@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { createCartItem } from "~/actions/cart.action";
-import { TypejewelryAssetById } from "~/actions/jewelry.action";
+import { addLikes, TypejewelryAssetById } from "~/actions/jewelry.action";
 import { ModelViewer } from "~/components/3D/model-viewer";
 import { PaymentButton } from "~/components/payment-button";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
@@ -42,6 +42,13 @@ export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
     },
     onError: (error) => {
       toast.error(error.message);
+    },
+  });
+
+  const { mutate: handleAddLike } = useMutation({
+    mutationFn: addLikes,
+    onSuccess: (res) => {
+      console.log(res);
     },
   });
 
@@ -121,7 +128,10 @@ export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
               <IconButton
                 icon={Star}
                 active={isLiked}
-                onClick={() => setIsLiked(!isLiked)}
+                onClick={() => {
+                  handleAddLike({ data: { jewelryAssetId: asset.id } });
+                  setIsLiked(!isLiked);
+                }}
               />
               <Button variant="outline" size="sm">
                 <Download className="mr-2 h-4 w-4" />

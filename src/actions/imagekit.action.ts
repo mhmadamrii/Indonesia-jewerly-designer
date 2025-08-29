@@ -1,5 +1,8 @@
 import ImageKit from "imagekit";
 
+import * as z from "zod";
+import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
+
 import { createServerFn } from "@tanstack/react-start";
 
 export const imageKitAuthenticator = createServerFn({ method: "GET" }).handler(
@@ -18,3 +21,25 @@ export const imageKitAuthenticator = createServerFn({ method: "GET" }).handler(
     }
   },
 );
+
+export const deleteImageServer = createServerFn({ method: "POST" })
+  .validator(
+    z.object({
+      fileId: z.string(),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data }): Promise<{ success: boolean; data: number }> => {
+    const res = await fetch(`https://api.imagekit.io/v1/files/${data.fileId}`, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Basic ${process.env.VITE_BASIC_AUTH}`,
+      },
+    });
+
+    return {
+      success: true,
+      data: res.status,
+    };
+  });

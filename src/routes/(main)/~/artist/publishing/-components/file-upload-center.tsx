@@ -4,18 +4,17 @@ import { upload } from "@imagekit/react";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { imageKitAuthenticator } from "~/actions/imagekit.action";
+import { deleteImageServer, imageKitAuthenticator } from "~/actions/imagekit.action";
 import { ModelViewer } from "~/components/3D/model-viewer";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { authClient } from "~/lib/auth/auth-client";
-import { cn } from "~/lib/utils";
+import { cn, formatFileSize, getCategoryFolder, getFileIcon } from "~/lib/utils";
 
 import {
   Check,
   CheckCircle,
-  File,
   FileText,
   HardDrive,
   ImageIcon,
@@ -101,15 +100,9 @@ export function FileUploadCenter({
     }) => {
       const { fileId, category } = data;
       try {
-        const res = await fetch(`https://api.imagekit.io/v1/files/${fileId}`, {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Basic ${import.meta.env.VITE_BASIC_AUTH}`,
-          },
-        });
+        const res = await deleteImageServer({ data: { fileId } });
 
-        if (res.status === 204) {
+        if (res.data === 204) {
           toast.success("File deleted successfully");
           removeFile(category, fileId);
         }
@@ -119,25 +112,6 @@ export function FileUploadCenter({
     },
   });
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-  };
-
-  const getCategoryFolder = (category: keyof typeof uploadedFiles) => {
-    switch (category) {
-      case "thumbnail":
-        return "thumbnails";
-      case "preview":
-        return "previews";
-      case "asset":
-        return "assets";
-    }
-  };
-
   const handleFileUpload = async (
     files: FileList,
     category: keyof typeof uploadedFiles,
@@ -146,7 +120,6 @@ export function FileUploadCenter({
     if (!file) return;
 
     const remainingStorage = totalStorage - usedStorage;
-    console.log("remainingStorage", remainingStorage);
     if (file.size > remainingStorage) {
       toast.error(
         `File size (${formatFileSize(
@@ -201,23 +174,32 @@ export function FileUploadCenter({
         },
       });
 
-      if (res.url && category == "thumbnail") {
-        onSetAssetStorageUrl((prev) => ({
-          ...prev,
-          thumbnail_url: res.url,
-        }));
-      }
-      if (res.url && category == "preview") {
-        onSetAssetStorageUrl((prev) => ({
-          ...prev,
-          preview_url: res.url,
-        }));
-      }
-      if (res.url && category == "asset") {
-        onSetAssetStorageUrl((prev) => ({
-          ...prev,
-          asset_url: res.url,
-        }));
+      if (res.url) {
+        switch (category) {
+          case "thumbnail":
+            onSetAssetStorageUrl((prev) => ({
+              ...prev,
+              thumbnail_url: res.url,
+            }));
+            break;
+
+          case "preview":
+            onSetAssetStorageUrl((prev) => ({
+              ...prev,
+              preview_url: res.url,
+            }));
+            break;
+
+          case "asset":
+            onSetAssetStorageUrl((prev) => ({
+              ...prev,
+              asset_url: res.url,
+            }));
+            break;
+
+          default:
+            break;
+        }
       }
 
       const newFiles: UploadedFile[] = Array.from(files).map((file) => ({
@@ -235,9 +217,9 @@ export function FileUploadCenter({
       }));
     } catch (error) {
       console.log(error);
+    } finally {
+      setUploading(null);
     }
-
-    setUploading(null);
   };
 
   const handleDrop = (e: React.DragEvent, category: keyof typeof uploadedFiles) => {
@@ -263,19 +245,6 @@ export function FileUploadCenter({
       ...prev,
       [category]: prev[category].filter((file) => file.id !== fileId),
     }));
-  };
-
-  const getFileIcon = (type: string) => {
-    if (type.startsWith("image/")) return <ImageIcon className="h-4 w-4" />;
-    if (type.startsWith("video/")) return <Play className="h-4 w-4" />;
-    if (
-      type.includes("glb") ||
-      type.includes("gltf") ||
-      type.includes("obj") ||
-      type.includes("stl")
-    )
-      return <File className="h-4 w-4" />;
-    return <File className="h-4 w-4" />;
   };
 
   const UploadArea = ({

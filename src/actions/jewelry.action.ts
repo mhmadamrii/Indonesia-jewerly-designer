@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 import { createServerFn } from "@tanstack/react-start";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { OPTIONS } from "~/constants";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
@@ -241,6 +241,28 @@ export const editjewelryAsset = createServerFn({ method: "POST" })
         categoryId: data.categoryId,
       })
       .where(eq(jewelryAssets.id, data.id))
+      .returning({ id: jewelryAssets.id });
+
+    return {
+      success: true,
+      data: res,
+    };
+  });
+
+export const addLikes = createServerFn({ method: "POST" })
+  .validator(
+    z.object({
+      jewelryAssetId: z.string(),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data }) => {
+    const res = await db
+      .update(jewelryAssets)
+      .set({
+        likes: sql`${jewelryAssets.likes} + 1`,
+      })
+      .where(eq(jewelryAssets.id, data.jewelryAssetId))
       .returning({ id: jewelryAssets.id });
 
     return {

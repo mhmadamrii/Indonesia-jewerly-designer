@@ -36,6 +36,7 @@ export const jewelryAssets = pgTable("jewelry_assets", {
   thumbnailUrl: text("thumbnail_url").notNull(),
   assetUrl: text("asset_url").notNull(),
   typeAsset: text("type_asset").notNull(),
+  likes: integer("likes").default(0),
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),

@@ -104,7 +104,7 @@ export function AssetGrid({
             <div className="text-muted-foreground mb-4 flex justify-between gap-2 text-sm">
               <button className="hover:text-primary flex items-center transition-colors">
                 <Heart className="mr-1 h-4 w-4 text-red-500" />
-                <span>{0} likes</span>
+                <span>{jewelry_assets.likes} likes</span>
               </button>
               <button className="hover:text-primary flex items-center transition-colors">
                 <MessageCircle className="mr-1 h-4 w-4" />
