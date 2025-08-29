@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { createCartItem } from "~/actions/cart.action";
@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 
 export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
+  const navigate = useNavigate();
   console.log("data detail", data);
   const queryClient = useQueryClient();
 
@@ -207,7 +208,16 @@ export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Button variant="outline">
+                    <Button
+                      className="cursor-pointer"
+                      onClick={() =>
+                        navigate({
+                          to: "/~/general/messages/$userId",
+                          params: { userId: user?.id ?? "" },
+                        })
+                      }
+                      variant="outline"
+                    >
                       <Mail />
                     </Button>
                     <Button variant="outline" size="sm">
