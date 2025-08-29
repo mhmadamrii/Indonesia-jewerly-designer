@@ -11,6 +11,14 @@ import { Textarea } from "~/components/ui/textarea";
 import { cn } from "~/lib/utils";
 
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+
+import {
   ChevronDown,
   ChevronUp,
   Flag,
@@ -30,12 +38,15 @@ export function ReviewSection({ jewelryAssetId }: ReviewSectionProps) {
   const queryClient = useQueryClient();
 
   const [hoveredRating, setHoveredRating] = useState<number>(0);
+  const [typeReview, setTypeReview] = useState<string>("");
   const [isExpanded, setIsExpanded] = useState(false);
   const [isWritingReview, setIsWritingReview] = useState(false);
   const [newReview, setNewReview] = useState({
     rating: 0,
     comment: "",
   });
+
+  console.log("typeReview", typeReview);
 
   const { data: reviewsData, refetch: refetchReviews } = useQuery({
     queryKey: ["jewelry_reviews", jewelryAssetId],
@@ -160,7 +171,20 @@ export function ReviewSection({ jewelryAssetId }: ReviewSectionProps) {
                   )}
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-3">
+                  <Label htmlFor="review-comment">Type review</Label>
+                  <Select onValueChange={setTypeReview} defaultValue={typeReview}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Satisfied">Satisfied</SelectItem>
+                      <SelectItem value="Neutral">Neutral</SelectItem>
+                      <SelectItem value="Dissatisfied">Dissatisfied</SelectItem>
+                      <SelectItem value="Interested">Interested</SelectItem>
+                      <SelectItem value="Not Interested">Not Interested</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <Label htmlFor="review-comment">Your Review</Label>
                   <Textarea
                     id="review-comment"
@@ -179,7 +203,7 @@ export function ReviewSection({ jewelryAssetId }: ReviewSectionProps) {
                     onClick={() =>
                       mutate({
                         data: {
-                          title: "Review",
+                          title: typeReview,
                           description: newReview.comment,
                           rating: newReview.rating,
                           productId: jewelryAssetId,

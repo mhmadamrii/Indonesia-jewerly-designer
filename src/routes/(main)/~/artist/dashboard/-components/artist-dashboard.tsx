@@ -30,13 +30,6 @@ export function ArtistDashboard({
 }: {
   dashboardData: ArtistDashboardAndAnalyticsType;
 }) {
-  const stats = {
-    totalRevenue: 12450,
-    totalProducts: 24,
-    averageRating: 4.8,
-    totalFollowers: 1250,
-  };
-
   const recentProducts = dashboardData.artistProducts
     .slice()
     .sort((a, b) =>
@@ -58,7 +51,6 @@ export function ArtistDashboard({
   return (
     <div className="bg-background min-h-screen">
       <main>
-        {/* Stats Overview */}
         <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -99,8 +91,17 @@ export function ArtistDashboard({
               <Star className="text-muted-foreground h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.averageRating}</div>
-              <p className="text-muted-foreground text-xs">Based on 127 reviews</p>
+              <div className="text-2xl font-bold">
+                {(
+                  dashboardData.assetReviews.reduce(
+                    (sum, item) => sum + item.review.rating,
+                    0,
+                  ) / dashboardData.assetReviews.length
+                ).toFixed(1)}
+              </div>
+              <p className="text-muted-foreground text-xs">
+                Based on {dashboardData.assetReviews.length} reviews
+              </p>
             </CardContent>
           </Card>
 
@@ -118,7 +119,6 @@ export function ArtistDashboard({
           </Card>
         </div>
 
-        {/* Main Content Tabs */}
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -197,7 +197,9 @@ export function ArtistDashboard({
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm font-medium">${sale.payments.amount}</p>
+                        <p className="text-sm font-medium">
+                          {formatPrice(parseInt(sale.payments.amount))}
+                        </p>
                         <Badge
                           variant={
                             sale.payments.status === "capture" ? "default" : "secondary"
@@ -221,11 +223,11 @@ export function ArtistDashboard({
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {dashboardData.assetReviews.map((item) => (
+                {dashboardData.assetReviews.slice(0, 5).map((item) => (
                   <div key={item.review.id} className="border-b pb-4 last:border-b-0">
                     <div className="mb-2 flex items-start justify-between">
                       <div>
-                        <h4 className="text-sm font-medium">Stunning Design</h4>
+                        <h4 className="text-sm font-medium">{item.review.title}</h4>
                         <div className="mt-1 flex items-center space-x-1">
                           {[...Array(5)].map((_, i) => (
                             <Star
@@ -374,7 +376,7 @@ export function ArtistDashboard({
                         {format(item.review.createdAt as Date, "MMM dd, yyyy")}
                       </span>
                     </div>
-                    <h4 className="mb-2 font-medium">Beautiful piece</h4>
+                    <h4 className="mb-2 font-medium">{item.review.title}</h4>
                     <p className="text-muted-foreground mb-3 text-sm">
                       {item.review.description}
                     </p>
