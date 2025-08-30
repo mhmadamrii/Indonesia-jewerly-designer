@@ -25,6 +25,14 @@ export const getAllUsers = createServerFn({ method: "GET" }).handler(async () =>
   };
 });
 
+export const getAllArtist = createServerFn({ method: "GET" }).handler(async () => {
+  const res = await db.select().from(user).where(eq(user.role, "artist"));
+  return {
+    success: true,
+    data: res,
+  };
+});
+
 export const getUserBoostCredits = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
@@ -40,28 +48,6 @@ export const getUserBoostCredits = createServerFn({ method: "GET" })
       data: res[0],
     };
   });
-
-// export const updateUserBoostCredits = createServerFn({ method: "POST" })
-//   .validator(
-//     z.object({
-//       boostCredit: z.number().min(0).max(100),
-//     }),
-//   )
-//   .middleware([authMiddleware])
-//   .handler(async ({ data, context }) => {
-//     const { boostCredit } = data;
-
-//     const res = await db
-//       .update(user)
-//       .set({ boostCredit })
-//       .where(eq(user.id, context.user.id))
-//       .returning({ id: user.id });
-
-//     return {
-//       success: true,
-//       data: res[0],
-//     };
-//   });
 
 export const registerToArtist = createServerFn({ method: "POST" })
   .middleware([authMiddleware])

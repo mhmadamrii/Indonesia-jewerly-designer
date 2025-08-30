@@ -3,7 +3,8 @@ import * as Ably from "ably";
 import { ChatClient } from "@ably/chat";
 import { ChatClientProvider, ChatRoomProvider } from "@ably/chat/react";
 import { createFileRoute } from "@tanstack/react-router";
-import { AblyChat } from "./-components/ably-chat";
+import { useState } from "react";
+import { ChatInterface } from "./-components/chat-interface";
 
 export const Route = createFileRoute("/(main)/~/general/messages/")({
   component: RouteComponent,
@@ -11,16 +12,20 @@ export const Route = createFileRoute("/(main)/~/general/messages/")({
 
 const ablyClient = new Ably.Realtime({
   clientId: "ably-chat",
-  key: "wZhwjw.JNu2jQ:t8RVWiqkNRIcdLeaqwFlI7x4pa4G4UfpnIiCcB3Sy5Y",
+  key: import.meta.env.VITE_ABLY_API_KEY,
 });
 
 function RouteComponent() {
   const chatClient = new ChatClient(ablyClient);
+  const [selectedArtist, setSelectedArtist] = useState<string | null>("");
 
   return (
     <ChatClientProvider client={chatClient}>
-      <ChatRoomProvider name="messages">
-        <AblyChat />
+      <ChatRoomProvider name={selectedArtist ?? "Lobby"}>
+        <ChatInterface
+          selectedArtist={selectedArtist}
+          setSelectedArtist={setSelectedArtist}
+        />
       </ChatRoomProvider>
     </ChatClientProvider>
   );
