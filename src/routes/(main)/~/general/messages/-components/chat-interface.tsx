@@ -109,16 +109,13 @@ export function ChatInterface() {
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col border p-3">
-      {/* Header */}
+    <div className="flex min-h-screen w-full flex-col gap-2 border p-3">
       <div className="bg-card rounded-sm border-b p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <MessageCircle className="text-primary h-6 w-6" />
             <h1 className="text-xl font-semibold text-balance">Chat Center</h1>
           </div>
-
-          {/* Role Switcher */}
           <div className="bg-muted flex items-center gap-2 rounded-lg p-1">
             <Button
               variant={userRole === "customer" ? "default" : "ghost"}
@@ -140,23 +137,23 @@ export function ChatInterface() {
             </Button>
           </div>
         </div>
-
         {/* Safety Banner */}
-        <div className="bg-accent/10 border-accent/20 mt-4 rounded-lg border p-3">
-          <div className="flex items-start gap-2">
-            <AlertTriangle className="text-accent mt-0.5 h-4 w-4 flex-shrink-0" />
-            <p className="text-accent-foreground text-sm">
+      </div>
+
+      {/* Chat Messages */}
+      <ScrollArea className="relative h-[500px] rounded-sm border">
+        <div className="border-accent/20 absolute -top-4 right-0 left-0 z-50 mt-4 border bg-yellow-100 p-3 dark:bg-yellow-900">
+          <div className="flex items-start gap-2 text-yellow-700 dark:text-yellow-300">
+            <AlertTriangle className="h-4 w-4 flex-shrink-0 text-yellow-500 dark:text-yellow-300" />
+            <p className="text-sm text-yellow-700 dark:text-yellow-300">
               <strong>Safety Notice:</strong> Transactions or communications outside this
               platform are not our responsibility. Please keep all business within the app
               for your protection.
             </p>
           </div>
         </div>
-      </div>
 
-      {/* Chat Messages */}
-      <ScrollArea className="flex-1 p-4">
-        <div className="space-y-4">
+        <div className="mt-20 px-3">
           {messages.map((message) => (
             <div
               key={message.id}
