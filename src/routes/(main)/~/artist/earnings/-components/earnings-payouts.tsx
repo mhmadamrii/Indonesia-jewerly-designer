@@ -1,7 +1,6 @@
 "use no memo";
 
 import { CheckCircle, Clock, DollarSign, TrendingUp } from "lucide-react";
-import { useState } from "react";
 import { MyPaymentTransactionsType } from "~/actions/payment.action";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { PaymentsTable } from "./payments-table";
@@ -15,58 +14,11 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
-// Mock data - replace with actual data fetching
-const mockPayments = [
-  {
-    id: "1",
-    userId: "user1",
-    jewelryAssetId: "asset1",
-    amount: "150.00",
-    status: "confirmed",
-    currency: "USD",
-    provider: "stripe",
-    providerId: "pi_1234567890",
-    description: "Gold necklace sale",
-    createdAt: new Date("2024-01-15"),
-    updatedAt: new Date("2024-01-15"),
-  },
-  {
-    id: "2",
-    userId: "user1",
-    jewelryAssetId: "asset2",
-    amount: "89.50",
-    status: "pending",
-    currency: "USD",
-    provider: "paypal",
-    providerId: "pp_9876543210",
-    description: "Silver bracelet sale",
-    createdAt: new Date("2024-01-14"),
-    updatedAt: new Date("2024-01-14"),
-  },
-  {
-    id: "3",
-    userId: "user1",
-    jewelryAssetId: "asset3",
-    amount: "275.00",
-    status: "confirmed",
-    currency: "USD",
-    provider: "stripe",
-    providerId: "pi_0987654321",
-    description: "Diamond ring sale",
-    createdAt: new Date("2024-01-13"),
-    updatedAt: new Date("2024-01-13"),
-  },
-];
-
 export function EarningsPayouts({
   paymentTransactions,
 }: {
   paymentTransactions: MyPaymentTransactionsType;
 }) {
-  console.log("paymentTransactions", paymentTransactions);
-  const [payments] = useState(mockPayments);
-
-  // Calculate earnings summary
   const totalEarnings = paymentTransactions
     .filter((p) => p.payment.isPaidToUser)
     .reduce((sum, p) => sum + Number.parseFloat(p.payment.amount), 0);
