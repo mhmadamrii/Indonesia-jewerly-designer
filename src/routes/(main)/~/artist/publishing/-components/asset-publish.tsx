@@ -1,10 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
+import { NavigateOptions, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { createFeedback } from "~/actions/review.action";
 import { getUserBoostCredits } from "~/actions/user.action";
 import { FeedbackModal } from "~/components/feedback-modal";
 import { Button } from "~/components/ui/button";
@@ -14,6 +15,7 @@ import { Label } from "~/components/ui/label";
 import { MultipleSelector } from "~/components/ui/multi-select";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Textarea } from "~/components/ui/textarea";
+import { CURRENCIES } from "~/constants";
 import { useFormStorage } from "~/lib/store";
 import { cn } from "~/lib/utils";
 import { FileUploadCenter } from "./file-upload-center";
@@ -58,7 +60,17 @@ import {
   CollapsibleTrigger,
 } from "~/components/animate-ui/radix/collapsible";
 
-import { createFeedback } from "~/actions/review.action";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "~/components/ui/alert-dialog";
+
 import {
   Select,
   SelectContent,
@@ -78,39 +90,10 @@ const formSchema = z.object({
   }),
 });
 
-const currencies = [
-  {
-    value: "USD",
-    label: "USD ($)",
-  },
-  {
-    value: "IDR",
-    label: "IDR (Rp)",
-  },
-  {
-    value: "EUR",
-    label: "EUR (€)",
-  },
-  {
-    value: "GBP",
-    label: "GBP (£)",
-  },
-  {
-    value: "JPY",
-    label: "JPY (¥)",
-  },
-  {
-    value: "CAD",
-    label: "CAD (C$)",
-  },
-  {
-    value: "AUD",
-    label: "AUD (A$)",
-  },
-];
-
 export function AssetPublish() {
   const navigate = useNavigate();
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [pendingLocation, setPendingLocation] = useState<NavigateOptions | null>(null);
 
   const { addDraft } = useFormStorage();
 
@@ -285,7 +268,7 @@ export function AssetPublish() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {currencies.map((currency) => (
+                        {CURRENCIES.map((currency) => (
                           <SelectItem key={currency.value} value={currency.value}>
                             {currency.label}
                           </SelectItem>
@@ -548,6 +531,24 @@ export function AssetPublish() {
         onSubmit={handleFeedbackSubmit}
         isCreatingFeedback={isCreatingFeedback}
       />
+      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>You have unsaved changes</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to leave? Your changes will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => console.log("stay")}>
+              Stay
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={() => console.log("leave")}>
+              Leave
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }

@@ -4,6 +4,7 @@ import { Await, createFileRoute } from "@tanstack/react-router";
 import { ExternalLink } from "lucide-react";
 import { getMyjewelryAssets } from "~/actions/jewelry.action";
 import { Button } from "~/components/ui/button";
+import { JewelryAssetTableSkeleton } from "./-components/jewelry-asset-table-skeleton";
 import { JewelryAssetTable } from "./-components/jewelry-asset-table";
 
 export const Route = createFileRoute("/(main)/~/artist/my-models/")({
@@ -36,7 +37,7 @@ function RouteComponent() {
             Export Data
           </Button>
         </div>
-        <Await promise={myJewelries} fallback={<div>Loading...</div>}>
+        <Await promise={myJewelries} fallback={<JewelryAssetTableSkeleton />}>
           {({ data }) => {
             return (
               <JewelryAssetTable

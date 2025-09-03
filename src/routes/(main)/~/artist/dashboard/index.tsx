@@ -4,6 +4,7 @@ import { getArtistDashboardAndAnalytics } from "~/actions/dashboard.action";
 import { HeaderPage } from "~/components/header-page";
 import { Button } from "~/components/ui/button";
 import { ArtistDashboard } from "./-components/artist-dashboard";
+import { ArtistDashboardSkeleton } from "~/components/skeletons/artist-dashboard-skeleton";
 
 export const Route = createFileRoute("/(main)/~/artist/dashboard/")({
   loader: ({ context }) => {
@@ -40,7 +41,7 @@ function RouteComponent() {
           </Button>
         }
       />
-      <Await promise={artistDashboardAndAnalytics} fallback={<span>Loading...</span>}>
+      <Await promise={artistDashboardAndAnalytics} fallback={<ArtistDashboardSkeleton />}>
         {({ data }) => <ArtistDashboard dashboardData={data} />}
       </Await>
     </div>
