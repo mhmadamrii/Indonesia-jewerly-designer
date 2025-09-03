@@ -29,21 +29,14 @@ import {
 
 type Payment = {
   id: string;
-  userId: string;
-  jewelryAssetId: string;
+  name: string;
+  description: string;
+  downloadUrl: string;
   amount: string;
+  isPaidToUser: boolean;
+  purchasedAt: Date | null;
   status: string;
-  currency: string;
-  provider: string;
-  providerId: string;
-  description: string | null;
-  createdAt: Date;
-  updatedAt: Date;
 };
-
-interface PaymentsTableProps {
-  payments: Payment[];
-}
 
 const columns: ColumnDef<Payment>[] = [
   {
@@ -69,12 +62,7 @@ const columns: ColumnDef<Payment>[] = [
     },
     cell: ({ row }) => {
       const amount = Number.parseFloat(row.getValue("amount"));
-      const currency = row.original.currency;
-      return (
-        <div className="font-medium">
-          {currency} {amount.toFixed(2)}
-        </div>
-      );
+      return <div className="font-medium">${amount}</div>;
     },
   },
   {
@@ -85,7 +73,7 @@ const columns: ColumnDef<Payment>[] = [
       return (
         <Badge
           variant={
-            status === "confirmed"
+            status === "capture"
               ? "default"
               : status === "pending"
                 ? "secondary"
@@ -117,13 +105,13 @@ const columns: ColumnDef<Payment>[] = [
       );
     },
     cell: ({ row }) => {
-      const date = row.getValue("createdAt") as Date;
-      return <div>{format(date, "MMM dd, yyyy")}</div>;
+      return <div>{format(new Date(), "MMM dd, yyyy")}</div>;
     },
   },
 ];
 
-export function PaymentsTable({ payments }: PaymentsTableProps) {
+export function PaymentsTable({ payments }: { payments: Payment[] }) {
+  console.log("payments", payments);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 

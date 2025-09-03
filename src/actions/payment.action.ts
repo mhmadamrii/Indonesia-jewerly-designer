@@ -118,6 +118,7 @@ export const getMyPaymentTransactions = createServerFn({ method: "GET" })
           id: payments.id,
           amount: payments.amount,
           status: payments.status,
+          isPaidToUser: payments.isPaidToUser,
           purchasedAt: payments.createdAt,
         },
         category: category.name,

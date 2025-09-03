@@ -2,6 +2,7 @@
 
 import { CheckCircle, Clock, DollarSign, TrendingUp } from "lucide-react";
 import { useState } from "react";
+import { MyPaymentTransactionsType } from "~/actions/payment.action";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { PaymentsTable } from "./payments-table";
 import { PayoutRequest } from "./payout-request";
@@ -57,20 +58,20 @@ const mockPayments = [
   },
 ];
 
-export function EarningsPayouts() {
+export function EarningsPayouts({
+  paymentTransactions,
+}: {
+  paymentTransactions: MyPaymentTransactionsType;
+}) {
+  console.log("paymentTransactions", paymentTransactions);
   const [payments] = useState(mockPayments);
 
   // Calculate earnings summary
-  const totalEarnings = payments
-    .filter((p) => p.status === "confirmed")
-    .reduce((sum, p) => sum + Number.parseFloat(p.amount), 0);
+  const totalEarnings = paymentTransactions
+    .filter((p) => p.payment.isPaidToUser)
+    .reduce((sum, p) => sum + Number.parseFloat(p.payment.amount), 0);
 
-  const pendingEarnings = payments
-    .filter((p) => p.status === "pending")
-    .reduce((sum, p) => sum + Number.parseFloat(p.amount), 0);
-
-  const confirmedPayments = payments.filter((p) => p.status === "confirmed");
-  const pendingPayments = payments.filter((p) => p.status === "pending");
+  const pendingEarnings = 0;
 
   return (
     <>
@@ -103,7 +104,7 @@ export function EarningsPayouts() {
             <CheckCircle className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{confirmedPayments.length}</div>
+            <div className="text-2xl font-bold">{paymentTransactions.length}</div>
             <p className="text-muted-foreground text-xs">This month</p>
           </CardContent>
         </Card>
@@ -135,7 +136,15 @@ export function EarningsPayouts() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <PaymentsTable payments={payments} />
+              <PaymentsTable
+                payments={paymentTransactions?.map((item) => ({
+                  ...item.jewelry,
+                  amount: item.payment.amount,
+                  isPaidToUser: item.payment.isPaidToUser,
+                  purchasedAt: item.payment.purchasedAt,
+                  status: item.payment.status,
+                }))}
+              />
             </CardContent>
           </Card>
         </TabsContent>
