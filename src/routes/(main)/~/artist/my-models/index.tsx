@@ -2,10 +2,11 @@
 
 import { Await, createFileRoute } from "@tanstack/react-router";
 import { ExternalLink } from "lucide-react";
+import { toast } from "sonner";
 import { getMyjewelryAssets } from "~/actions/jewelry.action";
 import { Button } from "~/components/ui/button";
-import { JewelryAssetTableSkeleton } from "./-components/jewelry-asset-table-skeleton";
 import { JewelryAssetTable } from "./-components/jewelry-asset-table";
+import { JewelryAssetTableSkeleton } from "./-components/jewelry-asset-table-skeleton";
 
 export const Route = createFileRoute("/(main)/~/artist/my-models/")({
   loader: async ({ context }) => {
@@ -32,7 +33,10 @@ function RouteComponent() {
               Manage your digital jewelry collection
             </p>
           </div>
-          <Button>
+          <Button
+            className="cursor-pointer"
+            onClick={() => toast.warning("under development")}
+          >
             <ExternalLink className="mr-2 h-4 w-4" />
             Export Data
           </Button>

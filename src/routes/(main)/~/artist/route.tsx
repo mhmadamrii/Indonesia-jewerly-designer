@@ -49,10 +49,8 @@ import {
   CreditCard,
   DollarSign,
   FileArchive,
-  HelpCircle,
   LayoutDashboard,
   LogOut,
-  Mail,
   MessagesSquare,
   PackagePlus,
   Sparkles,
@@ -113,21 +111,6 @@ const ARTIST_SIDEBAR = [
         label: "Artist Forum",
         link: "/~/artist/community",
         icon: Users,
-      },
-    ],
-  },
-  {
-    labelGroup: "Help & Support",
-    items: [
-      {
-        label: "FAQ",
-        link: "/~/artist/dashboard",
-        icon: HelpCircle,
-      },
-      {
-        label: "Contact Support",
-        link: "/~/artist/dashboard",
-        icon: Mail,
       },
     ],
   },

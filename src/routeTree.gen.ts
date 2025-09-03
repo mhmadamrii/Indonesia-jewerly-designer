@@ -33,6 +33,7 @@ import { Route as mainChar126GeneralContactSupportIndexRouteImport } from "./rou
 import { Route as mainChar126GeneralCartIndexRouteImport } from "./routes/(main)/~/general/cart/index";
 import { Route as mainChar126ArtistPublishingIndexRouteImport } from "./routes/(main)/~/artist/publishing/index";
 import { Route as mainChar126ArtistMyModelsIndexRouteImport } from "./routes/(main)/~/artist/my-models/index";
+import { Route as mainChar126ArtistMessagesIndexRouteImport } from "./routes/(main)/~/artist/messages/index";
 import { Route as mainChar126ArtistEarningsIndexRouteImport } from "./routes/(main)/~/artist/earnings/index";
 import { Route as mainChar126ArtistDraftsIndexRouteImport } from "./routes/(main)/~/artist/drafts/index";
 import { Route as mainChar126ArtistDashboardIndexRouteImport } from "./routes/(main)/~/artist/dashboard/index";
@@ -41,6 +42,7 @@ import { Route as mainChar126GeneralUUserIdRouteImport } from "./routes/(main)/~
 import { Route as mainChar126GeneralPaymentsStatusRouteImport } from "./routes/(main)/~/general/payments/$status";
 import { Route as mainChar126GeneralMessagesUserIdRouteImport } from "./routes/(main)/~/general/messages/$userId";
 import { Route as mainChar126GeneralAssetsAssetIdRouteImport } from "./routes/(main)/~/general/assets/$assetId";
+import { Route as mainChar126ArtistMessagesUserIdRouteImport } from "./routes/(main)/~/artist/messages/$userId";
 import { Route as mainChar126ArtistAssetsAssetIdRouteImport } from "./routes/(main)/~/artist/assets/$assetId";
 import { Route as mainChar126GeneralPaymentsReceiptIndexRouteImport } from "./routes/(main)/~/general/payments/receipt/index";
 import { Route as mainChar126GeneralPaymentsReceiptReceiptIdRouteImport } from "./routes/(main)/~/general/payments/receipt/$receiptId";
@@ -174,6 +176,12 @@ const mainChar126ArtistMyModelsIndexRoute =
     path: "/my-models/",
     getParentRoute: () => mainChar126ArtistRouteRoute,
   } as any);
+const mainChar126ArtistMessagesIndexRoute =
+  mainChar126ArtistMessagesIndexRouteImport.update({
+    id: "/messages/",
+    path: "/messages/",
+    getParentRoute: () => mainChar126ArtistRouteRoute,
+  } as any);
 const mainChar126ArtistEarningsIndexRoute =
   mainChar126ArtistEarningsIndexRouteImport.update({
     id: "/earnings/",
@@ -221,6 +229,12 @@ const mainChar126GeneralAssetsAssetIdRoute =
     id: "/assets/$assetId",
     path: "/assets/$assetId",
     getParentRoute: () => mainChar126GeneralRouteRoute,
+  } as any);
+const mainChar126ArtistMessagesUserIdRoute =
+  mainChar126ArtistMessagesUserIdRouteImport.update({
+    id: "/messages/$userId",
+    path: "/messages/$userId",
+    getParentRoute: () => mainChar126ArtistRouteRoute,
   } as any);
 const mainChar126ArtistAssetsAssetIdRoute =
   mainChar126ArtistAssetsAssetIdRouteImport.update({
@@ -272,6 +286,7 @@ export interface FileRoutesByFullPath {
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/~/artist/assets/$assetId": typeof mainChar126ArtistAssetsAssetIdRoute;
+  "/~/artist/messages/$userId": typeof mainChar126ArtistMessagesUserIdRoute;
   "/~/general/assets/$assetId": typeof mainChar126GeneralAssetsAssetIdRoute;
   "/~/general/messages/$userId": typeof mainChar126GeneralMessagesUserIdRoute;
   "/~/general/payments/$status": typeof mainChar126GeneralPaymentsStatusRoute;
@@ -280,6 +295,7 @@ export interface FileRoutesByFullPath {
   "/~/artist/dashboard": typeof mainChar126ArtistDashboardIndexRoute;
   "/~/artist/drafts": typeof mainChar126ArtistDraftsIndexRoute;
   "/~/artist/earnings": typeof mainChar126ArtistEarningsIndexRoute;
+  "/~/artist/messages": typeof mainChar126ArtistMessagesIndexRoute;
   "/~/artist/my-models": typeof mainChar126ArtistMyModelsIndexRoute;
   "/~/artist/publishing": typeof mainChar126ArtistPublishingIndexRoute;
   "/~/general/cart": typeof mainChar126GeneralCartIndexRoute;
@@ -307,6 +323,7 @@ export interface FileRoutesByTo {
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/~/artist/assets/$assetId": typeof mainChar126ArtistAssetsAssetIdRoute;
+  "/~/artist/messages/$userId": typeof mainChar126ArtistMessagesUserIdRoute;
   "/~/general/assets/$assetId": typeof mainChar126GeneralAssetsAssetIdRoute;
   "/~/general/messages/$userId": typeof mainChar126GeneralMessagesUserIdRoute;
   "/~/general/payments/$status": typeof mainChar126GeneralPaymentsStatusRoute;
@@ -315,6 +332,7 @@ export interface FileRoutesByTo {
   "/~/artist/dashboard": typeof mainChar126ArtistDashboardIndexRoute;
   "/~/artist/drafts": typeof mainChar126ArtistDraftsIndexRoute;
   "/~/artist/earnings": typeof mainChar126ArtistEarningsIndexRoute;
+  "/~/artist/messages": typeof mainChar126ArtistMessagesIndexRoute;
   "/~/artist/my-models": typeof mainChar126ArtistMyModelsIndexRoute;
   "/~/artist/publishing": typeof mainChar126ArtistPublishingIndexRoute;
   "/~/general/cart": typeof mainChar126GeneralCartIndexRoute;
@@ -344,6 +362,7 @@ export interface FileRoutesById {
   "/(main)/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/(main)/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
   "/(main)/~/artist/assets/$assetId": typeof mainChar126ArtistAssetsAssetIdRoute;
+  "/(main)/~/artist/messages/$userId": typeof mainChar126ArtistMessagesUserIdRoute;
   "/(main)/~/general/assets/$assetId": typeof mainChar126GeneralAssetsAssetIdRoute;
   "/(main)/~/general/messages/$userId": typeof mainChar126GeneralMessagesUserIdRoute;
   "/(main)/~/general/payments/$status": typeof mainChar126GeneralPaymentsStatusRoute;
@@ -352,6 +371,7 @@ export interface FileRoutesById {
   "/(main)/~/artist/dashboard/": typeof mainChar126ArtistDashboardIndexRoute;
   "/(main)/~/artist/drafts/": typeof mainChar126ArtistDraftsIndexRoute;
   "/(main)/~/artist/earnings/": typeof mainChar126ArtistEarningsIndexRoute;
+  "/(main)/~/artist/messages/": typeof mainChar126ArtistMessagesIndexRoute;
   "/(main)/~/artist/my-models/": typeof mainChar126ArtistMyModelsIndexRoute;
   "/(main)/~/artist/publishing/": typeof mainChar126ArtistPublishingIndexRoute;
   "/(main)/~/general/cart/": typeof mainChar126GeneralCartIndexRoute;
@@ -381,6 +401,7 @@ export interface FileRouteTypes {
     | "/~/artist"
     | "/~/general"
     | "/~/artist/assets/$assetId"
+    | "/~/artist/messages/$userId"
     | "/~/general/assets/$assetId"
     | "/~/general/messages/$userId"
     | "/~/general/payments/$status"
@@ -389,6 +410,7 @@ export interface FileRouteTypes {
     | "/~/artist/dashboard"
     | "/~/artist/drafts"
     | "/~/artist/earnings"
+    | "/~/artist/messages"
     | "/~/artist/my-models"
     | "/~/artist/publishing"
     | "/~/general/cart"
@@ -416,6 +438,7 @@ export interface FileRouteTypes {
     | "/~/artist"
     | "/~/general"
     | "/~/artist/assets/$assetId"
+    | "/~/artist/messages/$userId"
     | "/~/general/assets/$assetId"
     | "/~/general/messages/$userId"
     | "/~/general/payments/$status"
@@ -424,6 +447,7 @@ export interface FileRouteTypes {
     | "/~/artist/dashboard"
     | "/~/artist/drafts"
     | "/~/artist/earnings"
+    | "/~/artist/messages"
     | "/~/artist/my-models"
     | "/~/artist/publishing"
     | "/~/general/cart"
@@ -452,6 +476,7 @@ export interface FileRouteTypes {
     | "/(main)/~/artist"
     | "/(main)/~/general"
     | "/(main)/~/artist/assets/$assetId"
+    | "/(main)/~/artist/messages/$userId"
     | "/(main)/~/general/assets/$assetId"
     | "/(main)/~/general/messages/$userId"
     | "/(main)/~/general/payments/$status"
@@ -460,6 +485,7 @@ export interface FileRouteTypes {
     | "/(main)/~/artist/dashboard/"
     | "/(main)/~/artist/drafts/"
     | "/(main)/~/artist/earnings/"
+    | "/(main)/~/artist/messages/"
     | "/(main)/~/artist/my-models/"
     | "/(main)/~/artist/publishing/"
     | "/(main)/~/general/cart/"
@@ -681,6 +707,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof mainChar126ArtistMyModelsIndexRouteImport;
       parentRoute: typeof mainChar126ArtistRouteRoute;
     };
+    "/(main)/~/artist/messages/": {
+      id: "/(main)/~/artist/messages/";
+      path: "/messages";
+      fullPath: "/~/artist/messages";
+      preLoaderRoute: typeof mainChar126ArtistMessagesIndexRouteImport;
+      parentRoute: typeof mainChar126ArtistRouteRoute;
+    };
     "/(main)/~/artist/earnings/": {
       id: "/(main)/~/artist/earnings/";
       path: "/earnings";
@@ -736,6 +769,13 @@ declare module "@tanstack/react-router" {
       fullPath: "/~/general/assets/$assetId";
       preLoaderRoute: typeof mainChar126GeneralAssetsAssetIdRouteImport;
       parentRoute: typeof mainChar126GeneralRouteRoute;
+    };
+    "/(main)/~/artist/messages/$userId": {
+      id: "/(main)/~/artist/messages/$userId";
+      path: "/messages/$userId";
+      fullPath: "/~/artist/messages/$userId";
+      preLoaderRoute: typeof mainChar126ArtistMessagesUserIdRouteImport;
+      parentRoute: typeof mainChar126ArtistRouteRoute;
     };
     "/(main)/~/artist/assets/$assetId": {
       id: "/(main)/~/artist/assets/$assetId";
@@ -807,10 +847,12 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface mainChar126ArtistRouteRouteChildren {
   mainChar126ArtistAssetsAssetIdRoute: typeof mainChar126ArtistAssetsAssetIdRoute;
+  mainChar126ArtistMessagesUserIdRoute: typeof mainChar126ArtistMessagesUserIdRoute;
   mainChar126ArtistCommunityIndexRoute: typeof mainChar126ArtistCommunityIndexRoute;
   mainChar126ArtistDashboardIndexRoute: typeof mainChar126ArtistDashboardIndexRoute;
   mainChar126ArtistDraftsIndexRoute: typeof mainChar126ArtistDraftsIndexRoute;
   mainChar126ArtistEarningsIndexRoute: typeof mainChar126ArtistEarningsIndexRoute;
+  mainChar126ArtistMessagesIndexRoute: typeof mainChar126ArtistMessagesIndexRoute;
   mainChar126ArtistMyModelsIndexRoute: typeof mainChar126ArtistMyModelsIndexRoute;
   mainChar126ArtistPublishingIndexRoute: typeof mainChar126ArtistPublishingIndexRoute;
   mainChar126ArtistPublishingEditAssetIdRoute: typeof mainChar126ArtistPublishingEditAssetIdRoute;
@@ -819,10 +861,12 @@ interface mainChar126ArtistRouteRouteChildren {
 const mainChar126ArtistRouteRouteChildren: mainChar126ArtistRouteRouteChildren =
   {
     mainChar126ArtistAssetsAssetIdRoute: mainChar126ArtistAssetsAssetIdRoute,
+    mainChar126ArtistMessagesUserIdRoute: mainChar126ArtistMessagesUserIdRoute,
     mainChar126ArtistCommunityIndexRoute: mainChar126ArtistCommunityIndexRoute,
     mainChar126ArtistDashboardIndexRoute: mainChar126ArtistDashboardIndexRoute,
     mainChar126ArtistDraftsIndexRoute: mainChar126ArtistDraftsIndexRoute,
     mainChar126ArtistEarningsIndexRoute: mainChar126ArtistEarningsIndexRoute,
+    mainChar126ArtistMessagesIndexRoute: mainChar126ArtistMessagesIndexRoute,
     mainChar126ArtistMyModelsIndexRoute: mainChar126ArtistMyModelsIndexRoute,
     mainChar126ArtistPublishingIndexRoute:
       mainChar126ArtistPublishingIndexRoute,

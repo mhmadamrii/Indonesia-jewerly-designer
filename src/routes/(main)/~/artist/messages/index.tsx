@@ -7,7 +7,7 @@ import { useState } from "react";
 import { ChatInterface } from "./-components/chat-interface";
 import { ChatList } from "./-components/chat-list";
 
-export const Route = createFileRoute("/(main)/~/general/messages/")({
+export const Route = createFileRoute("/(main)/~/artist/messages/")({
   component: RouteComponent,
 });
 
