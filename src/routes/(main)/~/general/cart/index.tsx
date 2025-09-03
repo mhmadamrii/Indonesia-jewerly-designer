@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { HardDrive, ShoppingBag, Tag, Trash2, Zap } from "lucide-react";
-import { useState } from "react";
 import { toast } from "sonner";
 import { deleteCartItem, getCartItems } from "~/actions/cart.action";
 import { ModelViewer } from "~/components/3D/model-viewer";
@@ -27,8 +26,6 @@ function RouteComponent() {
     queryFn: () => getCartItems(),
   });
 
-  const [currentId, setCurrentId] = useState<string | null>(null);
-
   const { mutate: deleteItem, isPending: isDeletingItem } = useMutation({
     mutationFn: deleteCartItem,
     onSuccess: (res) => {
@@ -40,7 +37,6 @@ function RouteComponent() {
   });
 
   const handleRemoveItem = (id: string) => {
-    setCurrentId(id);
     deleteItem({
       data: {
         id,
@@ -48,11 +44,18 @@ function RouteComponent() {
     });
   };
 
-  const subtotal = 0;
+  const subtotal =
+    cartItemsData?.data?.reduce((acc, item) => {
+      if (item.jewelry_assets && item.cart_item) {
+        return acc + Number(item.jewelry_assets.price) * item.cart_item.quantity;
+      }
+      return acc;
+    }, 0) ?? 0;
+
   const totalBoost = 0;
   const totalStorage = 10;
 
-  const tax = subtotal * 0.08;
+  const tax = 0;
   const total = subtotal + tax;
 
   if (cartItemsData?.data.length === 0) {

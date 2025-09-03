@@ -2,6 +2,7 @@ import { Await, createFileRoute } from "@tanstack/react-router";
 import { getMyPaymentTransactions } from "~/actions/payment.action";
 import { HeaderPage } from "~/components/header-page";
 import { EarningsPayouts } from "./-components/earnings-payouts";
+import { EarningsPayoutsSkeleton } from "./-components/earnings-payouts-skeleton";
 
 export const Route = createFileRoute("/(main)/~/artist/earnings/")({
   component: RouteComponent,
@@ -24,7 +25,10 @@ function RouteComponent() {
         headerTitle="Earnings & Payouts"
         headerSubtitle="Track your jewelry sales earnings and manage payout requests"
       />
-      <Await promise={myPaymentTransactions} fallback={<h1>Loading...</h1>}>
+      <Await
+        promise={myPaymentTransactions}
+        fallback={<EarningsPayoutsSkeleton />}
+      >
         {({ data }) => <EarningsPayouts paymentTransactions={data} />}
       </Await>
     </div>
