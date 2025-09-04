@@ -92,12 +92,14 @@ export function ArtistDashboard({
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {(
-                  dashboardData.assetReviews.reduce(
-                    (sum, item) => sum + item.review.rating,
-                    0,
-                  ) / dashboardData.assetReviews.length
-                ).toFixed(1)}
+                {dashboardData.assetReviews.length > 0
+                  ? (
+                      dashboardData.assetReviews.reduce(
+                        (sum, item) => sum + item.review.rating,
+                        0,
+                      ) / dashboardData.assetReviews.length
+                    ).toFixed(1)
+                  : "0.0"}
               </div>
               <p className="text-muted-foreground text-xs">
                 Based on {dashboardData.assetReviews.length} reviews

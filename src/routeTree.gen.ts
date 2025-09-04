@@ -12,6 +12,7 @@ import { createServerRootRoute } from "@tanstack/react-start/server";
 
 import { Route as rootRouteImport } from "./routes/__root";
 import { Route as authRouteRouteImport } from "./routes/(auth)/route";
+import { Route as adminRouteRouteImport } from "./routes/(admin)/route";
 import { Route as IndexRouteImport } from "./routes/index";
 import { Route as publicPlaygroundsRouteImport } from "./routes/(public)/playgrounds";
 import { Route as publicHelloRouteImport } from "./routes/(public)/hello";
@@ -57,6 +58,10 @@ const authRouteRoute = authRouteRouteImport.update({
   id: "/(auth)",
   getParentRoute: () => rootRouteImport,
 } as any);
+const adminRouteRoute = adminRouteRouteImport.update({
+  id: "/(admin)",
+  getParentRoute: () => rootRouteImport,
+} as any);
 const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
@@ -78,9 +83,9 @@ const authAuthRoute = authAuthRouteImport.update({
   getParentRoute: () => authRouteRoute,
 } as any);
 const adminAdminRoute = adminAdminRouteImport.update({
-  id: "/(admin)/admin",
+  id: "/admin",
   path: "/admin",
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => adminRouteRoute,
 } as any);
 const mainChar126GeneralRouteRoute = mainChar126GeneralRouteRouteImport.update({
   id: "/(main)/~/general",
@@ -354,6 +359,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/": typeof IndexRoute;
+  "/(admin)": typeof adminRouteRouteWithChildren;
   "/(auth)": typeof authRouteRouteWithChildren;
   "/(admin)/admin": typeof adminAdminRoute;
   "/(auth)/auth": typeof authAuthRoute;
@@ -468,6 +474,7 @@ export interface FileRouteTypes {
   id:
     | "__root__"
     | "/"
+    | "/(admin)"
     | "/(auth)"
     | "/(admin)/admin"
     | "/(auth)/auth"
@@ -507,8 +514,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
+  adminRouteRoute: typeof adminRouteRouteWithChildren;
   authRouteRoute: typeof authRouteRouteWithChildren;
-  adminAdminRoute: typeof adminAdminRoute;
   publicHelloRoute: typeof publicHelloRoute;
   publicPlaygroundsRoute: typeof publicPlaygroundsRoute;
   mainChar126ArtistRouteRoute: typeof mainChar126ArtistRouteRouteWithChildren;
@@ -560,6 +567,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof authRouteRouteImport;
       parentRoute: typeof rootRouteImport;
     };
+    "/(admin)": {
+      id: "/(admin)";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof adminRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     "/": {
       id: "/";
       path: "/";
@@ -593,7 +607,7 @@ declare module "@tanstack/react-router" {
       path: "/admin";
       fullPath: "/admin";
       preLoaderRoute: typeof adminAdminRouteImport;
-      parentRoute: typeof rootRouteImport;
+      parentRoute: typeof adminRouteRoute;
     };
     "/(main)/~/general": {
       id: "/(main)/~/general";
@@ -833,6 +847,18 @@ declare module "@tanstack/react-start/server" {
   }
 }
 
+interface adminRouteRouteChildren {
+  adminAdminRoute: typeof adminAdminRoute;
+}
+
+const adminRouteRouteChildren: adminRouteRouteChildren = {
+  adminAdminRoute: adminAdminRoute,
+};
+
+const adminRouteRouteWithChildren = adminRouteRoute._addFileChildren(
+  adminRouteRouteChildren,
+);
+
 interface authRouteRouteChildren {
   authAuthRoute: typeof authAuthRoute;
 }
@@ -938,8 +964,8 @@ const mainChar126GeneralRouteRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  adminRouteRoute: adminRouteRouteWithChildren,
   authRouteRoute: authRouteRouteWithChildren,
-  adminAdminRoute: adminAdminRoute,
   publicHelloRoute: publicHelloRoute,
   publicPlaygroundsRoute: publicPlaygroundsRoute,
   mainChar126ArtistRouteRoute: mainChar126ArtistRouteRouteWithChildren,

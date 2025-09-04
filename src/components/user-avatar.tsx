@@ -26,7 +26,7 @@ export function UserAvatar({ user }: { user: UserWithRole }) {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link className="flex items-center gap-2" to="/~/general/feed">
+          <Link preload="intent" className="flex items-center gap-2" to="/~/general/feed">
             <UserIcon className="mr-2 h-4 w-4" />
             <span>Feed</span>
           </Link>

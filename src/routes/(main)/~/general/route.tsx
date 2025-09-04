@@ -15,6 +15,7 @@ import {
   Link,
   Outlet,
   redirect,
+  useNavigate,
 } from "@tanstack/react-router";
 
 import {
@@ -169,6 +170,7 @@ export const Route = createFileRoute("/(main)/~/general")({
 
 function MainLayout() {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const { theme } = useTheme();
   const { setIsRoleChanging } = useRoleStore();
   const { data: session } = authClient.useSession();
@@ -266,9 +268,19 @@ function MainLayout() {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          if (session?.user.email === "ijd.indonesia@gmail.com") {
+                            navigate({
+                              to: "/admin",
+                            });
+                          }
+                        }}
+                      >
                         <Sparkles />
-                        Upgrade to Pro
+                        {session?.user.email === "ijd.indonesia@gmail.com"
+                          ? "Admin"
+                          : "Upgrade to Pro"}
                       </DropdownMenuItem>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
