@@ -98,7 +98,21 @@ export function UserSettings() {
         bio: userSettingsData.data.settings?.bio || "",
         location: userSettingsData.data.settings?.location || "",
         website: userSettingsData.data.settings?.site || "",
-        showMarketplacePublic: userSettingsData.data.settings?.market_visibility || false,
+        showMarketplacePublic: userSettingsData.data.settings?.market_visibility ?? true,
+        showEmail: userSettingsData.data.settings?.show_email ?? true,
+        showLocation: userSettingsData.data.settings?.show_location ?? true,
+        profileVisibility:
+          (userSettingsData.data.settings?.profile_visibility as
+            | "public"
+            | "followers"
+            | "private") ?? "public",
+        // notifications
+        emailNotifications: userSettingsData.data.settings?.receive_email ?? true,
+        pushNotifications: userSettingsData.data.settings?.receive_push ?? true,
+        orderUpdates: userSettingsData.data.settings?.receive_order ?? true,
+        reviewNotifications: userSettingsData.data.settings?.receive_review ?? true,
+        followerNotifications: userSettingsData.data.settings?.receive_follower ?? true,
+        marketingEmails: userSettingsData.data.settings?.receive_marketing_email ?? true,
       }));
     }
   };
@@ -526,7 +540,21 @@ export function UserSettings() {
                 bio: settings.bio,
                 location: settings.location,
                 site: settings.website,
+                // privacy
                 market_visibility: settings.showMarketplacePublic,
+                show_email: settings.showEmail,
+                show_location: settings.showLocation,
+                profile_visibility: settings.profileVisibility as
+                  | "public"
+                  | "followers"
+                  | "private",
+                // notifications
+                receive_email: settings.emailNotifications,
+                receive_push: settings.pushNotifications,
+                receive_order: settings.orderUpdates,
+                receive_review: settings.reviewNotifications,
+                receive_follower: settings.followerNotifications,
+                receive_marketing_email: settings.marketingEmails,
               },
             })
           }

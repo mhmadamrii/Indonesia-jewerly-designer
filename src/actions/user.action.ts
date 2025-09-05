@@ -131,12 +131,28 @@ export const getUserSettings = createServerFn({ method: "GET" })
 export const updateUserSettings = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator(
-    z.object({
-      bio: z.string(),
-      location: z.string(),
-      site: z.string(),
-      market_visibility: z.boolean(),
-    }),
+    z
+      .object({
+        // profile
+        bio: z.string().optional(),
+        location: z.string().optional(),
+        site: z.string().optional(),
+        // privacy
+        market_visibility: z.boolean().optional(),
+        show_email: z.boolean().optional(),
+        show_location: z.boolean().optional(),
+        profile_visibility: z.enum(["public", "followers", "private"]).optional(),
+        // notifications
+        receive_email: z.boolean().optional(),
+        receive_push: z.boolean().optional(),
+        receive_order: z.boolean().optional(),
+        receive_review: z.boolean().optional(),
+        receive_follower: z.boolean().optional(),
+        receive_marketing_email: z.boolean().optional(),
+      })
+      .refine((obj) => Object.keys(obj).length > 0, {
+        message: "At least one field must be provided",
+      }),
   )
   .handler(async ({ context, data }) => {
     console.log("data from client", data);
