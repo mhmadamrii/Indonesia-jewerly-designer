@@ -6,6 +6,7 @@ import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
 import { wishlistItem } from "~/lib/db/schema";
 import { deleteCache, getFromCache, setCache } from "~/lib/redis/cachUtils";
+import { createAssetOwnerNotification } from "./notification.action";
 
 type WishlistItem = InferSelectModel<typeof wishlistItem>;
 
@@ -50,6 +51,13 @@ export const addWishlistItem = createServerFn({ method: "POST" })
       .returning({ id: wishlistItem.id });
 
     await deleteCache(cacheKey);
+
+    // Fire-and-forget notification to asset owner
+    try {
+      await createAssetOwnerNotification({
+        data: { jewelryAssetId, kind: "wishlist" },
+      });
+    } catch (_) {}
 
     return {
       success: true,

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
+import { useNotifications } from "~/hooks/use-notifications";
 
 import {
   Bell,
@@ -19,101 +20,9 @@ import {
   X,
 } from "lucide-react";
 
-interface Notification {
-  id: string;
-  type: "order" | "promotion" | "appointment" | "system" | "community" | "payment";
-  title: string;
-  message: string;
-  timestamp: Date;
-  isRead: boolean;
-  priority: "low" | "medium" | "high";
-  actionUrl?: string;
-  image?: string;
-}
-
 export function Notif() {
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: "1",
-      type: "order",
-      title: "Cincin Custom Anda Sudah Selesai!",
-      message:
-        "Cincin emas 18K dengan berlian 0.5 karat telah selesai dibuat. Siap untuk pengiriman hari ini.",
-      timestamp: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
-      isRead: false,
-      priority: "high",
-    },
-    {
-      id: "2",
-      type: "promotion",
-      title: "Flash Sale 30% - Koleksi Tradisional",
-      message:
-        "Dapatkan diskon hingga 30% untuk semua perhiasan tradisional Indonesia. Berlaku sampai akhir bulan!",
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-      isRead: false,
-      priority: "medium",
-    },
-    {
-      id: "3",
-      type: "appointment",
-      title: "Reminder: Konsultasi Besok",
-      message:
-        "Jangan lupa konsultasi desain perhiasan Anda besok pukul 14:00 di showroom Kemang.",
-      timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
-      isRead: true,
-      priority: "high",
-    },
-    {
-      id: "4",
-      type: "system",
-      title: "Profil Anda Telah Diperbarui",
-      message: "Informasi kontak dan preferensi desain Anda berhasil disimpan.",
-      timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
-      isRead: true,
-      priority: "low",
-    },
-    {
-      id: "5",
-      type: "community",
-      title: "Desain Baru: Koleksi Nusantara",
-      message:
-        "Lihat koleksi terbaru kami yang terinspirasi dari keindahan alam Indonesia.",
-      timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
-      isRead: false,
-      priority: "medium",
-    },
-    {
-      id: "6",
-      type: "payment",
-      title: "Pembayaran Berhasil Diterima",
-      message:
-        "Terima kasih! Pembayaran untuk pesanan #JD2024001 sebesar Rp 15.500.000 telah kami terima.",
-      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
-      isRead: true,
-      priority: "medium",
-    },
-    {
-      id: "7",
-      type: "order",
-      title: "Pesanan Dalam Proses Pembuatan",
-      message:
-        "Kalung custom Anda sedang dalam tahap setting batu mulia. Estimasi selesai 5 hari lagi.",
-      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
-      isRead: true,
-      priority: "low",
-    },
-    {
-      id: "8",
-      type: "promotion",
-      title: "Program Loyalitas Baru!",
-      message:
-        "Bergabunglah dengan program VIP kami dan dapatkan benefit eksklusif serta diskon khusus.",
-      timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
-      isRead: false,
-      priority: "medium",
-    },
-  ]);
-
+  const { notifications, unreadCount, isLoading, markAllRead, markRead, remove } =
+    useNotifications();
   const [filter, setFilter] = useState<
     | "all"
     | "unread"
@@ -124,6 +33,11 @@ export function Notif() {
     | "community"
     | "payment"
   >("all");
+
+  const normalized = useMemo(() => {
+    // API returns leftJoin rows: { notification, jewelry_assets }
+    return (notifications || []).map((row: any) => row.notification ?? row);
+  }, [notifications]);
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
@@ -191,30 +105,21 @@ export function Notif() {
     }
   };
 
-  const filteredNotifications = notifications.filter((notification) => {
+  const filteredNotifications = normalized.filter((notification: any) => {
     if (filter === "all") return true;
     if (filter === "unread") return !notification.isRead;
     return notification.type === filter;
   });
-
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
-
-  const markAsRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((notification) =>
-        notification.id === id ? { ...notification, isRead: true } : notification,
-      ),
-    );
+  const handleMarkAsRead = async (id: string) => {
+    await markRead({ data: { id } });
   };
 
-  const markAllAsRead = () => {
-    setNotifications((prev) =>
-      prev.map((notification) => ({ ...notification, isRead: true })),
-    );
+  const handleMarkAllAsRead = async () => {
+    await markAllRead();
   };
 
-  const deleteNotification = (id: string) => {
-    setNotifications((prev) => prev.filter((notification) => notification.id !== id));
+  const handleDelete = async (id: string) => {
+    await remove({ data: { id } });
   };
 
   return (
@@ -247,8 +152,8 @@ export function Notif() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={markAllAsRead}
-                disabled={unreadCount === 0}
+                onClick={handleMarkAllAsRead}
+                disabled={isLoading || unreadCount === 0}
               >
                 <Check className="mr-2 h-4 w-4" />
                 Tandai Semua Dibaca
@@ -320,13 +225,13 @@ export function Notif() {
               </CardContent>
             </Card>
           ) : (
-            filteredNotifications.map((notification) => (
+            filteredNotifications.map((notification: any) => (
               <Card
                 key={notification.id}
                 className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
                   !notification.isRead ? "border-l-4 border-l-blue-500" : ""
                 }`}
-                onClick={() => !notification.isRead && markAsRead(notification.id)}
+                onClick={() => !notification.isRead && handleMarkAsRead(notification.id)}
               >
                 <CardContent className="p-6">
                   <div className="flex items-start gap-4">
@@ -343,24 +248,23 @@ export function Notif() {
                             <h3
                               className={`font-semibold ${!notification.isRead ? "" : ""}`}
                             >
-                              {notification.title}
+                              {notification.message}
                             </h3>
                             {!notification.isRead && (
                               <div className="h-2 w-2 rounded-full bg-blue-500"></div>
                             )}
-                            <div
-                              className={`h-2 w-2 rounded-full ${getPriorityColor(notification.priority)}`}
-                            ></div>
                           </div>
                           <p
                             className={`text-sm leading-relaxed ${!notification.isRead ? "" : ""}`}
-                          >
-                            {notification.message}
-                          </p>
+                          ></p>
                           <div className="mt-3 flex items-center gap-4">
                             <div className="flex items-center gap-1 text-xs text-gray-500">
                               <Clock className="h-3 w-3" />
-                              {formatTimeAgo(notification.timestamp)}
+                              {formatTimeAgo(
+                                new Date(
+                                  notification.createdAt || notification.created_at,
+                                ),
+                              )}
                             </div>
                             <Badge variant="outline" className="text-xs capitalize">
                               {notification.type}
@@ -376,7 +280,7 @@ export function Notif() {
                               size="sm"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                markAsRead(notification.id);
+                                handleMarkAsRead(notification.id);
                               }}
                               className="h-8 w-8 p-0"
                             >
@@ -388,7 +292,7 @@ export function Notif() {
                             size="sm"
                             onClick={(e) => {
                               e.stopPropagation();
-                              deleteNotification(notification.id);
+                              handleDelete(notification.id);
                             }}
                             className="h-8 w-8 p-0 text-red-500 hover:bg-red-50 hover:text-red-700"
                           >

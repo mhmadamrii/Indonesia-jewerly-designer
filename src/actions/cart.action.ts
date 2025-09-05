@@ -5,6 +5,7 @@ import { and, eq } from "drizzle-orm";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
 import { cartItem, jewelryAssets } from "~/lib/db/schema";
+import { createAssetOwnerNotification } from "./notification.action";
 
 const CartSchema = z.object({
   jewelryAssetId: z.string(),
@@ -58,6 +59,12 @@ export const createCartItem = createServerFn({ method: "POST" })
         quantity,
       })
       .returning({ id: cartItem.id });
+
+    try {
+      await createAssetOwnerNotification({
+        data: { jewelryAssetId, kind: "cart" },
+      });
+    } catch (_) {}
 
     return {
       success: true,
