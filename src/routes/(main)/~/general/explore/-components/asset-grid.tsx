@@ -9,6 +9,7 @@ export function AssetGrid({
   category,
   user,
   reviewCount,
+  tags,
 }: jewelryWithJoins) {
   const navigate = useNavigate();
 
@@ -69,7 +70,7 @@ export function AssetGrid({
             </p>
 
             <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
-              {["tag1", "tag2", "tag3"].map((tag, idx) => (
+              {(tags ?? []).map((tag) => (
                 <span
                   key={tag}
                   className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-[11px] font-medium"

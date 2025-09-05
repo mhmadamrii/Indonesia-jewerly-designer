@@ -34,6 +34,7 @@ function RouteComponent() {
                   user={item.user}
                   jewelry_assets={item.jewelry_assets}
                   reviewCount={item.reviewCount}
+                  tags={item.tags}
                 />
               ))}
         </div>

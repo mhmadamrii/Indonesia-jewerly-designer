@@ -4,7 +4,14 @@ import { and, eq, gte, InferSelectModel, lte, sql } from "drizzle-orm";
 import { z } from "zod";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { category, jewelryAssets, review, user } from "~/lib/db/schema";
+import {
+  category,
+  jewelryAssets,
+  jewelryAssetTags,
+  review,
+  tag,
+  user,
+} from "~/lib/db/schema";
 
 export const exploreSearchParamSchema = z.object({
   artist: z.string().optional(),
@@ -19,6 +26,7 @@ export type jewelryWithJoins = {
   category: InferSelectModel<typeof category>;
   user: InferSelectModel<typeof user>;
   reviewCount: number;
+  tags: string[];
 };
 
 export interface IExploreProps {
@@ -83,11 +91,16 @@ export const getExploreAssetDatas = createServerFn({ method: "GET" })
           category,
           user,
           reviewCount: sql<number>`COUNT(${review.id})`,
+          tags: sql<
+            string[]
+          >`COALESCE(array_agg(${tag.name} ORDER BY ${tag.name}) FILTER (WHERE ${tag.id} IS NOT NULL), ARRAY[]::text[])`,
         })
         .from(jewelryAssets)
         .innerJoin(category, eq(jewelryAssets.categoryId, category.id))
         .innerJoin(user, eq(jewelryAssets.userId, user.id))
         .leftJoin(review, eq(jewelryAssets.id, review.jewelryAssetId))
+        .leftJoin(jewelryAssetTags, eq(jewelryAssets.id, jewelryAssetTags.jewelryAssetId))
+        .leftJoin(tag, eq(jewelryAssetTags.tagId, tag.id))
         .where(filters.length > 0 ? and(...filters) : undefined)
         .groupBy(jewelryAssets.id, category.id, user.id),
       db.select().from(user),
