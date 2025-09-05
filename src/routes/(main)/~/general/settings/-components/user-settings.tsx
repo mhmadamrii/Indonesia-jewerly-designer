@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { getUserSettings, updateUserSettings } from "~/actions/user.action";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -30,6 +33,7 @@ import {
   Eye,
   EyeOff,
   Globe,
+  Loader,
   Mail,
   Palette,
   Save,
@@ -38,13 +42,14 @@ import {
 } from "lucide-react";
 
 export function UserSettings() {
+  const queryClient = useQueryClient();
   const [settings, setSettings] = useState({
     // Profile Settings
-    name: "Sarah Chen",
-    email: "sarah.chen@example.com",
-    bio: "Passionate jewelry designer creating unique handcrafted pieces inspired by nature and modern aesthetics.",
-    location: "San Francisco, CA",
-    website: "https://sarahchenjewelry.com",
+    name: "",
+    email: "",
+    bio: "",
+    location: "",
+    website: "",
 
     // Privacy Settings
     showMarketplacePublic: true,
@@ -67,14 +72,40 @@ export function UserSettings() {
     timezone: "America/Los_Angeles",
   });
 
+  const { data: userSettingsData } = useQuery({
+    queryKey: ["user-settings"],
+    queryFn: () => getUserSettings(),
+  });
+
+  const { mutate: handleSave, isPending } = useMutation({
+    mutationFn: updateUserSettings,
+    onSuccess: () => {
+      toast.success("Settings saved successfully");
+      queryClient.invalidateQueries({ queryKey: ["user-settings"] });
+    },
+  });
+
   const handleSettingChange = (key: string, value: any) => {
     setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSave = () => {
-    console.log("[v0] Saving settings:", settings);
-    // Here you would typically save to your backend
+  const handleUpdateSettingsEffect = () => {
+    if (userSettingsData) {
+      setSettings((prev) => ({
+        ...prev,
+        name: userSettingsData.data.user.name,
+        email: userSettingsData.data.user.email,
+        bio: userSettingsData.data.settings?.bio || "",
+        location: userSettingsData.data.settings?.location || "",
+        website: userSettingsData.data.settings?.site || "",
+        showMarketplacePublic: userSettingsData.data.settings?.market_visibility || false,
+      }));
+    }
   };
+
+  useEffect(() => {
+    handleUpdateSettingsEffect();
+  }, [userSettingsData]);
 
   return (
     <div className="min-h-screen p-4">
@@ -116,7 +147,12 @@ export function UserSettings() {
             <CardContent className="space-y-6">
               <div className="flex items-center gap-6">
                 <Avatar className="h-20 w-20">
-                  <AvatarImage src="/placeholder-img.jpg?height=80&width=80" />
+                  <AvatarImage
+                    src={
+                      userSettingsData?.data.user.image ||
+                      "/placeholder-img.jpg?height=80&width=80"
+                    }
+                  />
                   <AvatarFallback>SC</AvatarFallback>
                 </Avatar>
                 <div>
@@ -483,9 +519,27 @@ export function UserSettings() {
       </Tabs>
 
       <div className="mt-8 flex justify-end">
-        <Button onClick={handleSave} className="flex items-center gap-2">
-          <Save className="h-4 w-4" />
-          Save Changes
+        <Button
+          onClick={() =>
+            handleSave({
+              data: {
+                bio: settings.bio,
+                location: settings.location,
+                site: settings.website,
+                market_visibility: settings.showMarketplacePublic,
+              },
+            })
+          }
+          className="flex w-full items-center gap-2 sm:w-[150px]"
+        >
+          {isPending ? (
+            <Loader className="animate-spin" />
+          ) : (
+            <>
+              <Save className="h-4 w-4" />
+              Save Changes
+            </>
+          )}
         </Button>
       </div>
     </div>

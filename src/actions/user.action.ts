@@ -6,7 +6,7 @@ import { count, eq } from "drizzle-orm";
 import { auth } from "~/lib/auth";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { follow, jewelryAssets, user } from "~/lib/db/schema";
+import { follow, jewelryAssets, settings, user } from "~/lib/db/schema";
 
 export type UserById = Awaited<ReturnType<(typeof getUserById)>>["data"]; // prettier-ignore
 
@@ -111,4 +111,40 @@ export const getUserProfileStats = createServerFn({ method: "GET" })
         totalProducts,
       },
     };
+  });
+
+export const getUserSettings = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    const res = await db
+      .select()
+      .from(user)
+      .leftJoin(settings, eq(user.id, settings.userId))
+      .where(eq(user.id, context.user.id));
+
+    return {
+      success: true,
+      data: res[0],
+    };
+  });
+
+export const updateUserSettings = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator(
+    z.object({
+      bio: z.string(),
+      location: z.string(),
+      site: z.string(),
+      market_visibility: z.boolean(),
+    }),
+  )
+  .handler(async ({ context, data }) => {
+    console.log("data from client", data);
+    const res = await db
+      .update(settings)
+      .set(data)
+      .where(eq(settings.userId, context.user.id))
+      .returning({ id: settings.id });
+
+    return { success: true, data: res[0] };
   });

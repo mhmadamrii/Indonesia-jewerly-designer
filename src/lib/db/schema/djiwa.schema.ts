@@ -170,11 +170,36 @@ export const feedback = pgTable("feedback", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const settings = pgTable("settings", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  // profile
+  bio: text("bio"),
+  location: text("location"),
+  site: text("site"),
+  // privacy
+  market_visibility: boolean("market_visibility").default(true),
+  show_email: boolean("show_email").default(true),
+  show_location: boolean("show_location").default(true),
+  profile_visibility: text("profile_visibility").default("public"),
+  // notifications
+  receive_email: boolean("receive_email").default(true),
+  receive_push: boolean("receive_push").default(true),
+  receive_order: boolean("receive_order").default(true),
+  receive_review: boolean("receive_review").default(true),
+  receive_follower: boolean("receive_follower").default(true),
+  receive_marketing_email: boolean("receive_marketing_email").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 /**
  * Relations
  */
 
-export const userRelations = relations(user, ({ many }) => ({
+export const userRelations = relations(user, ({ many, one }) => ({
   jewelryAssets: many(jewelryAssets),
   cartItems: many(cartItem),
   wishlistItems: many(wishlistItem),
@@ -183,6 +208,7 @@ export const userRelations = relations(user, ({ many }) => ({
   payments: many(payments),
   followers: many(follow, { relationName: "followers" }),
   followings: many(follow, { relationName: "followings" }),
+  settings: one(settings),
 }));
 
 export const categoryRelations = relations(category, ({ many }) => ({
@@ -268,6 +294,13 @@ export const paymentsRelations = relations(payments, ({ one }) => ({
   jewelryAsset: one(jewelryAssets, {
     fields: [payments.jewelryAssetId],
     references: [jewelryAssets.id],
+  }),
+}));
+
+export const settingsRelations = relations(settings, ({ one }) => ({
+  user: one(user, {
+    fields: [settings.userId],
+    references: [user.id],
   }),
 }));
 
