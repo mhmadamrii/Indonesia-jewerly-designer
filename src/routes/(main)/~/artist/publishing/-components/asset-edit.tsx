@@ -15,6 +15,7 @@ import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Textarea } from "~/components/ui/textarea";
 import { CURRENCIES } from "~/constants";
 import { cn } from "~/lib/utils";
+import { FileUploadCenter } from "./file-upload-center";
 
 import {
   ChevronDown,
@@ -433,7 +434,7 @@ export function AssetEdit({ initialData }: { initialData: TypejewelryAssetById }
               )}
             />
 
-            {/* <div className="flex w-full flex-col justify-center">
+            <div className="flex w-full flex-col justify-center">
               <FileUploadCenter
                 initialImageUrl={{
                   preview_url: initialData.jewelry_assets.previewUrl,
@@ -449,7 +450,7 @@ export function AssetEdit({ initialData }: { initialData: TypejewelryAssetById }
                 onSetAssetStorageUrl={setAssetStorageUrl}
                 onSetUsedStorage={setTotalStorageLimitToUpdate}
               />
-            </div> */}
+            </div>
 
             <div className="flex w-full items-center justify-end">
               <Button

@@ -226,15 +226,16 @@ export const editjewelryAsset = createServerFn({ method: "POST" })
   )
   .middleware([authMiddleware])
   .handler(async ({ data, context }) => {
+    // Update main asset fields
     const res = await db
       .update(jewelryAssets)
       .set({
         name: data.name,
         description: data.description,
         price: data.price,
-        // thumbnailUrl: data.thumbnailUrl,
-        // previewUrl: data.previewUrl,
-        // assetUrl: data.assetUrl,
+        thumbnailUrl: data.thumbnailUrl,
+        previewUrl: data.previewUrl,
+        assetUrl: data.assetUrl,
         typeAsset: data.typeAsset,
         userId: context.user.id,
         boost: data.boost,
@@ -242,6 +243,27 @@ export const editjewelryAsset = createServerFn({ method: "POST" })
       })
       .where(eq(jewelryAssets.id, data.id))
       .returning({ id: jewelryAssets.id });
+
+    // Update user's storage usage and boost credit as needed
+    await db
+      .update(user)
+      .set({
+        boostCredit: data.totalBoostToUpdate,
+        userStorageUsage: data.totalStorageLimitToUpdate,
+      })
+      .where(eq(user.id, context.user.id));
+
+    // Replace tags if provided
+    if (data.tags) {
+      await db
+        .delete(jewelryAssetTags)
+        .where(eq(jewelryAssetTags.jewelryAssetId, data.id));
+      if (data.tags.length > 0) {
+        await db
+          .insert(jewelryAssetTags)
+          .values(data.tags.map((tagId: string) => ({ jewelryAssetId: data.id, tagId })));
+      }
+    }
 
     return {
       success: true,

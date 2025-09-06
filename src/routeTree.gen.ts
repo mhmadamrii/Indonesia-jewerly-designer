@@ -23,6 +23,7 @@ import { Route as mainChar126ArtistRouteRouteImport } from "./routes/(main)/~/ar
 import { Route as mainChar126GeneralWishlistsIndexRouteImport } from "./routes/(main)/~/general/wishlists/index";
 import { Route as mainChar126GeneralSettingsIndexRouteImport } from "./routes/(main)/~/general/settings/index";
 import { Route as mainChar126GeneralPurchasedModelsIndexRouteImport } from "./routes/(main)/~/general/purchased-models/index";
+import { Route as mainChar126GeneralPaymentMethodsIndexRouteImport } from "./routes/(main)/~/general/payment-methods/index";
 import { Route as mainChar126GeneralNotificationsIndexRouteImport } from "./routes/(main)/~/general/notifications/index";
 import { Route as mainChar126GeneralMessagesIndexRouteImport } from "./routes/(main)/~/general/messages/index";
 import { Route as mainChar126GeneralInvoicesIndexRouteImport } from "./routes/(main)/~/general/invoices/index";
@@ -113,6 +114,12 @@ const mainChar126GeneralPurchasedModelsIndexRoute =
   mainChar126GeneralPurchasedModelsIndexRouteImport.update({
     id: "/purchased-models/",
     path: "/purchased-models/",
+    getParentRoute: () => mainChar126GeneralRouteRoute,
+  } as any);
+const mainChar126GeneralPaymentMethodsIndexRoute =
+  mainChar126GeneralPaymentMethodsIndexRouteImport.update({
+    id: "/payment-methods/",
+    path: "/payment-methods/",
     getParentRoute: () => mainChar126GeneralRouteRoute,
   } as any);
 const mainChar126GeneralNotificationsIndexRoute =
@@ -312,6 +319,7 @@ export interface FileRoutesByFullPath {
   "/~/general/invoices": typeof mainChar126GeneralInvoicesIndexRoute;
   "/~/general/messages": typeof mainChar126GeneralMessagesIndexRoute;
   "/~/general/notifications": typeof mainChar126GeneralNotificationsIndexRoute;
+  "/~/general/payment-methods": typeof mainChar126GeneralPaymentMethodsIndexRoute;
   "/~/general/purchased-models": typeof mainChar126GeneralPurchasedModelsIndexRoute;
   "/~/general/settings": typeof mainChar126GeneralSettingsIndexRoute;
   "/~/general/wishlists": typeof mainChar126GeneralWishlistsIndexRoute;
@@ -349,6 +357,7 @@ export interface FileRoutesByTo {
   "/~/general/invoices": typeof mainChar126GeneralInvoicesIndexRoute;
   "/~/general/messages": typeof mainChar126GeneralMessagesIndexRoute;
   "/~/general/notifications": typeof mainChar126GeneralNotificationsIndexRoute;
+  "/~/general/payment-methods": typeof mainChar126GeneralPaymentMethodsIndexRoute;
   "/~/general/purchased-models": typeof mainChar126GeneralPurchasedModelsIndexRoute;
   "/~/general/settings": typeof mainChar126GeneralSettingsIndexRoute;
   "/~/general/wishlists": typeof mainChar126GeneralWishlistsIndexRoute;
@@ -389,6 +398,7 @@ export interface FileRoutesById {
   "/(main)/~/general/invoices/": typeof mainChar126GeneralInvoicesIndexRoute;
   "/(main)/~/general/messages/": typeof mainChar126GeneralMessagesIndexRoute;
   "/(main)/~/general/notifications/": typeof mainChar126GeneralNotificationsIndexRoute;
+  "/(main)/~/general/payment-methods/": typeof mainChar126GeneralPaymentMethodsIndexRoute;
   "/(main)/~/general/purchased-models/": typeof mainChar126GeneralPurchasedModelsIndexRoute;
   "/(main)/~/general/settings/": typeof mainChar126GeneralSettingsIndexRoute;
   "/(main)/~/general/wishlists/": typeof mainChar126GeneralWishlistsIndexRoute;
@@ -428,6 +438,7 @@ export interface FileRouteTypes {
     | "/~/general/invoices"
     | "/~/general/messages"
     | "/~/general/notifications"
+    | "/~/general/payment-methods"
     | "/~/general/purchased-models"
     | "/~/general/settings"
     | "/~/general/wishlists"
@@ -465,6 +476,7 @@ export interface FileRouteTypes {
     | "/~/general/invoices"
     | "/~/general/messages"
     | "/~/general/notifications"
+    | "/~/general/payment-methods"
     | "/~/general/purchased-models"
     | "/~/general/settings"
     | "/~/general/wishlists"
@@ -504,6 +516,7 @@ export interface FileRouteTypes {
     | "/(main)/~/general/invoices/"
     | "/(main)/~/general/messages/"
     | "/(main)/~/general/notifications/"
+    | "/(main)/~/general/payment-methods/"
     | "/(main)/~/general/purchased-models/"
     | "/(main)/~/general/settings/"
     | "/(main)/~/general/wishlists/"
@@ -642,6 +655,13 @@ declare module "@tanstack/react-router" {
       path: "/purchased-models";
       fullPath: "/~/general/purchased-models";
       preLoaderRoute: typeof mainChar126GeneralPurchasedModelsIndexRouteImport;
+      parentRoute: typeof mainChar126GeneralRouteRoute;
+    };
+    "/(main)/~/general/payment-methods/": {
+      id: "/(main)/~/general/payment-methods/";
+      path: "/payment-methods";
+      fullPath: "/~/general/payment-methods";
+      preLoaderRoute: typeof mainChar126GeneralPaymentMethodsIndexRouteImport;
       parentRoute: typeof mainChar126GeneralRouteRoute;
     };
     "/(main)/~/general/notifications/": {
@@ -919,6 +939,7 @@ interface mainChar126GeneralRouteRouteChildren {
   mainChar126GeneralInvoicesIndexRoute: typeof mainChar126GeneralInvoicesIndexRoute;
   mainChar126GeneralMessagesIndexRoute: typeof mainChar126GeneralMessagesIndexRoute;
   mainChar126GeneralNotificationsIndexRoute: typeof mainChar126GeneralNotificationsIndexRoute;
+  mainChar126GeneralPaymentMethodsIndexRoute: typeof mainChar126GeneralPaymentMethodsIndexRoute;
   mainChar126GeneralPurchasedModelsIndexRoute: typeof mainChar126GeneralPurchasedModelsIndexRoute;
   mainChar126GeneralSettingsIndexRoute: typeof mainChar126GeneralSettingsIndexRoute;
   mainChar126GeneralWishlistsIndexRoute: typeof mainChar126GeneralWishlistsIndexRoute;
@@ -946,6 +967,8 @@ const mainChar126GeneralRouteRouteChildren: mainChar126GeneralRouteRouteChildren
     mainChar126GeneralMessagesIndexRoute: mainChar126GeneralMessagesIndexRoute,
     mainChar126GeneralNotificationsIndexRoute:
       mainChar126GeneralNotificationsIndexRoute,
+    mainChar126GeneralPaymentMethodsIndexRoute:
+      mainChar126GeneralPaymentMethodsIndexRoute,
     mainChar126GeneralPurchasedModelsIndexRoute:
       mainChar126GeneralPurchasedModelsIndexRoute,
     mainChar126GeneralSettingsIndexRoute: mainChar126GeneralSettingsIndexRoute,
