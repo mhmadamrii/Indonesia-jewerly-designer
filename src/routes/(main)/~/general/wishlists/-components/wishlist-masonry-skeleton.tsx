@@ -26,20 +26,12 @@ export function WishlistMasonrySkeleton() {
   return (
     <div className="w-full columns-1 gap-4 space-y-4 sm:columns-2 md:columns-3 lg:columns-4">
       {cardHeights.map((height, index) => (
-        <Card key={index} className={`${height} mb-4 break-inside-avoid overflow-hidden`}>
-          <CardContent className="space-y-3">
-            <Skeleton className="h-32 w-full rounded-md" />
-            <div className="space-y-2">
-              <Skeleton className="h-3 w-full" />
-              <Skeleton className="h-3 w-4/5" />
-              <Skeleton className="h-3 w-3/5" />
-            </div>
-            {(height === "h-72" || height === "h-80") && (
-              <div className="space-y-2 pt-2">
-                <Skeleton className="h-3 w-full" />
-                <Skeleton className="h-3 w-2/3" />
-              </div>
-            )}
+        <Card
+          key={index}
+          className={`${height} mb-4 break-inside-avoid overflow-hidden p-0`}
+        >
+          <CardContent className="h-full space-y-3 p-0">
+            <Skeleton className="h-full w-full rounded-md" />
           </CardContent>
         </Card>
       ))}

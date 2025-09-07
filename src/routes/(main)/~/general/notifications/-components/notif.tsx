@@ -21,8 +21,7 @@ import {
 } from "lucide-react";
 
 export function Notif() {
-  const { notifications, unreadCount, isLoading, markAllRead, markRead, remove } =
-    useNotifications();
+  const { notifications, unreadCount, isLoading, markAllRead, markRead, remove } = useNotifications(); // prettier-ignore
   const [filter, setFilter] = useState<
     | "all"
     | "unread"
@@ -77,18 +76,11 @@ export function Notif() {
     }
   };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "high":
-        return "bg-red-500";
-      case "medium":
-        return "bg-yellow-500";
-      case "low":
-        return "bg-green-500";
-      default:
-        return "bg-gray-500";
-    }
-  };
+  const filteredNotifications = normalized.filter((notification: any) => {
+    if (filter === "all") return true;
+    if (filter === "unread") return !notification.isRead;
+    return notification.type === filter;
+  });
 
   const formatTimeAgo = (date: Date) => {
     const now = new Date();
@@ -105,11 +97,6 @@ export function Notif() {
     }
   };
 
-  const filteredNotifications = normalized.filter((notification: any) => {
-    if (filter === "all") return true;
-    if (filter === "unread") return !notification.isRead;
-    return notification.type === filter;
-  });
   const handleMarkAsRead = async (id: string) => {
     await markRead({ data: { id } });
   };
@@ -123,8 +110,8 @@ export function Notif() {
   };
 
   return (
-    <div className="mx-10 min-h-screen">
-      <div className="container mx-auto px-4 py-8">
+    <div className="mx-2 min-h-screen">
+      <div className="px-4 py-8">
         <div className="mb-8">
           <div className="mb-6 flex items-center justify-between">
             <div className="flex items-center gap-3">

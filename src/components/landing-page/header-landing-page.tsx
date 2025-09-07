@@ -6,13 +6,14 @@ import { authClient } from "~/lib/auth/auth-client";
 import { useRoleStore } from "~/lib/store/role.store";
 import { useTheme } from "../theme-provider";
 import { ThemeToggle } from "../theme-toggle";
+import { Skeleton } from "../ui/skeleton";
 import { UserAvatar } from "../user-avatar";
 
 export function HeaderLandingPage() {
   const navigate = useNavigate();
   const { setIsRoleChanging, setRole } = useRoleStore();
   const { theme } = useTheme();
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending: isSessionPending } = authClient.useSession();
 
   useEffect(() => {
     setIsRoleChanging(false);
@@ -45,7 +46,9 @@ export function HeaderLandingPage() {
               <ShoppingBag className="h-4 w-4" />
             </Button>
             <ThemeToggle />
-            {session?.user ? (
+            {isSessionPending ? (
+              <Skeleton className="h-8 w-8" />
+            ) : session?.user ? (
               <UserAvatar user={session?.user} />
             ) : (
               <>
