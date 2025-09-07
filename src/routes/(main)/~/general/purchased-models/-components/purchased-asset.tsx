@@ -59,17 +59,13 @@ export function PurchasedAsset({
   }, [assets]);
 
   const handleDownload = (asset: any) => {
-    // Simulate download
     toast.success(`Downloading ${asset.name}...`);
-    // In real implementation, trigger file download
     window.open(asset.downloadUrl, "_blank");
   };
 
   const handleChatArtist = (asset: any) => {
-    // Navigate to chat or open chat modal
     toast.info(`Opening chat with ${asset.artist.name}`);
     console.log("Chat with artist:", asset.artist.id);
-    // In real implementation, navigate to chat or open chat modal
   };
 
   const handleExplore = () => {
@@ -84,10 +80,6 @@ export function PurchasedAsset({
       return;
     }
     toast.success(`Downloading ${selectedRows.length} assets...`);
-    console.log(
-      "Bulk download:",
-      selectedRows.map((asset) => asset.id),
-    );
   };
 
   const columns = createPurchasedColumns({

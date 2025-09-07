@@ -2,9 +2,11 @@
 
 import type React from "react";
 
+import { useMutation } from "@tanstack/react-query";
 import { AlertCircle, CheckCircle, Wallet } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { createPayoutRequest } from "~/actions/user.action";
 import { Alert, AlertDescription } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
 import {
@@ -36,6 +38,23 @@ export function PayoutRequest({ availableAmount }: PayoutRequestProps) {
   const [notes, setNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const payoutMutation = useMutation({
+    mutationFn: createPayoutRequest,
+    onSuccess: () => {
+      toast.success("Your payout request has been submitted.");
+      setAmount("");
+      setPaymentMethod("");
+      setAccountDetails("");
+      setNotes("");
+    },
+    onError: () => {
+      toast.error("Failed to submit payout request");
+    },
+    onSettled: () => {
+      setIsSubmitting(false);
+    },
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -46,18 +65,14 @@ export function PayoutRequest({ availableAmount }: PayoutRequestProps) {
     }
 
     setIsSubmitting(true);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    toast(`Your payout request for $${requestAmount.toFixed(2)} has been submitted.`);
-
-    // Reset form
-    setAmount("");
-    setPaymentMethod("");
-    setAccountDetails("");
-    setNotes("");
-    setIsSubmitting(false);
+    payoutMutation.mutate({
+      data: {
+        amount: requestAmount,
+        paymentMethod,
+        accountDetails,
+        notes,
+      },
+    });
   };
 
   const isFormValid =

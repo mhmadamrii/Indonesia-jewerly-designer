@@ -2,11 +2,11 @@ import z from "zod";
 
 import { createServerFn } from "@tanstack/react-start";
 import { getWebRequest } from "@tanstack/react-start/server";
-import { count, eq } from "drizzle-orm";
+import { count, eq, sql } from "drizzle-orm";
 import { auth } from "~/lib/auth";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { follow, jewelryAssets, settings, user } from "~/lib/db/schema";
+import { feedback, follow, jewelryAssets, settings, user } from "~/lib/db/schema";
 
 export type UserById = Awaited<ReturnType<(typeof getUserById)>>["data"]; // prettier-ignore
 
@@ -32,6 +32,48 @@ export const getAllArtist = createServerFn({ method: "GET" }).handler(async () =
     data: res,
   };
 });
+
+export const getAllFeedbacks = createServerFn({ method: "GET" }).handler(async () => {
+  const res = await db
+    .select({
+      feedback,
+      user,
+    })
+    .from(feedback)
+    .leftJoin(user, eq(feedback.userId, user.id))
+    .orderBy(sql`${feedback.createdAt} DESC`);
+  return {
+    success: true,
+    data: res,
+  };
+});
+
+export const createPayoutRequest = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator(
+    z.object({
+      amount: z.number().positive(),
+      paymentMethod: z.string().min(2),
+      accountDetails: z.string().min(3),
+      notes: z.string().optional(),
+    }),
+  )
+  .handler(async ({ context, data }) => {
+    const inserted = await db
+      .insert(feedback)
+      .values({
+        userId: context.user.id,
+        message: data.notes || "Payout request",
+        emote: "payout",
+        type: "payout",
+        isPayoutRequest: true,
+        payoutAmount: Math.round(data.amount),
+        payoutStatus: "pending",
+      })
+      .returning({ id: feedback.id });
+
+    return { success: true, data: inserted[0] };
+  });
 
 export const getUserBoostCredits = createServerFn({ method: "GET" })
   .middleware([authMiddleware])

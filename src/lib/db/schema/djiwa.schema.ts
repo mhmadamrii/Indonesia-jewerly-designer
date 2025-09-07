@@ -164,8 +164,14 @@ export const follow = pgTable(
 
 export const feedback = pgTable("feedback", {
   id: uuid("id").primaryKey().defaultRandom(),
+  userId: text("user_id").references(() => user.id, { onDelete: "set null" }),
   message: text("message").notNull(),
   emote: text("emote").notNull(),
+  type: text("type"), // e.g., bug, idea, support, payout
+  // payout request fields
+  isPayoutRequest: boolean("is_payout_request").default(false).notNull(),
+  payoutAmount: integer("payout_amount"),
+  payoutStatus: text("payout_status").default("pending"), // pending, approved, rejected, paid
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -283,6 +289,13 @@ export const wishlistItemRelations = relations(wishlistItem, ({ one }) => ({
   jewelryAsset: one(jewelryAssets, {
     fields: [wishlistItem.jewelryAssetId],
     references: [jewelryAssets.id],
+  }),
+}));
+
+export const feedbackRelations = relations(feedback, ({ one }) => ({
+  user: one(user, {
+    fields: [feedback.userId],
+    references: [user.id],
   }),
 }));
 
