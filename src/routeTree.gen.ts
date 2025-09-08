@@ -20,6 +20,7 @@ import { Route as authAuthRouteImport } from "./routes/(auth)/auth";
 import { Route as adminAdminRouteImport } from "./routes/(admin)/admin";
 import { Route as mainChar126GeneralRouteRouteImport } from "./routes/(main)/~/general/route";
 import { Route as mainChar126ArtistRouteRouteImport } from "./routes/(main)/~/artist/route";
+import { Route as mainChar126GeneralMessagesRouteRouteImport } from "./routes/(main)/~/general/messages/route";
 import { Route as mainChar126GeneralWishlistsIndexRouteImport } from "./routes/(main)/~/general/wishlists/index";
 import { Route as mainChar126GeneralSettingsIndexRouteImport } from "./routes/(main)/~/general/settings/index";
 import { Route as mainChar126GeneralPurchasedModelsIndexRouteImport } from "./routes/(main)/~/general/purchased-models/index";
@@ -98,6 +99,12 @@ const mainChar126ArtistRouteRoute = mainChar126ArtistRouteRouteImport.update({
   path: "/~/artist",
   getParentRoute: () => rootRouteImport,
 } as any);
+const mainChar126GeneralMessagesRouteRoute =
+  mainChar126GeneralMessagesRouteRouteImport.update({
+    id: "/messages",
+    path: "/messages",
+    getParentRoute: () => mainChar126GeneralRouteRoute,
+  } as any);
 const mainChar126GeneralWishlistsIndexRoute =
   mainChar126GeneralWishlistsIndexRouteImport.update({
     id: "/wishlists/",
@@ -130,9 +137,9 @@ const mainChar126GeneralNotificationsIndexRoute =
   } as any);
 const mainChar126GeneralMessagesIndexRoute =
   mainChar126GeneralMessagesIndexRouteImport.update({
-    id: "/messages/",
-    path: "/messages/",
-    getParentRoute: () => mainChar126GeneralRouteRoute,
+    id: "/",
+    path: "/",
+    getParentRoute: () => mainChar126GeneralMessagesRouteRoute,
   } as any);
 const mainChar126GeneralInvoicesIndexRoute =
   mainChar126GeneralInvoicesIndexRouteImport.update({
@@ -232,9 +239,9 @@ const mainChar126GeneralPaymentsStatusRoute =
   } as any);
 const mainChar126GeneralMessagesUserIdRoute =
   mainChar126GeneralMessagesUserIdRouteImport.update({
-    id: "/messages/$userId",
-    path: "/messages/$userId",
-    getParentRoute: () => mainChar126GeneralRouteRoute,
+    id: "/$userId",
+    path: "/$userId",
+    getParentRoute: () => mainChar126GeneralMessagesRouteRoute,
   } as any);
 const mainChar126GeneralAssetsAssetIdRoute =
   mainChar126GeneralAssetsAssetIdRouteImport.update({
@@ -297,6 +304,7 @@ export interface FileRoutesByFullPath {
   "/playgrounds": typeof publicPlaygroundsRoute;
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
+  "/~/general/messages": typeof mainChar126GeneralMessagesRouteRouteWithChildren;
   "/~/artist/assets/$assetId": typeof mainChar126ArtistAssetsAssetIdRoute;
   "/~/artist/messages/$userId": typeof mainChar126ArtistMessagesUserIdRoute;
   "/~/general/assets/$assetId": typeof mainChar126GeneralAssetsAssetIdRoute;
@@ -317,7 +325,7 @@ export interface FileRoutesByFullPath {
   "/~/general/favorites": typeof mainChar126GeneralFavoritesIndexRoute;
   "/~/general/feed": typeof mainChar126GeneralFeedIndexRoute;
   "/~/general/invoices": typeof mainChar126GeneralInvoicesIndexRoute;
-  "/~/general/messages": typeof mainChar126GeneralMessagesIndexRoute;
+  "/~/general/messages/": typeof mainChar126GeneralMessagesIndexRoute;
   "/~/general/notifications": typeof mainChar126GeneralNotificationsIndexRoute;
   "/~/general/payment-methods": typeof mainChar126GeneralPaymentMethodsIndexRoute;
   "/~/general/purchased-models": typeof mainChar126GeneralPurchasedModelsIndexRoute;
@@ -376,6 +384,7 @@ export interface FileRoutesById {
   "/(public)/playgrounds": typeof publicPlaygroundsRoute;
   "/(main)/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/(main)/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
+  "/(main)/~/general/messages": typeof mainChar126GeneralMessagesRouteRouteWithChildren;
   "/(main)/~/artist/assets/$assetId": typeof mainChar126ArtistAssetsAssetIdRoute;
   "/(main)/~/artist/messages/$userId": typeof mainChar126ArtistMessagesUserIdRoute;
   "/(main)/~/general/assets/$assetId": typeof mainChar126GeneralAssetsAssetIdRoute;
@@ -416,6 +425,7 @@ export interface FileRouteTypes {
     | "/playgrounds"
     | "/~/artist"
     | "/~/general"
+    | "/~/general/messages"
     | "/~/artist/assets/$assetId"
     | "/~/artist/messages/$userId"
     | "/~/general/assets/$assetId"
@@ -436,7 +446,7 @@ export interface FileRouteTypes {
     | "/~/general/favorites"
     | "/~/general/feed"
     | "/~/general/invoices"
-    | "/~/general/messages"
+    | "/~/general/messages/"
     | "/~/general/notifications"
     | "/~/general/payment-methods"
     | "/~/general/purchased-models"
@@ -494,6 +504,7 @@ export interface FileRouteTypes {
     | "/(public)/playgrounds"
     | "/(main)/~/artist"
     | "/(main)/~/general"
+    | "/(main)/~/general/messages"
     | "/(main)/~/artist/assets/$assetId"
     | "/(main)/~/artist/messages/$userId"
     | "/(main)/~/general/assets/$assetId"
@@ -636,6 +647,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof mainChar126ArtistRouteRouteImport;
       parentRoute: typeof rootRouteImport;
     };
+    "/(main)/~/general/messages": {
+      id: "/(main)/~/general/messages";
+      path: "/messages";
+      fullPath: "/~/general/messages";
+      preLoaderRoute: typeof mainChar126GeneralMessagesRouteRouteImport;
+      parentRoute: typeof mainChar126GeneralRouteRoute;
+    };
     "/(main)/~/general/wishlists/": {
       id: "/(main)/~/general/wishlists/";
       path: "/wishlists";
@@ -673,10 +691,10 @@ declare module "@tanstack/react-router" {
     };
     "/(main)/~/general/messages/": {
       id: "/(main)/~/general/messages/";
-      path: "/messages";
-      fullPath: "/~/general/messages";
+      path: "/";
+      fullPath: "/~/general/messages/";
       preLoaderRoute: typeof mainChar126GeneralMessagesIndexRouteImport;
-      parentRoute: typeof mainChar126GeneralRouteRoute;
+      parentRoute: typeof mainChar126GeneralMessagesRouteRoute;
     };
     "/(main)/~/general/invoices/": {
       id: "/(main)/~/general/invoices/";
@@ -792,10 +810,10 @@ declare module "@tanstack/react-router" {
     };
     "/(main)/~/general/messages/$userId": {
       id: "/(main)/~/general/messages/$userId";
-      path: "/messages/$userId";
+      path: "/$userId";
       fullPath: "/~/general/messages/$userId";
       preLoaderRoute: typeof mainChar126GeneralMessagesUserIdRouteImport;
-      parentRoute: typeof mainChar126GeneralRouteRoute;
+      parentRoute: typeof mainChar126GeneralMessagesRouteRoute;
     };
     "/(main)/~/general/assets/$assetId": {
       id: "/(main)/~/general/assets/$assetId";
@@ -925,9 +943,26 @@ const mainChar126ArtistRouteRouteWithChildren =
     mainChar126ArtistRouteRouteChildren,
   );
 
-interface mainChar126GeneralRouteRouteChildren {
-  mainChar126GeneralAssetsAssetIdRoute: typeof mainChar126GeneralAssetsAssetIdRoute;
+interface mainChar126GeneralMessagesRouteRouteChildren {
   mainChar126GeneralMessagesUserIdRoute: typeof mainChar126GeneralMessagesUserIdRoute;
+  mainChar126GeneralMessagesIndexRoute: typeof mainChar126GeneralMessagesIndexRoute;
+}
+
+const mainChar126GeneralMessagesRouteRouteChildren: mainChar126GeneralMessagesRouteRouteChildren =
+  {
+    mainChar126GeneralMessagesUserIdRoute:
+      mainChar126GeneralMessagesUserIdRoute,
+    mainChar126GeneralMessagesIndexRoute: mainChar126GeneralMessagesIndexRoute,
+  };
+
+const mainChar126GeneralMessagesRouteRouteWithChildren =
+  mainChar126GeneralMessagesRouteRoute._addFileChildren(
+    mainChar126GeneralMessagesRouteRouteChildren,
+  );
+
+interface mainChar126GeneralRouteRouteChildren {
+  mainChar126GeneralMessagesRouteRoute: typeof mainChar126GeneralMessagesRouteRouteWithChildren;
+  mainChar126GeneralAssetsAssetIdRoute: typeof mainChar126GeneralAssetsAssetIdRoute;
   mainChar126GeneralPaymentsStatusRoute: typeof mainChar126GeneralPaymentsStatusRoute;
   mainChar126GeneralUUserIdRoute: typeof mainChar126GeneralUUserIdRoute;
   mainChar126GeneralCartIndexRoute: typeof mainChar126GeneralCartIndexRoute;
@@ -937,7 +972,6 @@ interface mainChar126GeneralRouteRouteChildren {
   mainChar126GeneralFavoritesIndexRoute: typeof mainChar126GeneralFavoritesIndexRoute;
   mainChar126GeneralFeedIndexRoute: typeof mainChar126GeneralFeedIndexRoute;
   mainChar126GeneralInvoicesIndexRoute: typeof mainChar126GeneralInvoicesIndexRoute;
-  mainChar126GeneralMessagesIndexRoute: typeof mainChar126GeneralMessagesIndexRoute;
   mainChar126GeneralNotificationsIndexRoute: typeof mainChar126GeneralNotificationsIndexRoute;
   mainChar126GeneralPaymentMethodsIndexRoute: typeof mainChar126GeneralPaymentMethodsIndexRoute;
   mainChar126GeneralPurchasedModelsIndexRoute: typeof mainChar126GeneralPurchasedModelsIndexRoute;
@@ -949,9 +983,9 @@ interface mainChar126GeneralRouteRouteChildren {
 
 const mainChar126GeneralRouteRouteChildren: mainChar126GeneralRouteRouteChildren =
   {
+    mainChar126GeneralMessagesRouteRoute:
+      mainChar126GeneralMessagesRouteRouteWithChildren,
     mainChar126GeneralAssetsAssetIdRoute: mainChar126GeneralAssetsAssetIdRoute,
-    mainChar126GeneralMessagesUserIdRoute:
-      mainChar126GeneralMessagesUserIdRoute,
     mainChar126GeneralPaymentsStatusRoute:
       mainChar126GeneralPaymentsStatusRoute,
     mainChar126GeneralUUserIdRoute: mainChar126GeneralUUserIdRoute,
@@ -964,7 +998,6 @@ const mainChar126GeneralRouteRouteChildren: mainChar126GeneralRouteRouteChildren
       mainChar126GeneralFavoritesIndexRoute,
     mainChar126GeneralFeedIndexRoute: mainChar126GeneralFeedIndexRoute,
     mainChar126GeneralInvoicesIndexRoute: mainChar126GeneralInvoicesIndexRoute,
-    mainChar126GeneralMessagesIndexRoute: mainChar126GeneralMessagesIndexRoute,
     mainChar126GeneralNotificationsIndexRoute:
       mainChar126GeneralNotificationsIndexRoute,
     mainChar126GeneralPaymentMethodsIndexRoute:

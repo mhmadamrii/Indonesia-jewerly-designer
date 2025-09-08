@@ -1,9 +1,11 @@
 import { PlusCircle, Search } from "lucide-react";
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { cn } from "~/lib/utils";
+import { DialogSelectUser } from "../../../general/messages/-components/dialog-select-user";
 
 const chats = [
   {
@@ -27,12 +29,18 @@ const chats = [
 ];
 
 export function ChatList() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   return (
     <div className="text-card-foreground flex h-screen flex-col border-r">
       <div className="border-b p-4">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Chats</h1>
-          <Button variant="ghost" size="icon">
+          <Button
+            onClick={() => setIsDialogOpen(true)}
+            variant="ghost"
+            size="icon"
+            className="cursor-pointer"
+          >
             <PlusCircle className="h-6 w-6" />
           </Button>
         </div>
@@ -75,6 +83,7 @@ export function ChatList() {
           ))}
         </div>
       </ScrollArea>
+      <DialogSelectUser open={isDialogOpen} onOpenChange={setIsDialogOpen} />
     </div>
   );
 }

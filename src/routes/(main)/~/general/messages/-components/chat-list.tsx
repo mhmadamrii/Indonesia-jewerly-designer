@@ -1,9 +1,13 @@
+import { useQuery } from "@tanstack/react-query";
 import { PlusCircle, Search } from "lucide-react";
+import { useState } from "react";
+import { getAllConversations } from "~/actions/message.action";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { cn } from "~/lib/utils";
+import { DialogSelectUser } from "./dialog-select-user";
 
 const chats = [
   {
@@ -27,12 +31,25 @@ const chats = [
 ];
 
 export function ChatList() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const { data: allConversations } = useQuery({
+    queryKey: ["chat_list_conversations"],
+    queryFn: getAllConversations,
+  });
+  console.log("allConversations", allConversations);
+
   return (
     <div className="text-card-foreground flex h-screen flex-col border-r">
       <div className="border-b p-4">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Chats</h1>
-          <Button variant="ghost" size="icon">
+          <Button
+            onClick={() => setIsDialogOpen(true)}
+            variant="ghost"
+            size="icon"
+            className="cursor-pointer"
+          >
             <PlusCircle className="h-6 w-6" />
           </Button>
         </div>
@@ -43,7 +60,7 @@ export function ChatList() {
       </div>
       <ScrollArea className="h-[calc(100vh-4.5rem)]">
         <div className="flex flex-col">
-          {[...chats].map((chat, index) => (
+          {allConversations?.data.map((chat, index) => (
             <div
               key={index}
               className={cn(
@@ -52,29 +69,29 @@ export function ChatList() {
               )}
             >
               <Avatar className="h-12 w-12 border-2 border-transparent">
-                <AvatarImage src={chat.avatar} alt={chat.name} />
-                <AvatarFallback>{chat.name.charAt(0)}</AvatarFallback>
+                <AvatarImage
+                  src={chat.user.image ?? "placeholder-img.jpg"}
+                  alt={chat.user.name}
+                />
+                <AvatarFallback>{chat.user.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div className="flex-1">
                 <div className="flex items-center justify-between">
-                  <h2 className="font-semibold">{chat.name}</h2>
-                  <span className="text-muted-foreground text-xs">{chat.time}</span>
+                  <h2 className="font-semibold">{chat.user.name}</h2>
+                  <span className="text-muted-foreground text-xs">{30}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <p className="text-muted-foreground truncate text-sm">
-                    {chat.lastMessage}
-                  </p>
-                  {chat.unread > 0 && (
-                    <div className="bg-primary text-primary-foreground flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold">
-                      {chat.unread}
-                    </div>
-                  )}
+                  <p className="text-muted-foreground truncate text-sm">kontolodon</p>
+                  <div className="bg-primary text-primary-foreground flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold">
+                    30
+                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
       </ScrollArea>
+      <DialogSelectUser open={isDialogOpen} onOpenChange={setIsDialogOpen} />
     </div>
   );
 }
