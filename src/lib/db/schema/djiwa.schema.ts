@@ -3,6 +3,7 @@ import { user } from "./auth.schema";
 
 import {
   boolean,
+  index,
   integer,
   pgTable,
   primaryKey,
@@ -204,33 +205,49 @@ export const settings = pgTable("settings", {
 export const conversation = pgTable("conversation", {
   id: uuid("id").primaryKey().defaultRandom(),
   type: text("type").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const conversationParticipant = pgTable("conversation_participant", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  conversationId: uuid("conversation_id")
-    .notNull()
-    .references(() => conversation.id, { onDelete: "cascade" }),
-});
+export const conversationParticipant = pgTable(
+  "conversation_participant",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    conversationId: uuid("conversation_id")
+      .notNull()
+      .references(() => conversation.id, { onDelete: "cascade" }),
+  },
+  (table) => ({
+    userIdx: index("conversation_participant_user_idx").on(table.userId),
+    conversationIdx: index("conversation_participant_conversation_idx").on(
+      table.conversationId,
+    ),
+  }),
+);
 
-export const message = pgTable("message", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  content: text("content").notNull(),
-  isRead: boolean("is_read").default(false).notNull(),
-  conversationId: uuid("conversation_id")
-    .notNull()
-    .references(() => conversation.id, { onDelete: "cascade" }),
-  senderId: text("sender_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
+export const message = pgTable(
+  "message",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    content: text("content").notNull(),
+    isRead: boolean("is_read").default(false).notNull(),
+    conversationId: uuid("conversation_id")
+      .notNull()
+      .references(() => conversation.id, { onDelete: "cascade" }),
+    senderId: text("sender_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    conversationIdx: index("message_conversation_idx").on(table.conversationId),
+    senderIdx: index("message_sender_idx").on(table.senderId),
+  }),
+);
 
 /**
  * Relations
@@ -247,6 +264,7 @@ export const userRelations = relations(user, ({ many, one }) => ({
   followings: many(follow, { relationName: "followings" }),
   settings: one(settings),
   conversationParticipants: many(conversationParticipant),
+  messages: many(message),
 }));
 
 export const categoryRelations = relations(category, ({ many }) => ({

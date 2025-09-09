@@ -1,13 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { z } from "zod";
 import { ChatInterface } from "./-components/chat-interface";
 
 export const Route = createFileRoute("/(main)/~/general/messages/")({
   component: RouteComponent,
+  validateSearch: z.object({ conv: z.string().optional() }),
 });
 
 function RouteComponent() {
-  const [selectedArtist, setSelectedArtist] = useState<string | null>("");
+  const { conv } = Route.useSearch();
+  console.log("conv search", conv);
 
-  return <ChatInterface />;
+  return <ChatInterface convId={conv as string} />;
 }

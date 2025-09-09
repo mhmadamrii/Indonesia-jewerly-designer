@@ -1,40 +1,45 @@
 import z from "zod";
 
 import { createServerFn } from "@tanstack/react-start";
-import { eq } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { conversation, conversationParticipant, user } from "~/lib/db/schema";
+import { conversation, conversationParticipant, message, user } from "~/lib/db/schema";
 
 export const getAllConversations = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
-  .handler(async ({ context }) => {
+  .handler(async ({ context }): Promise<{ success: boolean; data: any[] }> => {
+    const userId = context.user.id;
+
     const res = await db
       .select({
-        conversation: {
-          id: conversation.id,
-          type: conversation.type,
-          createdAt: conversation.createdAt,
-          updatedAt: conversation.updatedAt,
-        },
-        participant: {
-          id: conversationParticipant.id,
-          userId: conversationParticipant.userId,
-        },
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          image: user.image,
-        },
+        conversationId: conversation.id,
+        type: conversation.type,
+        createdAt: conversation.createdAt,
+        updatedAt: conversation.updatedAt,
+        lastMessage: sql`(
+          SELECT row_to_json(m)
+          FROM ${message} m
+          WHERE m.conversation_id = ${conversation.id}
+          ORDER BY m.created_at DESC
+          LIMIT 1
+        )`.as("last_message"),
+        receiver: sql`(
+          SELECT row_to_json(u)
+          FROM ${user} u
+          INNER JOIN ${conversationParticipant} cp
+            ON cp.user_id = u.id
+          WHERE cp.conversation_id = ${conversation.id}
+            AND u.id != ${userId}
+          LIMIT 1
+        )`.as("receiver"),
       })
       .from(conversation)
-      .leftJoin(
+      .innerJoin(
         conversationParticipant,
-        eq(conversationParticipant.conversationId, conversation.id),
+        eq(conversation.id, conversationParticipant.conversationId),
       )
-      .innerJoin(user, eq(conversationParticipant.userId, user.id))
-      .where(eq(conversationParticipant.userId, context.user.id));
+      .where(eq(conversationParticipant.userId, userId));
 
     return {
       success: true,
@@ -42,14 +47,67 @@ export const getAllConversations = createServerFn({ method: "GET" })
     };
   });
 
+export const getMessagesByConversationId = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .validator(z.object({ conversationId: z.string() }))
+  .handler(async ({ context, data }) => {
+    const userId = context.user.id;
+    const { conversationId } = data;
+
+    const isParticipant = await db
+      .select()
+      .from(conversationParticipant)
+      .where(
+        and(
+          eq(conversationParticipant.conversationId, conversationId),
+          eq(conversationParticipant.userId, userId),
+        ),
+      )
+      .limit(1);
+
+    if (isParticipant.length === 0) {
+      return { success: false, error: "Access denied" };
+    }
+
+    const messagesList = await db
+      .select()
+      .from(message)
+      .innerJoin(user, eq(message.senderId, user.id))
+      .where(eq(message.conversationId, conversationId))
+      .orderBy(asc(message.createdAt));
+
+    return {
+      success: true,
+      data: messagesList,
+    };
+  });
+
 export const createMessage = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .handler(async ({ data, context }) => {});
+  .validator(z.object({ content: z.string(), conversationId: z.string() }))
+  .handler(async ({ data, context }) => {
+    const { content, conversationId } = data;
+
+    const res = await db
+      .insert(message)
+      .values({
+        content,
+        senderId: context.user.id,
+        conversationId,
+      })
+      .returning({ id: message.id });
+
+    return {
+      success: true,
+      data: res[0],
+    };
+  });
 
 export const createConversation = createServerFn({ method: "POST" })
   .validator(
     z.object({
       type: z.string(),
+      receiverId: z.string(),
     }),
   )
   .middleware([authMiddleware])
@@ -59,16 +117,16 @@ export const createConversation = createServerFn({ method: "POST" })
       .values(data)
       .returning({ id: conversation.id });
 
-    const res = await db
+    const participants = await db
       .insert(conversationParticipant)
-      .values({
-        userId: context.user.id,
-        conversationId: chat[0].id,
-      })
+      .values([
+        { userId: context.user.id, conversationId: chat[0].id },
+        { userId: data.receiverId, conversationId: chat[0].id },
+      ])
       .returning({ id: conversationParticipant.id });
 
     return {
       success: true,
-      data: res,
+      data: participants[0],
     };
   });

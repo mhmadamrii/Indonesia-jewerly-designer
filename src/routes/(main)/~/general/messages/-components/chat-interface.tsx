@@ -1,31 +1,55 @@
-import { Message } from "@ably/chat";
 import { useMessages } from "@ably/chat/react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Mic, Paperclip, Phone, Send, Smile, Video } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
-import { getAllArtist } from "~/actions/user.action";
+import { useEffect, useState } from "react";
+import { createMessage, getMessagesByConversationId } from "~/actions/message.action";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { authClient } from "~/lib/auth/auth-client";
 
-export function ChatInterface() {
+type MessageType = {
+  content: string;
+  createdAt: Date;
+  imageUrl?: string;
+};
+
+export function ChatInterface({ convId }: { convId: string }) {
   const { data: session } = authClient.useSession();
 
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<MessageType[]>([]);
   const [newMessage, setNewMessage] = useState("");
 
-  const { data: allArtists } = useQuery({
-    queryKey: ["all_artists"],
-    queryFn: getAllArtist,
+  const { data: conversationDataById } = useQuery({
+    queryKey: ["chat_interface_conversation", convId],
+    queryFn: () => getMessagesByConversationId({ data: { conversationId: convId } }),
+    enabled: !!convId,
+  });
+  console.log("conversationDataById", conversationDataById);
+
+  const { mutate: createMessageFn } = useMutation({
+    mutationFn: createMessage,
+    onSuccess: (data) => {
+      console.log("data", data);
+    },
   });
 
   const { sendMessage: send } = useMessages({
     listener: (event) => {
       console.log("received message", event.message);
-      setMessages((prev) => [...prev, event.message]);
+      createMessageFn({
+        data: {
+          content: event.message.text,
+          conversationId: convId,
+        },
+      });
+      const newMessages = {
+        content: event.message.text,
+        createdAt: event.message.createdAt,
+      };
+      setMessages((prev) => [...prev, newMessages]);
     },
   });
 
@@ -54,6 +78,22 @@ export function ChatInterface() {
       console.error("error sending message", error);
     }
   };
+
+  const handleSetPrevMessages = () => {
+    const prevMessages = conversationDataById?.data?.map((m) => ({
+      content: m.message.content,
+      createdAt: m.message.createdAt,
+      imageUrl: m.user.image,
+    }));
+    setMessages(prevMessages as MessageType[]);
+  };
+  console.log("messages", messages);
+
+  useEffect(() => {
+    if (convId) {
+      handleSetPrevMessages();
+    }
+  }, [convId, conversationDataById]);
 
   return (
     <div className="bg-background text-foreground flex h-[calc(100vh-4.5rem)] flex-col">
@@ -86,10 +126,7 @@ export function ChatInterface() {
       <ScrollArea className="flex-1 p-4">
         <div className="flex flex-col gap-4">
           <AnimatePresence initial={false}>
-            {messages.map((message, idx) => {
-              const messageRole = message.metadata?.role || "customer";
-              const isCurrentUser = messageRole === "seller";
-
+            {messages?.map((message, idx) => {
               return (
                 <motion.div
                   key={idx} // Prefer stable unique ID if available
@@ -97,44 +134,21 @@ export function ChatInterface() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.25, ease: "easeOut" }}
-                  className={`flex gap-3 ${
-                    isCurrentUser ? "flex-row-reverse" : "flex-row"
-                  }`}
+                  className="flex gap-3"
                 >
                   <Avatar className="h-8 w-8">
                     <AvatarImage
-                      // @ts-expect-error
-                      src={
-                        messageRole !== "seller"
-                          ? session?.user?.image
-                          : "/placeholder-img.jpg"
-                      }
+                      src={message.imageUrl ?? "/placeholder-img.jpg"}
                       alt={session?.user?.name}
                     />
-                    <AvatarFallback
-                      className={
-                        messageRole === "seller"
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-secondary text-secondary-foreground"
-                      }
-                    >
-                      {messageRole === "seller" ? "S" : "C"}
+                    <AvatarFallback className="bg-primary text-primary-foreground">
+                      X
                     </AvatarFallback>
                   </Avatar>
 
-                  <div
-                    className={`flex max-w-xs flex-col lg:max-w-md ${
-                      isCurrentUser ? "items-end" : "items-start"
-                    }`}
-                  >
-                    <div
-                      className={`rounded-lg px-3 py-2 ${
-                        isCurrentUser
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-card border"
-                      }`}
-                    >
-                      <p className="text-sm">{message.text}</p>
+                  <div className="flex max-w-xs flex-col lg:max-w-md">
+                    <div className="rounded-lg px-3 py-2">
+                      <p className="text-sm">{message.content}</p>
                     </div>
                     <span className="text-muted-foreground mt-1 text-xs">
                       {formatTime(message.createdAt)}

@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { PlusCircle, Search } from "lucide-react";
 import { useState } from "react";
 import { getAllConversations } from "~/actions/message.action";
@@ -9,35 +10,14 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import { cn } from "~/lib/utils";
 import { DialogSelectUser } from "./dialog-select-user";
 
-const chats = [
-  {
-    id: 1,
-    name: "Jacquenetta Slowgrave",
-    avatar: "/placeholder-img.jpg",
-    lastMessage: "Great! Looking forward to it. See ...",
-    time: "10 minutes",
-    unread: 8,
-    online: true,
-  },
-  {
-    id: 2,
-    name: "Nickola Peever",
-    avatar: "/placeholder-img.jpg",
-    lastMessage: "Sounds perfect! I've been wantin...",
-    time: "40 minutes",
-    unread: 2,
-    online: false,
-  },
-];
-
 export function ChatList() {
+  const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const { data: allConversations } = useQuery({
     queryKey: ["chat_list_conversations"],
     queryFn: getAllConversations,
   });
-  console.log("allConversations", allConversations);
 
   return (
     <div className="text-card-foreground flex h-screen flex-col border-r">
@@ -62,6 +42,12 @@ export function ChatList() {
         <div className="flex flex-col">
           {allConversations?.data.map((chat, index) => (
             <div
+              onClick={() =>
+                navigate({
+                  to: "/~/general/messages",
+                  search: { conv: chat.conversationId },
+                })
+              }
               key={index}
               className={cn(
                 "bg-background hover:bg-card flex cursor-pointer items-center gap-4 border-l p-4",
@@ -70,14 +56,14 @@ export function ChatList() {
             >
               <Avatar className="h-12 w-12 border-2 border-transparent">
                 <AvatarImage
-                  src={chat.user.image ?? "placeholder-img.jpg"}
-                  alt={chat.user.name}
+                  src={chat?.receiver?.image ?? "/placeholder-img.jpg"}
+                  alt={chat?.receiver?.name}
                 />
-                <AvatarFallback>{chat.user.name.charAt(0)}</AvatarFallback>
+                <AvatarFallback>{chat.receiver.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div className="flex-1">
                 <div className="flex items-center justify-between">
-                  <h2 className="font-semibold">{chat.user.name}</h2>
+                  <h2 className="font-semibold">{chat?.receiver.name}</h2>
                   <span className="text-muted-foreground text-xs">{30}</span>
                 </div>
                 <div className="flex items-center justify-between">

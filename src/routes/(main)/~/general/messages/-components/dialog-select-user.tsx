@@ -56,6 +56,7 @@ export function DialogSelectUser({ open, onOpenChange }: UserSelectionDialogProp
     createNewConversation({
       data: {
         type: "private",
+        receiverId : selectedUser?.id ?? "",
       },
     });
   };
@@ -173,6 +174,7 @@ export function DialogSelectUser({ open, onOpenChange }: UserSelectionDialogProp
                 </Avatar>
                 <div>
                   <p className="text-sm font-medium">Selected: {selectedUser.name}</p>
+                  {/* @ts-ignore */}
                   <p className="text-muted-foreground text-xs">{selectedUser.role}</p>
                 </div>
               </div>
@@ -192,7 +194,7 @@ export function DialogSelectUser({ open, onOpenChange }: UserSelectionDialogProp
             >
               Cancel
             </Button>
-            <Button onClick={handleStartChat} disabled={!selectedUser} className="flex-1">
+            <Button onClick={handleStartChat} disabled={!selectedUser} className="flex-1 cursor-pointer">
               <MessageCircle className="mr-2 h-4 w-4" />
               Start Chat
             </Button>
