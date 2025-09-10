@@ -132,7 +132,7 @@ export function ChatInterface({ convId }: { convId: string }) {
         </div>
       </header>
 
-      <ScrollArea className="flex-1 p-4">
+      <ScrollArea className="h-[calc(100vh-230px)] p-4">
         <div className="flex flex-col gap-4">
           <AnimatePresence initial={false}>
             {messages?.map((message, idx) => {
