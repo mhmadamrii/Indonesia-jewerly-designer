@@ -212,8 +212,7 @@ export function AssetDetail({ data }: { data: TypejewelryAssetById }) {
                       className="cursor-pointer"
                       onClick={() =>
                         navigate({
-                          to: "/~/general/messages/$userId",
-                          params: { userId: user?.id ?? "" },
+                          to: "/~/general/messages",
                         })
                       }
                       variant="outline"

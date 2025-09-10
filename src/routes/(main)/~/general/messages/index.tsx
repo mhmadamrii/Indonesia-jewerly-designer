@@ -9,7 +9,6 @@ export const Route = createFileRoute("/(main)/~/general/messages/")({
 
 function RouteComponent() {
   const { conv } = Route.useSearch();
-  console.log("conv search", conv);
 
   return <ChatInterface convId={conv as string} />;
 }

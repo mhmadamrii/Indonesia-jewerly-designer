@@ -2,13 +2,15 @@ import { useMessages } from "@ably/chat/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Mic, Paperclip, Phone, Send, Smile, Video } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
 import { createMessage, getMessagesByConversationId } from "~/actions/message.action";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { authClient } from "~/lib/auth/auth-client";
+import { SelectUserContext } from "./select-user-provider";
 
 type MessageType = {
   content: string;
@@ -18,6 +20,7 @@ type MessageType = {
 
 export function ChatInterface({ convId }: { convId: string }) {
   const { data: session } = authClient.useSession();
+  const { selectedUser } = useContext(SelectUserContext);
 
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [newMessage, setNewMessage] = useState("");
@@ -28,6 +31,7 @@ export function ChatInterface({ convId }: { convId: string }) {
     enabled: !!convId,
   });
   console.log("conversationDataById", conversationDataById);
+  console.log("selectedUser", selectedUser);
 
   const { mutate: createMessageFn } = useMutation({
     mutationFn: createMessage,
@@ -62,7 +66,9 @@ export function ChatInterface({ convId }: { convId: string }) {
   };
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim()) return;
+    if (!selectedUser || !newMessage.trim()) {
+      return toast.error("Please select a user and enter a message");
+    }
 
     try {
       await send({
@@ -101,11 +107,14 @@ export function ChatInterface({ convId }: { convId: string }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Avatar className="h-12 w-12">
-              <AvatarImage src="/placeholder-img.jpg" alt="Jacquenetta Slowgrave" />
+              <AvatarImage
+                src={selectedUser?.image ?? "/placeholder-img.jpg"}
+                alt="User"
+              />
               <AvatarFallback>JS</AvatarFallback>
             </Avatar>
             <div>
-              <h2 className="text-lg font-semibold">Jacquenetta Slowgrave</h2>
+              <h2 className="text-lg font-semibold">{selectedUser?.name}</h2>
               <div className="flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full bg-green-500"></div>
                 <span className="text-sm text-green-500">Online</span>

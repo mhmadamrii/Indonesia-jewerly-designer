@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { PlusCircle, Search } from "lucide-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { getAllConversations } from "~/actions/message.action";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
@@ -9,15 +9,20 @@ import { Input } from "~/components/ui/input";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { cn } from "~/lib/utils";
 import { DialogSelectUser } from "./dialog-select-user";
+import { SelectUserContext } from "./select-user-provider";
 
 export function ChatList() {
   const navigate = useNavigate();
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { setSelectedUser } = useContext(SelectUserContext);
 
   const { data: allConversations } = useQuery({
     queryKey: ["chat_list_conversations"],
     queryFn: getAllConversations,
   });
+
+  console.log("allConversations", allConversations);
 
   return (
     <div className="text-card-foreground flex h-screen flex-col border-r">
@@ -42,12 +47,17 @@ export function ChatList() {
         <div className="flex flex-col">
           {allConversations?.data.map((chat, index) => (
             <div
-              onClick={() =>
+              onClick={() => {
+                setSelectedUser({
+                  id: chat.receiver.id,
+                  name: chat.receiver.name,
+                  image: chat.receiver.image,
+                });
                 navigate({
                   to: "/~/general/messages",
                   search: { conv: chat.conversationId },
-                })
-              }
+                });
+              }}
               key={index}
               className={cn(
                 "bg-background hover:bg-card flex cursor-pointer items-center gap-4 border-l p-4",
@@ -67,7 +77,9 @@ export function ChatList() {
                   <span className="text-muted-foreground text-xs">{30}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <p className="text-muted-foreground truncate text-sm">kontolodon</p>
+                  <p className="text-muted-foreground truncate text-sm">
+                    {chat.lastMessage?.content}
+                  </p>
                   <div className="bg-primary text-primary-foreground flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold">
                     30
                   </div>
