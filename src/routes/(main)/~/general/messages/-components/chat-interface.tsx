@@ -10,12 +10,14 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { authClient } from "~/lib/auth/auth-client";
+import { cn } from "~/lib/utils";
 import { SelectUserContext } from "./select-user-provider";
 
 type MessageType = {
   content: string;
   createdAt: Date;
   imageUrl?: string;
+  userId?: string;
 };
 
 export function ChatInterface({ convId }: { convId: string }) {
@@ -30,8 +32,6 @@ export function ChatInterface({ convId }: { convId: string }) {
     queryFn: () => getMessagesByConversationId({ data: { conversationId: convId } }),
     enabled: !!convId,
   });
-  console.log("conversationDataById", conversationDataById);
-  console.log("selectedUser", selectedUser);
 
   const { mutate: createMessageFn } = useMutation({
     mutationFn: createMessage,
@@ -87,13 +87,13 @@ export function ChatInterface({ convId }: { convId: string }) {
 
   const handleSetPrevMessages = () => {
     const prevMessages = conversationDataById?.data?.map((m) => ({
+      userId: m.user.id,
       content: m.message.content,
       createdAt: m.message.createdAt,
       imageUrl: m.user.image,
     }));
     setMessages(prevMessages as MessageType[]);
   };
-  console.log("messages", messages);
 
   useEffect(() => {
     if (convId) {
@@ -143,7 +143,9 @@ export function ChatInterface({ convId }: { convId: string }) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.25, ease: "easeOut" }}
-                  className="flex gap-3"
+                  className={cn("flex gap-3", {
+                    "flex-row-reverse": message.userId === selectedUser?.id,
+                  })}
                 >
                   <Avatar className="h-8 w-8">
                     <AvatarImage

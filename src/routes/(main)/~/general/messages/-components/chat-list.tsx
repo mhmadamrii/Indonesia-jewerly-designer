@@ -22,8 +22,6 @@ export function ChatList() {
     queryFn: getAllConversations,
   });
 
-  console.log("allConversations", allConversations);
-
   return (
     <div className="text-card-foreground flex h-screen flex-col border-r">
       <div className="border-b p-4">
