@@ -1,5 +1,4 @@
 import { ClientOnly, Link, useNavigate } from "@tanstack/react-router";
-import { Search, ShoppingBag } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import { authClient } from "~/lib/auth/auth-client";
@@ -8,6 +7,29 @@ import { useTheme } from "../theme-provider";
 import { ThemeToggle } from "../theme-toggle";
 import { Skeleton } from "../ui/skeleton";
 import { UserAvatar } from "../user-avatar";
+
+const menuItems = [
+  {
+    label: "Beranda",
+    to: "/",
+  },
+  {
+    label: "Koleksi",
+    to: "/collections",
+  },
+  {
+    label: "Designer",
+    to: "#",
+  },
+  {
+    label: "Tentang Kami",
+    to: "#",
+  },
+  {
+    label: "Kontak",
+    to: "#",
+  },
+];
 
 export function HeaderLandingPage() {
   const navigate = useNavigate();
@@ -21,11 +43,11 @@ export function HeaderLandingPage() {
   }, []);
 
   return (
-    <header className="fixed top-0 z-50 w-full border-b bg-gradient-to-b from-slate-50 to-white backdrop-blur-md dark:from-slate-900 dark:to-slate-800">
+    <header className="fixed top-0 z-50 w-full border-b bg-[linear-gradient(145deg,hsl(25,15%,10%),hsl(25,10%,15%))] backdrop-blur-md dark:from-slate-900 dark:to-slate-800">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <ClientOnly fallback={<div>Loading...</div>}>
-            <Link className="w-full" to="/">
+            <Link className="" to="/">
               <img
                 src={
                   theme === "dark" || theme === "system"
@@ -38,13 +60,13 @@ export function HeaderLandingPage() {
             </Link>
           </ClientOnly>
 
+          <div className="flex items-baseline space-x-8">
+            {menuItems.map((item) => (
+              <Link to={`${item.to}`}>{item.label}</Link>
+            ))}
+          </div>
+
           <div className="hidden items-center space-x-4 md:flex">
-            <Button variant="ghost" size="sm" className="hover:text-amber-600">
-              <Search className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="hover:text-amber-600">
-              <ShoppingBag className="h-4 w-4" />
-            </Button>
             <ThemeToggle />
             {isSessionPending ? (
               <Skeleton className="h-8 w-8" />

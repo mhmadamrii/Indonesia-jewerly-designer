@@ -75,6 +75,23 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
+  /* Premium jewelry colors */
+  --gold: 35 85% 45%;
+  --gold-light: 35 75% 65%;
+  --emerald: 140 65% 35%;
+  --burgundy: 0 65% 35%;
+  --pearl: 25 15% 95%;
+  --onyx: 25 15% 12%;
+
+  /* Gradients */
+  --gradient-hero: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899);
+  --gradient-card: linear-gradient(145deg, hsl(25 20% 99%), hsl(25 15% 95%));
+  --gradient-accent: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899);
+
+  /* Shadows */
+  --shadow-luxury: 0 25px 50px -12px hsl(35 85% 45% / 0.25);
+  --shadow-card: 0 10px 30px -5px hsl(25 15% 12% / 0.1);
+  --shadow-glow: 0 0 40px hsl(35 85% 45% / 0.3);
 }
 
 .dark {
@@ -109,6 +126,19 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
+  /* Dark mode gradients */
+  --gradient-hero: linear-gradient(to right, #fde68a, #f59e0b, #b45309);
+  --gradient-card: linear-gradient(145deg, hsl(25 15% 10%), hsl(25 10% 15%));
+  --shadow-luxury: 0 25px 50px -12px hsl(35 85% 55% / 0.4);
+  --shadow-glow: 0 0 40px hsl(35 85% 55% / 0.5);
+  --sidebar-background: 240 5.9% 10%;
+  --sidebar-foreground: 240 4.8% 95.9%;
+  --sidebar-primary: 224.3 76.3% 48%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 240 3.7% 15.9%;
+  --sidebar-accent-foreground: 240 4.8% 95.9%;
+  --sidebar-border: 240 3.7% 15.9%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
 }
 
 @layer base {

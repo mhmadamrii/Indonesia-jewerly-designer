@@ -13,11 +13,11 @@ import { createServerRootRoute } from "@tanstack/react-start/server";
 import { Route as rootRouteImport } from "./routes/__root";
 import { Route as authRouteRouteImport } from "./routes/(auth)/route";
 import { Route as adminRouteRouteImport } from "./routes/(admin)/route";
-import { Route as IndexRouteImport } from "./routes/index";
-import { Route as publicPlaygroundsRouteImport } from "./routes/(public)/playgrounds";
-import { Route as publicHelloRouteImport } from "./routes/(public)/hello";
+import { Route as publicIndexRouteImport } from "./routes/(public)/index";
 import { Route as authAuthRouteImport } from "./routes/(auth)/auth";
 import { Route as adminAdminRouteImport } from "./routes/(admin)/admin";
+import { Route as publicCollectionsIndexRouteImport } from "./routes/(public)/collections/index";
+import { Route as publicBerandaIndexRouteImport } from "./routes/(public)/beranda/index";
 import { Route as mainChar126GeneralRouteRouteImport } from "./routes/(main)/~/general/route";
 import { Route as mainChar126ArtistRouteRouteImport } from "./routes/(main)/~/artist/route";
 import { Route as mainChar126GeneralMessagesRouteRouteImport } from "./routes/(main)/~/general/messages/route";
@@ -63,19 +63,9 @@ const adminRouteRoute = adminRouteRouteImport.update({
   id: "/(admin)",
   getParentRoute: () => rootRouteImport,
 } as any);
-const IndexRoute = IndexRouteImport.update({
-  id: "/",
+const publicIndexRoute = publicIndexRouteImport.update({
+  id: "/(public)/",
   path: "/",
-  getParentRoute: () => rootRouteImport,
-} as any);
-const publicPlaygroundsRoute = publicPlaygroundsRouteImport.update({
-  id: "/(public)/playgrounds",
-  path: "/playgrounds",
-  getParentRoute: () => rootRouteImport,
-} as any);
-const publicHelloRoute = publicHelloRouteImport.update({
-  id: "/(public)/hello",
-  path: "/hello",
   getParentRoute: () => rootRouteImport,
 } as any);
 const authAuthRoute = authAuthRouteImport.update({
@@ -87,6 +77,16 @@ const adminAdminRoute = adminAdminRouteImport.update({
   id: "/admin",
   path: "/admin",
   getParentRoute: () => adminRouteRoute,
+} as any);
+const publicCollectionsIndexRoute = publicCollectionsIndexRouteImport.update({
+  id: "/(public)/collections/",
+  path: "/collections/",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const publicBerandaIndexRoute = publicBerandaIndexRouteImport.update({
+  id: "/(public)/beranda/",
+  path: "/beranda/",
+  getParentRoute: () => rootRouteImport,
 } as any);
 const mainChar126GeneralRouteRoute = mainChar126GeneralRouteRouteImport.update({
   id: "/(main)/~/general",
@@ -290,13 +290,13 @@ const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
 } as any);
 
 export interface FileRoutesByFullPath {
-  "/": typeof authRouteRouteWithChildren;
+  "/": typeof publicIndexRoute;
   "/admin": typeof adminAdminRoute;
   "/auth": typeof authAuthRoute;
-  "/hello": typeof publicHelloRoute;
-  "/playgrounds": typeof publicPlaygroundsRoute;
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
+  "/beranda": typeof publicBerandaIndexRoute;
+  "/collections": typeof publicCollectionsIndexRoute;
   "/~/general/messages": typeof mainChar126GeneralMessagesRouteRouteWithChildren;
   "/~/artist/assets/$assetId": typeof mainChar126ArtistAssetsAssetIdRoute;
   "/~/artist/messages/$userId": typeof mainChar126ArtistMessagesUserIdRoute;
@@ -328,13 +328,13 @@ export interface FileRoutesByFullPath {
   "/~/general/payments/receipt": typeof mainChar126GeneralPaymentsReceiptIndexRoute;
 }
 export interface FileRoutesByTo {
-  "/": typeof authRouteRouteWithChildren;
+  "/": typeof publicIndexRoute;
   "/admin": typeof adminAdminRoute;
   "/auth": typeof authAuthRoute;
-  "/hello": typeof publicHelloRoute;
-  "/playgrounds": typeof publicPlaygroundsRoute;
   "/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
+  "/beranda": typeof publicBerandaIndexRoute;
+  "/collections": typeof publicCollectionsIndexRoute;
   "/~/artist/assets/$assetId": typeof mainChar126ArtistAssetsAssetIdRoute;
   "/~/artist/messages/$userId": typeof mainChar126ArtistMessagesUserIdRoute;
   "/~/general/assets/$assetId": typeof mainChar126GeneralAssetsAssetIdRoute;
@@ -366,15 +366,15 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
-  "/": typeof IndexRoute;
   "/(admin)": typeof adminRouteRouteWithChildren;
   "/(auth)": typeof authRouteRouteWithChildren;
   "/(admin)/admin": typeof adminAdminRoute;
   "/(auth)/auth": typeof authAuthRoute;
-  "/(public)/hello": typeof publicHelloRoute;
-  "/(public)/playgrounds": typeof publicPlaygroundsRoute;
+  "/(public)/": typeof publicIndexRoute;
   "/(main)/~/artist": typeof mainChar126ArtistRouteRouteWithChildren;
   "/(main)/~/general": typeof mainChar126GeneralRouteRouteWithChildren;
+  "/(public)/beranda/": typeof publicBerandaIndexRoute;
+  "/(public)/collections/": typeof publicCollectionsIndexRoute;
   "/(main)/~/general/messages": typeof mainChar126GeneralMessagesRouteRouteWithChildren;
   "/(main)/~/artist/assets/$assetId": typeof mainChar126ArtistAssetsAssetIdRoute;
   "/(main)/~/artist/messages/$userId": typeof mainChar126ArtistMessagesUserIdRoute;
@@ -411,10 +411,10 @@ export interface FileRouteTypes {
     | "/"
     | "/admin"
     | "/auth"
-    | "/hello"
-    | "/playgrounds"
     | "/~/artist"
     | "/~/general"
+    | "/beranda"
+    | "/collections"
     | "/~/general/messages"
     | "/~/artist/assets/$assetId"
     | "/~/artist/messages/$userId"
@@ -449,10 +449,10 @@ export interface FileRouteTypes {
     | "/"
     | "/admin"
     | "/auth"
-    | "/hello"
-    | "/playgrounds"
     | "/~/artist"
     | "/~/general"
+    | "/beranda"
+    | "/collections"
     | "/~/artist/assets/$assetId"
     | "/~/artist/messages/$userId"
     | "/~/general/assets/$assetId"
@@ -483,15 +483,15 @@ export interface FileRouteTypes {
     | "/~/general/payments/receipt";
   id:
     | "__root__"
-    | "/"
     | "/(admin)"
     | "/(auth)"
     | "/(admin)/admin"
     | "/(auth)/auth"
-    | "/(public)/hello"
-    | "/(public)/playgrounds"
+    | "/(public)/"
     | "/(main)/~/artist"
     | "/(main)/~/general"
+    | "/(public)/beranda/"
+    | "/(public)/collections/"
     | "/(main)/~/general/messages"
     | "/(main)/~/artist/assets/$assetId"
     | "/(main)/~/artist/messages/$userId"
@@ -524,13 +524,13 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
   adminRouteRoute: typeof adminRouteRouteWithChildren;
   authRouteRoute: typeof authRouteRouteWithChildren;
-  publicHelloRoute: typeof publicHelloRoute;
-  publicPlaygroundsRoute: typeof publicPlaygroundsRoute;
+  publicIndexRoute: typeof publicIndexRoute;
   mainChar126ArtistRouteRoute: typeof mainChar126ArtistRouteRouteWithChildren;
   mainChar126GeneralRouteRoute: typeof mainChar126GeneralRouteRouteWithChildren;
+  publicBerandaIndexRoute: typeof publicBerandaIndexRoute;
+  publicCollectionsIndexRoute: typeof publicCollectionsIndexRoute;
 }
 export interface FileServerRoutesByFullPath {
   "/api/auth/$": typeof ApiAuthSplatServerRoute;
@@ -585,25 +585,11 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof adminRouteRouteImport;
       parentRoute: typeof rootRouteImport;
     };
-    "/": {
-      id: "/";
+    "/(public)/": {
+      id: "/(public)/";
       path: "/";
       fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/(public)/playgrounds": {
-      id: "/(public)/playgrounds";
-      path: "/playgrounds";
-      fullPath: "/playgrounds";
-      preLoaderRoute: typeof publicPlaygroundsRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/(public)/hello": {
-      id: "/(public)/hello";
-      path: "/hello";
-      fullPath: "/hello";
-      preLoaderRoute: typeof publicHelloRouteImport;
+      preLoaderRoute: typeof publicIndexRouteImport;
       parentRoute: typeof rootRouteImport;
     };
     "/(auth)/auth": {
@@ -619,6 +605,20 @@ declare module "@tanstack/react-router" {
       fullPath: "/admin";
       preLoaderRoute: typeof adminAdminRouteImport;
       parentRoute: typeof adminRouteRoute;
+    };
+    "/(public)/collections/": {
+      id: "/(public)/collections/";
+      path: "/collections";
+      fullPath: "/collections";
+      preLoaderRoute: typeof publicCollectionsIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/(public)/beranda/": {
+      id: "/(public)/beranda/";
+      path: "/beranda";
+      fullPath: "/beranda";
+      preLoaderRoute: typeof publicBerandaIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
     };
     "/(main)/~/general": {
       id: "/(main)/~/general";
@@ -996,13 +996,13 @@ const mainChar126GeneralRouteRouteWithChildren =
   );
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   adminRouteRoute: adminRouteRouteWithChildren,
   authRouteRoute: authRouteRouteWithChildren,
-  publicHelloRoute: publicHelloRoute,
-  publicPlaygroundsRoute: publicPlaygroundsRoute,
+  publicIndexRoute: publicIndexRoute,
   mainChar126ArtistRouteRoute: mainChar126ArtistRouteRouteWithChildren,
   mainChar126GeneralRouteRoute: mainChar126GeneralRouteRouteWithChildren,
+  publicBerandaIndexRoute: publicBerandaIndexRoute,
+  publicCollectionsIndexRoute: publicCollectionsIndexRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
