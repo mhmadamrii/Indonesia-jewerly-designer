@@ -5,6 +5,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "~/components/theme-provider";
 import { getUser } from "~/lib/auth/functions/getUser";
+import "~/lib/lang/i18n";
 
 import {
   createRootRouteWithContext,
