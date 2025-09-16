@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Eye, Heart, MessageCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { jewelryWithJoins } from "~/actions/explore.action";
 import { AddWishlist } from "~/components/add-wishlist";
 import { PaymentButton } from "~/components/payment-button";
@@ -11,6 +12,7 @@ export function AssetGrid({
   reviewCount,
   tags,
 }: jewelryWithJoins) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
@@ -116,7 +118,7 @@ export function AssetGrid({
 
           <PaymentButton
             assetId={jewelry_assets.id}
-            purchaseLabel="Purchase"
+            purchaseLabel={t("purchase")}
             totalPrice={jewelry_assets.price}
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 py-3 font-semibold text-white hover:from-blue-700 hover:to-purple-700"
           />

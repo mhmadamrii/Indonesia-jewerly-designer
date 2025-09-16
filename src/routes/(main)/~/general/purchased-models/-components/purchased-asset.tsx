@@ -1,6 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import { Download, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { MyPaymentTransactionsType } from "~/actions/payment.action";
 import { Button } from "~/components/ui/button";
@@ -22,6 +23,7 @@ export function PurchasedAsset({
 }: {
   purchasedAssetsData: MyPaymentTransactionsType | undefined;
 }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
@@ -105,10 +107,8 @@ export function PurchasedAsset({
     <div className="space-y-6 p-6 pb-0">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">My Purchased Assets</h1>
-          <p className="text-muted-foreground">
-            Your collection of purchased 3D jewelry assets
-          </p>
+          <h1 className="text-3xl font-bold tracking-tight">{t("my_purchase_asset")}</h1>
+          <p className="text-muted-foreground">{t("your_collection_desc")}</p>
         </div>
       </div>
 

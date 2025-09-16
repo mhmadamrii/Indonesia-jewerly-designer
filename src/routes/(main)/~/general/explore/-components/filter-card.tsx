@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { getFilterExploreAsset } from "~/actions/explore.action";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
@@ -27,6 +28,7 @@ import {
 } from "~/components/ui/card";
 
 export function FilterCard() {
+  const { t } = useTranslation();
   const navigate = useNavigate({
     from: "/~/general/explore",
   });
@@ -84,7 +86,7 @@ export function FilterCard() {
     <div className="sticky top-20 h-[550px] w-[30%]">
       <Card className="h-full">
         <CardHeader>
-          <CardTitle>Filters</CardTitle>
+          <CardTitle>{t("filters")}</CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-3">
@@ -97,15 +99,15 @@ export function FilterCard() {
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="latest" id="latest" />
-                <Label htmlFor="latest">Latest</Label>
+                <Label htmlFor="latest">{t("latest")}</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="oldest" id="oldest" />
-                <Label htmlFor="oldest">Oldest</Label>
+                <Label htmlFor="oldest">{t("oldest")}</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="this-week" id="this-week" />
-                <Label htmlFor="this-week">This Week</Label>
+                <Label htmlFor="this-week">{t("this_week")}</Label>
               </div>
             </RadioGroup>
             <Separator />
@@ -127,7 +129,7 @@ export function FilterCard() {
 
           <div>
             <p className="mb-2 text-sm font-medium">
-              Price Range: ${priceRange[0]} - ${priceRange[1]}
+              {t("price_range")}: ${priceRange[0]} - ${priceRange[1]}
             </p>
             <Slider
               value={priceRange}
@@ -140,7 +142,7 @@ export function FilterCard() {
           </div>
 
           <div className="flex w-full flex-col space-y-1">
-            <label className="text-sm font-medium">Category</label>
+            <label className="text-sm font-medium">{t("category")}</label>
             <Select
               onOpenChange={() => refetch()}
               onValueChange={handleCategoryChange}
@@ -187,7 +189,7 @@ export function FilterCard() {
             })}
             onClick={handleApply}
           >
-            Apply Filters
+            {t("apply")}
           </Button>
           <Button
             onClick={resetFilters}

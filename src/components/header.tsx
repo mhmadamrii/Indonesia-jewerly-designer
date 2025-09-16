@@ -1,5 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { CartDrawer } from "./cart-drawer";
 import { SwitchRole } from "./switch-role";
 import { ThemeToggle } from "./theme-toggle";
@@ -78,6 +79,7 @@ function InputCommandDialog({
 
 export function Header() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -98,7 +100,7 @@ export function Header() {
           <SearchInput
             onFocus={() => setOpen(true)}
             className="bg-background min-w-[320px] rounded-full"
-            placeholder="Search Item, Collections, and Accounts"
+            placeholder={t("search_items_collections_accounts")}
           />
           <InputCommandDialog open={open} setOpen={setOpen} />
         </div>
