@@ -16,7 +16,7 @@ export function FooterLanding() {
   };
 
   return (
-    <footer className="bg-onyx text-pearl">
+    <footer className="text-pearl bg-[linear-gradient(145deg,hsl(25,15%,10%),hsl(25,10%,15%))]">
       <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
         <div className="mb-12 grid gap-8 lg:grid-cols-4">
@@ -105,7 +105,7 @@ export function FooterLanding() {
         {/* Bottom Footer */}
         <div className="flex flex-col items-center justify-between md:flex-row">
           <div className="text-pearl/60 mb-4 text-sm md:mb-0">
-            © 2024 Nusantara Gems. Seluruh hak cipta dilindungi.
+            © 2024 Indonesia Jewelry Designer. Seluruh hak cipta dilindungi.
           </div>
 
           <div className="flex flex-wrap gap-6 text-sm">

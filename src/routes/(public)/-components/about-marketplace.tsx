@@ -26,7 +26,7 @@ export function AboutMarketplace() {
   ];
 
   return (
-    <section className="bg-gradient-card py-20">
+    <section className="bg-[linear-gradient(145deg,hsl(25,15%,10%),hsl(25,10%,15%))] py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mx-auto mb-16 max-w-3xl text-center">
@@ -48,7 +48,7 @@ export function AboutMarketplace() {
           {features.map((feature, index) => (
             <Card
               key={index}
-              className="bg-card border-border/50 hover:shadow-card group transition-all duration-300"
+              className="border-border/50 hover:shadow-card group bg-[hsl(25,15%,10%)] transition-all duration-300"
             >
               <CardContent className="p-6 text-center">
                 <div className="group-hover:shadow-glow mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-r from-amber-200 via-amber-500 to-amber-700 transition-all duration-300">
@@ -64,7 +64,7 @@ export function AboutMarketplace() {
         </div>
 
         {/* Stats Section */}
-        <div className="bg-card border-border/50 shadow-card rounded-2xl border p-8">
+        <div className="border-border/50 shadow-card rounded-2xl border bg-[hsl(25,15%,10%)] p-8">
           <div className="grid gap-8 text-center md:grid-cols-4">
             <div>
               <div className="text-gold mb-2 text-3xl font-bold">500K+</div>

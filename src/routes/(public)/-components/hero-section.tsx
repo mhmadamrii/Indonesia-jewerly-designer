@@ -52,7 +52,7 @@ export function HeroSection() {
             <Button
               variant="outline"
               size="lg"
-              className="border-gold text-gold hover:bg-gold hover:text-primary-foreground px-8 py-6 text-lg transition-all duration-300"
+              className="border border-amber-500 px-8 py-6 text-lg transition-all duration-300 hover:bg-amber-500 hover:text-amber-200"
             >
               Gabung Sebagai Desainer
             </Button>

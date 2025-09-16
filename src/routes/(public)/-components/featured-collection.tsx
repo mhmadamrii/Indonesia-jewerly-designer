@@ -57,7 +57,7 @@ export function FeaturedCollection() {
             <p className="text-muted-foreground mb-4 text-lg">
               Karya eksklusif dari desainer terpilih
             </p>
-            <Button className="bg-gradient-accent text-primary-foreground hover:shadow-glow transition-all duration-300">
+            <Button className="text-primary-foreground hover:shadow-glow bg-gradient-to-r from-amber-200 via-amber-500 to-amber-700 transition-all duration-300">
               Lihat Koleksi Lengkap
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -74,13 +74,13 @@ export function FeaturedCollection() {
               <CardContent className="p-6">
                 <div className="mb-3 flex items-center">
                   <div className="flex items-center">
-                    <Star className="fill-gold text-gold mr-1 h-4 w-4" />
+                    <Star className="text-gold mr-1 h-4 w-4 border-current fill-amber-500" />
                     <span className="text-foreground text-sm font-medium">
                       {collection.rating}
                     </span>
                   </div>
                 </div>
-                <h3 className="text-foreground group-hover:text-gold mb-2 text-xl font-bold transition-colors">
+                <h3 className="text-foreground mb-2 text-xl font-bold transition-colors group-hover:text-amber-500">
                   {collection.title}
                 </h3>
                 <p className="text-muted-foreground mb-4">{collection.description}</p>

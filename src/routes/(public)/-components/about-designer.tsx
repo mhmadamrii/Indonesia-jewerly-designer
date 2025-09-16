@@ -22,7 +22,7 @@ export function AboutDesigner() {
   ];
 
   return (
-    <section className="py-20">
+    <section className="bg-[linear-gradient(145deg,hsl(25,15%,10%),hsl(25,10%,15%))] py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-16 lg:grid-cols-2">
           {/* Content */}
@@ -58,8 +58,8 @@ export function AboutDesigner() {
             </div>
 
             {/* Stats */}
-            <div className="bg-card border-border/50 mb-8 grid grid-cols-2 gap-8 rounded-xl border p-6">
-              <div className="text-center">
+            <div className="border-border/50 mb-8 grid grid-cols-2 gap-8 rounded-xl border bg-[hsl(25,15%,10%)] p-6">
+              <div className="bg-[hsl(25,15%,10%)] text-center">
                 <div className="text-gold mb-1 text-2xl font-bold">95%</div>
                 <div className="text-muted-foreground text-sm">Kepuasan Pelanggan</div>
               </div>
@@ -90,10 +90,10 @@ export function AboutDesigner() {
             </div>
 
             {/* Floating Card */}
-            <Card className="bg-card border-border/50 shadow-card absolute -bottom-8 -left-8">
+            <Card className="border-border/50 shadow-card absolute -bottom-8 -left-8 bg-[hsl(25,15%,10%)]">
               <CardContent className="p-6">
                 <div className="flex items-center">
-                  <div className="bg-gradient-accent mr-4 flex h-12 w-12 items-center justify-center rounded-full">
+                  <div className="mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-amber-200 via-amber-500 to-amber-700">
                     <Award className="text-primary-foreground h-6 w-6" />
                   </div>
                   <div>

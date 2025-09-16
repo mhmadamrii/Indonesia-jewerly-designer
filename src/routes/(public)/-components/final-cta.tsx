@@ -5,7 +5,7 @@ export function FinalCTA() {
   return (
     <section className="relative overflow-hidden py-20">
       {/* Background with gradient */}
-      <div className="bg-gradient-hero absolute inset-0"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-amber-200 via-amber-500 to-amber-700"></div>
       <div className="bg-background/10 absolute inset-0"></div>
 
       {/* Decorative elements */}
@@ -26,7 +26,7 @@ export function FinalCTA() {
           {/* Main Headline */}
           <h2 className="text-primary-foreground mb-6 text-4xl leading-tight font-bold sm:text-5xl lg:text-6xl">
             Wujudkan Pesona Anda <br className="hidden sm:block" />
-            Dengan <span className="text-pearl">Sentuhan Lokal</span>
+            Dengan <span className="text-dark dark:text-white">Sentuhan Lokal</span>
           </h2>
 
           {/* Description */}
