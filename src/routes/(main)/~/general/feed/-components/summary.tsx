@@ -1,11 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { CreditCard, ListOrdered, Paintbrush, TrendingUp } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { getFeedSummary } from "~/actions/dashboard.action";
 import { SlidingNumber } from "~/components/animate-ui/text/sliding-number";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 
 export function Summary() {
+  const { t } = useTranslation();
+
   const { data } = useQuery({
     queryKey: ["dashboard_summary"],
     queryFn: getFeedSummary,
@@ -18,7 +21,7 @@ export function Summary() {
           <CardHeader className="px-2">
             <CardTitle>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground text-sm">Transactions</span>
+                <span className="text-muted-foreground text-sm">{t("transactions")}</span>
                 <CreditCard className="h-5 w-5 text-blue-500" />
               </div>
             </CardTitle>
@@ -35,7 +38,7 @@ export function Summary() {
           <CardHeader className="px-2">
             <CardTitle>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground text-sm">Assets</span>
+                <span className="text-muted-foreground text-sm">{t("assets")}</span>
                 <TrendingUp className="h-5 w-5 text-green-500" />
               </div>
             </CardTitle>
@@ -51,7 +54,7 @@ export function Summary() {
           <CardHeader className="px-2">
             <CardTitle>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground text-sm">Orders</span>
+                <span className="text-muted-foreground text-sm">{t("orders")}</span>
                 <ListOrdered className="h-5 w-5 text-red-500" />
               </div>
             </CardTitle>
@@ -65,7 +68,7 @@ export function Summary() {
           <CardHeader className="px-2">
             <CardTitle>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground text-sm">Artists</span>
+                <span className="text-muted-foreground text-sm">{t("artists")}</span>
                 <Paintbrush className="h-5 w-5 text-purple-500" />
               </div>
             </CardTitle>

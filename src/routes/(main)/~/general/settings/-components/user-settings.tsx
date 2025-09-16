@@ -40,8 +40,11 @@ import {
   Shield,
   User,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export function UserSettings() {
+  const { t, i18n } = useTranslation();
+
   const queryClient = useQueryClient();
   const [settings, setSettings] = useState({
     // Profile Settings
@@ -475,17 +478,16 @@ export function UserSettings() {
                 <div className="space-y-2">
                   <Label>Language</Label>
                   <Select
-                    value={settings.language}
-                    onValueChange={(value) => handleSettingChange("language", value)}
+                    value={i18n.language}
+                    onValueChange={(val) => i18n.changeLanguage(val)}
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="en">English</SelectItem>
+                      <SelectItem value="id">Indonesia</SelectItem>
                       <SelectItem value="es">Español</SelectItem>
-                      <SelectItem value="fr">Français</SelectItem>
-                      <SelectItem value="de">Deutsch</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

@@ -1,5 +1,6 @@
 import { Await, createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { getFeeds } from "~/actions/dashboard.action";
 import { ArtistSkeleton } from "~/components/skeletons/artist-skeleton";
 import { CategoryFilterSkeleton } from "~/components/skeletons/category-filter-skeleton";
@@ -22,6 +23,7 @@ export const Route = createFileRoute("/(main)/~/general/feed/")({
 });
 
 function RouteComponent() {
+  const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState("");
   const { feeds } = Route.useLoaderData();
 
@@ -32,7 +34,7 @@ function RouteComponent() {
           <CarouselBanner />
           <div className="flex flex-col gap-4">
             <div className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row sm:gap-0">
-              <h1 className="text-xl font-semibold">Featured Collections</h1>
+              <h1 className="text-xl font-semibold">{t("featured_collections")}</h1>
               <div className="flex gap-3">
                 <Await promise={feeds} fallback={<CategoryFilterSkeleton />}>
                   {({ data }) => (

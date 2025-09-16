@@ -1,22 +1,19 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import { lang } from "./lang";
 
 const resources = {
   en: {
-    translation: {
-      welcome_to_react: "Welcome to React and react-i18next",
-    },
+    translation: lang.en,
   },
-  fr: {
-    translation: {
-      welcome_to_react: "Kontol BASUR",
-    },
+  id: {
+    translation: lang.id,
   },
 };
 
 i18n.use(initReactI18next).init({
   resources,
-  lng: "fr",
+  lng: "id",
 
   interpolation: {
     escapeValue: false,

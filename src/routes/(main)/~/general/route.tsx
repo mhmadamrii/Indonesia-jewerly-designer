@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Header } from "~/components/header";
 import { RoleRedirectProvider } from "~/components/role-redirect-provider";
 import { useTheme } from "~/components/theme-provider";
@@ -62,95 +63,6 @@ import {
   UserCog,
 } from "lucide-react";
 
-const USER_SIDEBAR = [
-  {
-    labelGroup: "General",
-    items: [
-      {
-        label: "Home",
-        link: "/~/general/feed",
-        icon: Home,
-      },
-      {
-        label: "Explore",
-        link: "/~/general/explore",
-        icon: Search,
-      },
-    ],
-  },
-  {
-    labelGroup: "My Library",
-    items: [
-      {
-        label: "Purchased Models",
-        link: "/~/general/purchased-models",
-        icon: Library,
-      },
-      {
-        label: "Favorites / Wishlist",
-        link: "/~/general/wishlists",
-        icon: Heart,
-      },
-    ],
-  },
-  {
-    labelGroup: "Cart & Orders",
-    items: [
-      {
-        label: "My Cart",
-        link: "/~/general/cart",
-        icon: ShoppingCart,
-      },
-      {
-        label: "Messages & Custom",
-        link: "/~/general/messages",
-        icon: MessagesSquare,
-      },
-    ],
-  },
-  {
-    labelGroup: "Account",
-    items: [
-      {
-        label: "Settings",
-        link: "/~/general/settings",
-        icon: UserCog,
-      },
-      {
-        label: "Payment Methods",
-        link: "/~/general/payment-methods",
-        icon: CreditCard,
-      },
-      {
-        label: "Notifications",
-        link: "/~/general/notifications",
-        icon: Bell,
-      },
-      {
-        label: "Billing History",
-        // link: "/~/general/billing-history",
-        link: "/~/general/payments/receipt",
-        icon: Clock,
-      },
-    ],
-  },
-  {
-    labelGroup: "Help & Support",
-    items: [
-      {
-        label: "FAQ",
-        link: "/~/general/faq",
-        icon: HelpCircle,
-      },
-      {
-        label: "Contact Support",
-        link: "/~/general/contact-support",
-        icon: Mail,
-      },
-    ],
-  },
-];
-
 export const Route = createFileRoute("/(main)/~/general")({
   component: MainLayout,
   beforeLoad: async ({ context }) => {
@@ -171,9 +83,100 @@ export const Route = createFileRoute("/(main)/~/general")({
 function MainLayout() {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+
+  const { t, i18n } = useTranslation();
   const { theme } = useTheme();
   const { setIsRoleChanging } = useRoleStore();
   const { data: session } = authClient.useSession();
+
+  const USER_SIDEBAR = [
+    {
+      labelGroup: t("general"),
+      items: [
+        {
+          label: t("home"),
+          link: "/~/general/feed",
+          icon: Home,
+        },
+        {
+          label: t("explore"),
+          link: "/~/general/explore",
+          icon: Search,
+        },
+      ],
+    },
+    {
+      labelGroup: t("myLibrary"),
+      items: [
+        {
+          label: t("purchasedModels"),
+          link: "/~/general/purchased-models",
+          icon: Library,
+        },
+        {
+          label: t("favorites"),
+          link: "/~/general/wishlists",
+          icon: Heart,
+        },
+      ],
+    },
+    {
+      labelGroup: t("cartOrders"),
+      items: [
+        {
+          label: t("myCart"),
+          link: "/~/general/cart",
+          icon: ShoppingCart,
+        },
+        {
+          label: t("messages"),
+          link: "/~/general/messages",
+          icon: MessagesSquare,
+        },
+      ],
+    },
+    {
+      labelGroup: t("account"),
+      items: [
+        {
+          label: t("settings"),
+          link: "/~/general/settings",
+          icon: UserCog,
+        },
+        {
+          label: t("paymentMethods"),
+          link: "/~/general/payment-methods",
+          icon: CreditCard,
+        },
+        {
+          label: t("notifications"),
+          link: "/~/general/notifications",
+          icon: Bell,
+        },
+        {
+          label: t("billingHistory"),
+          // link: "/~/general/billing-history",
+          link: "/~/general/payments/receipt",
+          icon: Clock,
+        },
+      ],
+    },
+    {
+      labelGroup: t("helpSupport"),
+      items: [
+        {
+          label: t("faq"),
+          link: "/~/general/faq",
+          icon: HelpCircle,
+        },
+        {
+          label: t("contactSupport"),
+          link: "/~/general/contact-support",
+          icon: Mail,
+        },
+      ],
+    },
+  ];
 
   useEffect(() => {
     setIsRoleChanging(false);

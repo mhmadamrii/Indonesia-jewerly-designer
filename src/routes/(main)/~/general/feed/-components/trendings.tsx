@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Eye, LoaderIcon, ShoppingCart } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { createCartItem } from "~/actions/cart.action";
 import { TrendingJewelriesType } from "~/actions/dashboard.action";
@@ -14,6 +15,7 @@ type TrendingsProps = {
 };
 
 export function Trendings({ jewelries }: TrendingsProps) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [selected3D, setSelected3D] = useState("");
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -134,7 +136,7 @@ export function Trendings({ jewelries }: TrendingsProps) {
               ) : (
                 <>
                   <ShoppingCart className="h-4 w-4" />
-                  <span>{"Add to Cart"}</span>
+                  <span>{t("add_to_cart")}</span>
                 </>
               )}
             </button>
