@@ -9,6 +9,7 @@ import { TrendingJewelriesType } from "~/actions/dashboard.action";
 import { ModelViewer } from "~/components/3D/model-viewer";
 import { AddWishlist } from "~/components/add-wishlist";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Badge } from "~/components/ui/badge";
 
 type TrendingsProps = {
   jewelries: TrendingJewelriesType;
@@ -96,19 +97,13 @@ export function Trendings({ jewelries }: TrendingsProps) {
             <p className="text-muted-foreground mb-3 line-clamp-2 truncate text-sm">
               {item.jewelry_assets.description}
             </p>
-
-            <div className="mb-3 flex flex-wrap gap-1">
-              {item.tags.map((tag, idx) => (
-                <span
-                  key={idx}
-                  className="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600"
-                >
-                  {tag}
-                </span>
-              ))}
-              <span className="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600">
-                +30
-              </span>
+            <div className="h-[60px]">
+              <div className="mb-3 flex flex-wrap gap-1">
+                {item.tags.map((tag, idx) => (
+                  <Badge key={idx}>{tag}</Badge>
+                ))}
+                <Badge>+30</Badge>
+              </div>
             </div>
 
             <div className="mb-3 flex items-center justify-between">

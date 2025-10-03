@@ -9,7 +9,6 @@ import { HeroSection } from "./-components/hero-section";
 
 export const Route = createFileRoute("/(public)/")({
   component: Home,
-  ssr: false,
   head: () => ({
     meta: [
       {

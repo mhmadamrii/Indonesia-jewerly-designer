@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { getUserSettings, updateUserSettings } from "~/actions/user.action";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
@@ -40,7 +41,6 @@ import {
   Shield,
   User,
 } from "lucide-react";
-import { useTranslation } from "react-i18next";
 
 export function UserSettings() {
   const { t, i18n } = useTranslation();
@@ -180,7 +180,7 @@ export function UserSettings() {
                     <Camera className="h-4 w-4" />
                     Change Photo
                   </Button>
-                  <p className="mt-2 text-sm text-slate-500">
+                  <p className="text-muted-foreground mt-2 text-sm">
                     JPG, PNG or GIF. Max size 2MB.
                   </p>
                 </div>
@@ -252,10 +252,10 @@ export function UserSettings() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between rounded-lg border p-4">
                   <div className="flex items-center gap-3">
-                    <Globe className="h-5 w-5 text-slate-600" />
+                    <Globe className="h-5 w-5" />
                     <div>
                       <h4 className="font-medium">Marketplace Section Visibility</h4>
-                      <p className="text-sm text-slate-500">
+                      <p className="text-muted-foreground text-sm">
                         Show your marketplace activity to public visitors
                       </p>
                     </div>
@@ -270,10 +270,10 @@ export function UserSettings() {
 
                 <div className="flex items-center justify-between rounded-lg border p-4">
                   <div className="flex items-center gap-3">
-                    <Mail className="h-5 w-5 text-slate-600" />
+                    <Mail className="h-5 w-5" />
                     <div>
                       <h4 className="font-medium">Email Address</h4>
-                      <p className="text-sm text-slate-500">
+                      <p className="text-muted-foreground text-sm">
                         Show your email on your public profile
                       </p>
                     </div>
@@ -288,10 +288,10 @@ export function UserSettings() {
 
                 <div className="flex items-center justify-between rounded-lg border p-4">
                   <div className="flex items-center gap-3">
-                    <Globe className="h-5 w-5 text-slate-600" />
+                    <Globe className="h-5 w-5" />
                     <div>
                       <h4 className="font-medium">Location</h4>
-                      <p className="text-sm text-slate-500">
+                      <p className="text-muted-foreground text-sm">
                         Show your location on your public profile
                       </p>
                     </div>
@@ -357,7 +357,7 @@ export function UserSettings() {
                 <div className="flex items-center justify-between rounded-lg border p-4">
                   <div>
                     <h4 className="font-medium">Email Notifications</h4>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-muted-foreground text-sm">
                       Receive notifications via email
                     </p>
                   </div>
@@ -372,7 +372,7 @@ export function UserSettings() {
                 <div className="flex items-center justify-between rounded-lg border p-4">
                   <div>
                     <h4 className="font-medium">Push Notifications</h4>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-muted-foreground text-sm">
                       Receive push notifications in your browser
                     </p>
                   </div>
@@ -387,7 +387,7 @@ export function UserSettings() {
                 <div className="flex items-center justify-between rounded-lg border p-4">
                   <div>
                     <h4 className="font-medium">Order Updates</h4>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-muted-foreground text-sm">
                       Get notified about order status changes
                     </p>
                   </div>
@@ -402,7 +402,7 @@ export function UserSettings() {
                 <div className="flex items-center justify-between rounded-lg border p-4">
                   <div>
                     <h4 className="font-medium">New Reviews</h4>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-muted-foreground text-sm">
                       Get notified when someone reviews your products
                     </p>
                   </div>
@@ -417,7 +417,7 @@ export function UserSettings() {
                 <div className="flex items-center justify-between rounded-lg border p-4">
                   <div>
                     <h4 className="font-medium">New Followers</h4>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-muted-foreground text-sm">
                       Get notified when someone follows you
                     </p>
                   </div>
@@ -432,7 +432,7 @@ export function UserSettings() {
                 <div className="flex items-center justify-between rounded-lg border p-4">
                   <div>
                     <h4 className="font-medium">Marketing Emails</h4>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-muted-foreground text-sm">
                       Receive promotional emails and updates
                     </p>
                   </div>
