@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { jewelryWithJoins } from "~/actions/explore.action";
 import { AddWishlist } from "~/components/add-wishlist";
 import { PaymentButton } from "~/components/payment-button";
+import { Badge } from "~/components/ui/badge";
 
 export function AssetGrid({
   jewelry_assets,
@@ -16,7 +17,7 @@ export function AssetGrid({
   const navigate = useNavigate();
 
   return (
-    <div className="group bg-card h-[400px] max-w-4xl overflow-hidden rounded-md shadow-md transition-all duration-300 hover:shadow-xl">
+    <div className="group bg-card h-[480px] max-w-4xl overflow-hidden rounded-md shadow-md transition-all duration-300 hover:shadow-xl">
       <div className="flex h-full flex-col justify-between">
         <div className="relative z-10 h-[40%]">
           <img
@@ -71,20 +72,17 @@ export function AssetGrid({
               {jewelry_assets.description}
             </p>
 
-            <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
-              {(tags ?? []).map((tag, idx) => (
-                <span
-                  key={idx}
-                  className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-[11px] font-medium"
-                >
-                  {tag}
-                </span>
-              ))}
-              {user.name === "ijd.id" && (
-                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-700">
-                  🌟 Top Seller
-                </span>
-              )}
+            <div className="h-[60px]">
+              <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
+                {(tags ?? []).map((tag, idx) => (
+                  <Badge key={idx}>{tag}</Badge>
+                ))}
+                {user.name === "ijd.id" && (
+                  <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-700">
+                    🌟 Top Seller
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className="mb-3 flex items-center">

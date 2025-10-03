@@ -83,7 +83,7 @@ export function UserSettings() {
   const { mutate: handleSave, isPending } = useMutation({
     mutationFn: updateUserSettings,
     onSuccess: () => {
-      toast.success("Settings saved successfully");
+      toast.success(t("settings_saved_success"));
       queryClient.invalidateQueries({ queryKey: ["user-settings"] });
     },
   });
@@ -127,39 +127,35 @@ export function UserSettings() {
   return (
     <div className="min-h-screen p-4">
       <div className="mb-8">
-        <h1 className="mb-2 text-3xl font-bold">Settings & Preferences</h1>
-        <p className="text-slate-200">
-          Manage your account settings and privacy preferences
-        </p>
+        <h1 className="mb-2 text-3xl font-bold">{t("settings_preferences")}</h1>
+        <p className="text-slate-200">{t("manage_account_settings")}</p>
       </div>
 
       <Tabs defaultValue="profile" className="space-y-6">
         <TabsList className="grid w-full grid-cols-4 shadow-sm">
           <TabsTrigger value="profile" className="flex items-center gap-2">
             <User className="h-4 w-4" />
-            Profile
+            {t("profile")}
           </TabsTrigger>
           <TabsTrigger value="privacy" className="flex items-center gap-2">
             <Shield className="h-4 w-4" />
-            Privacy
+            {t("privacy")}
           </TabsTrigger>
           <TabsTrigger value="notifications" className="flex items-center gap-2">
             <Bell className="h-4 w-4" />
-            Notifications
+            {t("notifications")}
           </TabsTrigger>
           <TabsTrigger value="display" className="flex items-center gap-2">
             <Palette className="h-4 w-4" />
-            Display
+            {t("display")}
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="profile" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Profile Information</CardTitle>
-              <CardDescription>
-                Update your personal information and public profile
-              </CardDescription>
+              <CardTitle>{t("profile_information")}</CardTitle>
+              <CardDescription>{t("update_personal_information")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex items-center gap-6">
@@ -178,17 +174,17 @@ export function UserSettings() {
                     className="flex items-center gap-2 bg-transparent"
                   >
                     <Camera className="h-4 w-4" />
-                    Change Photo
+                    {t("change_photo")}
                   </Button>
                   <p className="text-muted-foreground mt-2 text-sm">
-                    JPG, PNG or GIF. Max size 2MB.
+                    {t("photo_requirements")}
                   </p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
+                  <Label htmlFor="name">{t("full_name")}</Label>
                   <Input
                     id="name"
                     value={settings.name}
@@ -196,7 +192,7 @@ export function UserSettings() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
+                  <Label htmlFor="email">{t("email_address")}</Label>
                   <Input
                     id="email"
                     type="email"
@@ -207,10 +203,10 @@ export function UserSettings() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="bio">Bio</Label>
+                <Label htmlFor="bio">{t("bio")}</Label>
                 <Textarea
                   id="bio"
-                  placeholder="Tell people about yourself..."
+                  placeholder={t("tell_about_yourself")}
                   value={settings.bio}
                   onChange={(e) => handleSettingChange("bio", e.target.value)}
                   className="min-h-[100px]"
@@ -219,7 +215,7 @@ export function UserSettings() {
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="location">Location</Label>
+                  <Label htmlFor="location">{t("location")}</Label>
                   <Input
                     id="location"
                     value={settings.location}
@@ -227,7 +223,7 @@ export function UserSettings() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="website">Website</Label>
+                  <Label htmlFor="website">{t("website")}</Label>
                   <Input
                     id="website"
                     type="url"
@@ -243,10 +239,8 @@ export function UserSettings() {
         <TabsContent value="privacy" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Privacy & Visibility</CardTitle>
-              <CardDescription>
-                Control who can see your information and marketplace activity
-              </CardDescription>
+              <CardTitle>{t("privacy_visibility")}</CardTitle>
+              <CardDescription>{t("control_visibility")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
@@ -254,9 +248,9 @@ export function UserSettings() {
                   <div className="flex items-center gap-3">
                     <Globe className="h-5 w-5" />
                     <div>
-                      <h4 className="font-medium">Marketplace Section Visibility</h4>
+                      <h4 className="font-medium">{t("marketplace_visibility")}</h4>
                       <p className="text-muted-foreground text-sm">
-                        Show your marketplace activity to public visitors
+                        {t("show_marketplace_activity")}
                       </p>
                     </div>
                   </div>
@@ -272,9 +266,9 @@ export function UserSettings() {
                   <div className="flex items-center gap-3">
                     <Mail className="h-5 w-5" />
                     <div>
-                      <h4 className="font-medium">Email Address</h4>
+                      <h4 className="font-medium">{t("email_address")}</h4>
                       <p className="text-muted-foreground text-sm">
-                        Show your email on your public profile
+                        {t("show_email_on_profile")}
                       </p>
                     </div>
                   </div>
@@ -290,9 +284,9 @@ export function UserSettings() {
                   <div className="flex items-center gap-3">
                     <Globe className="h-5 w-5" />
                     <div>
-                      <h4 className="font-medium">Location</h4>
+                      <h4 className="font-medium">{t("location")}</h4>
                       <p className="text-muted-foreground text-sm">
-                        Show your location on your public profile
+                        {t("show_location_on_profile")}
                       </p>
                     </div>
                   </div>
@@ -308,7 +302,7 @@ export function UserSettings() {
               <Separator />
 
               <div className="space-y-4">
-                <h4 className="font-medium">Profile Visibility</h4>
+                <h4 className="font-medium">{t("profile_visibility_label")}</h4>
                 <Select
                   value={settings.profileVisibility}
                   onValueChange={(value) =>
@@ -322,19 +316,19 @@ export function UserSettings() {
                     <SelectItem value="public">
                       <div className="flex items-center gap-2">
                         <Eye className="h-4 w-4" />
-                        Public - Anyone can view
+                        {t("public_profile")}
                       </div>
                     </SelectItem>
                     <SelectItem value="followers">
                       <div className="flex items-center gap-2">
                         <User className="h-4 w-4" />
-                        Followers Only
+                        {t("followers_only")}
                       </div>
                     </SelectItem>
                     <SelectItem value="private">
                       <div className="flex items-center gap-2">
                         <EyeOff className="h-4 w-4" />
-                        Private - Only you can view
+                        {t("private_profile")}
                       </div>
                     </SelectItem>
                   </SelectContent>
@@ -347,18 +341,16 @@ export function UserSettings() {
         <TabsContent value="notifications" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Notification Preferences</CardTitle>
-              <CardDescription>
-                Choose how you want to be notified about activity
-              </CardDescription>
+              <CardTitle>{t("notification_preferences")}</CardTitle>
+              <CardDescription>{t("choose_how_notified")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 <div className="flex items-center justify-between rounded-lg border p-4">
                   <div>
-                    <h4 className="font-medium">Email Notifications</h4>
+                    <h4 className="font-medium">{t("email_notifications")}</h4>
                     <p className="text-muted-foreground text-sm">
-                      Receive notifications via email
+                      {t("receive_email_notifications")}
                     </p>
                   </div>
                   <Switch
@@ -371,9 +363,9 @@ export function UserSettings() {
 
                 <div className="flex items-center justify-between rounded-lg border p-4">
                   <div>
-                    <h4 className="font-medium">Push Notifications</h4>
+                    <h4 className="font-medium">{t("push_notifications")}</h4>
                     <p className="text-muted-foreground text-sm">
-                      Receive push notifications in your browser
+                      {t("receive_push_notifications")}
                     </p>
                   </div>
                   <Switch
@@ -386,9 +378,9 @@ export function UserSettings() {
 
                 <div className="flex items-center justify-between rounded-lg border p-4">
                   <div>
-                    <h4 className="font-medium">Order Updates</h4>
+                    <h4 className="font-medium">{t("order_updates")}</h4>
                     <p className="text-muted-foreground text-sm">
-                      Get notified about order status changes
+                      {t("get_notified_order_status")}
                     </p>
                   </div>
                   <Switch
@@ -401,9 +393,9 @@ export function UserSettings() {
 
                 <div className="flex items-center justify-between rounded-lg border p-4">
                   <div>
-                    <h4 className="font-medium">New Reviews</h4>
+                    <h4 className="font-medium">{t("new_reviews")}</h4>
                     <p className="text-muted-foreground text-sm">
-                      Get notified when someone reviews your products
+                      {t("get_notified_new_reviews")}
                     </p>
                   </div>
                   <Switch
@@ -416,9 +408,9 @@ export function UserSettings() {
 
                 <div className="flex items-center justify-between rounded-lg border p-4">
                   <div>
-                    <h4 className="font-medium">New Followers</h4>
+                    <h4 className="font-medium">{t("new_followers")}</h4>
                     <p className="text-muted-foreground text-sm">
-                      Get notified when someone follows you
+                      {t("get_notified_new_followers")}
                     </p>
                   </div>
                   <Switch
@@ -431,9 +423,9 @@ export function UserSettings() {
 
                 <div className="flex items-center justify-between rounded-lg border p-4">
                   <div>
-                    <h4 className="font-medium">Marketing Emails</h4>
+                    <h4 className="font-medium">{t("marketing_emails")}</h4>
                     <p className="text-muted-foreground text-sm">
-                      Receive promotional emails and updates
+                      {t("receive_promotional_emails")}
                     </p>
                   </div>
                   <Switch
@@ -451,15 +443,13 @@ export function UserSettings() {
         <TabsContent value="display" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Display Preferences</CardTitle>
-              <CardDescription>
-                Customize how the interface appears to you
-              </CardDescription>
+              <CardTitle>{t("display_preferences")}</CardTitle>
+              <CardDescription>{t("customize_interface")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label>Theme</Label>
+                  <Label>{t("theme")}</Label>
                   <Select
                     value={settings.theme}
                     onValueChange={(value) => handleSettingChange("theme", value)}
@@ -468,15 +458,15 @@ export function UserSettings() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="light">Light</SelectItem>
-                      <SelectItem value="dark">Dark</SelectItem>
-                      <SelectItem value="system">System</SelectItem>
+                      <SelectItem value="light">{t("light")}</SelectItem>
+                      <SelectItem value="dark">{t("dark")}</SelectItem>
+                      <SelectItem value="system">{t("system")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Language</Label>
+                  <Label>{t("language")}</Label>
                   <Select
                     value={i18n.language}
                     onValueChange={(val) => i18n.changeLanguage(val)}
@@ -485,15 +475,15 @@ export function UserSettings() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="en">English</SelectItem>
-                      <SelectItem value="id">Indonesia</SelectItem>
-                      <SelectItem value="es">Español</SelectItem>
+                      <SelectItem value="en">{t("english")}</SelectItem>
+                      <SelectItem value="id">{t("indonesia")}</SelectItem>
+                      <SelectItem value="es">{t("spanish")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Currency</Label>
+                  <Label>{t("currency")}</Label>
                   <Select
                     value={settings.currency}
                     onValueChange={(value) => handleSettingChange("currency", value)}
@@ -511,7 +501,7 @@ export function UserSettings() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Timezone</Label>
+                  <Label>{t("timezone")}</Label>
                   <Select
                     value={settings.timezone}
                     onValueChange={(value) => handleSettingChange("timezone", value)}
@@ -520,11 +510,11 @@ export function UserSettings() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="America/Los_Angeles">Pacific Time</SelectItem>
-                      <SelectItem value="America/Denver">Mountain Time</SelectItem>
-                      <SelectItem value="America/Chicago">Central Time</SelectItem>
-                      <SelectItem value="America/New_York">Eastern Time</SelectItem>
-                      <SelectItem value="Europe/London">GMT</SelectItem>
+                      <SelectItem value="America/Los_Angeles">{t("pacific_time")}</SelectItem>
+                      <SelectItem value="America/Denver">{t("mountain_time")}</SelectItem>
+                      <SelectItem value="America/Chicago">{t("central_time")}</SelectItem>
+                      <SelectItem value="America/New_York">{t("eastern_time")}</SelectItem>
+                      <SelectItem value="Europe/London">{t("gmt")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -567,7 +557,7 @@ export function UserSettings() {
           ) : (
             <>
               <Save className="h-4 w-4" />
-              Save Changes
+              {t("save_changes")}
             </>
           )}
         </Button>
