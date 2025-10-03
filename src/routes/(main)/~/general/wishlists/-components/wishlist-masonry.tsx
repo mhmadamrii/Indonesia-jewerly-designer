@@ -97,10 +97,10 @@ export function WishlistMasonry({
   const { mutate: deleteItem, isPending: isDeletingItem } = useMutation({
     mutationFn: deleteWishlistItem,
     onSuccess: () => {
-      router.invalidate();
       toast.success("Successfully", {
         description: "Item removed from wishlist successfully",
       });
+      router.invalidate();
     },
   });
 

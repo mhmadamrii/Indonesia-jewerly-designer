@@ -6,7 +6,6 @@ import { OPTIONS } from "~/constants";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
 import { category, jewelryAssets, jewelryAssetTags, tag, user } from "~/lib/db/schema";
-import { getClient } from "~/lib/redis/config";
 
 export type MyJewelryAssetsType = Awaited<ReturnType<(typeof getMyjewelryAssets)>>["data"]; // prettier-ignore
 export type TypejewelryAssetById = Awaited<ReturnType<(typeof getjewelryById)>>["data"]; // prettier-ignore
@@ -103,7 +102,7 @@ export const createjewelryAsset = createServerFn({ method: "POST" })
   .validator(jewelryAssetSchema)
   .middleware([authMiddleware])
   .handler(async ({ data, context }) => {
-    const redis = await getClient();
+    // const redis = await getClient();
     const cachedKey = `dashboard_data:${context.user.id}`;
 
     const {
@@ -158,10 +157,10 @@ export const createjewelryAsset = createServerFn({ method: "POST" })
       );
     }
 
-    await Promise.all([
-      redis.del(cachedKey),
-      redis.del(`explore_data:${context.user.id}`),
-    ]);
+    // await Promise.all([
+    //   redis.del(cachedKey),
+    //   redis.del(`explore_data:${context.user.id}`),
+    // ]);
 
     return {
       success: true,

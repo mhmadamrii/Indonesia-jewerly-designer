@@ -21,7 +21,11 @@ export function AssetGrid({
       <div className="flex h-full flex-col justify-between">
         <div className="relative z-10 h-[40%]">
           <img
-            src={jewelry_assets.thumbnailUrl ?? "/placeholder-img.jpg"}
+            src={
+              jewelry_assets.thumbnailUrl !== ""
+                ? jewelry_assets.thumbnailUrl
+                : "/placeholder-img.jpg"
+            }
             alt={jewelry_assets.name}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />

@@ -40,8 +40,8 @@ export function JewelryAssetTable({
   const { mutate: deleteAsset, isPending: isDeleting } = useMutation({
     mutationFn: deletejewelryAsset,
     onSuccess: () => {
-      router.invalidate();
       toast.success("Asset deleted successfully");
+      router.invalidate();
     },
   });
   console.log("jewelryAssetData", jewelryAssetData);

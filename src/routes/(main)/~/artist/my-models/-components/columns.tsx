@@ -70,7 +70,11 @@ export const createColumns = ({
       return (
         <div className="bg-muted relative h-16 w-16 overflow-hidden rounded-lg">
           <img
-            src={row.original.thumbnailUrl}
+            src={
+              row.original.thumbnailUrl !== ""
+                ? row.original.thumbnailUrl
+                : "/placeholder-img.jpg"
+            }
             alt="Asset preview"
             className="h-full w-full object-cover"
           />
