@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { toast } from "sonner";
 import { createCategory } from "~/actions/category.action";
@@ -13,7 +13,9 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "~/components/ui/chart";
 import { Input } from "~/components/ui/input";
+import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
+
 import {
   Table,
   TableBody,
@@ -152,7 +154,7 @@ function RouteComponent() {
                   <CartesianGrid vertical={false} strokeDasharray="3 3" />
                   <XAxis dataKey="name" tickLine={false} axisLine={false} />
                   <ChartTooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="count" fill="var(--color-count)" radius={6} />
+                  <Bar dataKey="count" fill="white" radius={6} />
                 </BarChart>
               </ChartContainer>
             )}
@@ -160,7 +162,7 @@ function RouteComponent() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <h2 className="text-xl font-semibold">Create Category</h2>
@@ -204,21 +206,6 @@ function RouteComponent() {
             >
               {isSeedingTags ? "Seeding..." : "Seed Jewelry Tags"}
             </Button>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <h2 className="text-xl font-semibold">Navigation</h2>
-            <p className="text-muted-foreground text-sm">
-              Quick links to other parts of the application.
-            </p>
-          </CardHeader>
-          <CardContent>
-            <Link to="/~/general/feed">
-              <Button variant="outline" className="w-full">
-                Go to Feed Page
-              </Button>
-            </Link>
           </CardContent>
         </Card>
       </div>
@@ -398,6 +385,14 @@ function RouteComponent() {
             )}
           </CardContent>
         </Card>
+      </div>
+
+      <div className="mt-8 w-full">
+        <Separator className="w-full" />
+      </div>
+
+      <div>
+        <h1 className="text-3xl font-bold">Earnings & Payouts</h1>
       </div>
     </div>
   );

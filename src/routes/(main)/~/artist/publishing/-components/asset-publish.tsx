@@ -269,7 +269,11 @@ export function AssetPublish() {
                       </FormControl>
                       <SelectContent>
                         {CURRENCIES.map((currency) => (
-                          <SelectItem key={currency.value} value={currency.value}>
+                          <SelectItem
+                            disabled={currency.value !== "IDR"}
+                            key={currency.value}
+                            value={currency.value}
+                          >
                             {currency.label}
                           </SelectItem>
                         ))}

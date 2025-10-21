@@ -171,7 +171,7 @@ export function Trendings({ jewelries }: TrendingsProps) {
             onClick={() => setJewelryLimit(jewelryLimit - 6)}
             className="cursor-pointer hover:underline"
           >
-            Show Less
+            {jewelries.length > 0 && "Show Less"}
           </button>
         ) : (
           <button
