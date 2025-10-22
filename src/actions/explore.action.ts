@@ -2,8 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { endOfMonth, startOfMonth, subMonths } from "date-fns";
 import { and, eq, gte, InferSelectModel, lte, sql } from "drizzle-orm";
 import { z } from "zod";
-import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
+
 import {
   category,
   jewelryAssets,
@@ -34,9 +34,9 @@ export interface IExploreProps {
 }
 
 export const getExploreAssetDatas = createServerFn({ method: "GET" })
-  .middleware([authMiddleware])
   .validator(exploreSearchParamSchema)
   .handler(async ({ context, data }) => {
+    console.log("data for filter", data);
     const filters = [];
 
     // Category filter
@@ -53,6 +53,7 @@ export const getExploreAssetDatas = createServerFn({ method: "GET" })
     if (data.priceFrom !== undefined) {
       filters.push(gte(jewelryAssets.price, data.priceFrom));
     }
+
     if (data.priceTo !== undefined) {
       filters.push(lte(jewelryAssets.price, data.priceTo));
     }
@@ -116,9 +117,8 @@ export const getExploreAssetDatas = createServerFn({ method: "GET" })
     };
   });
 
-export const getFilterExploreAsset = createServerFn({ method: "GET" })
-  .middleware([authMiddleware])
-  .handler(async ({ context }) => {
+export const getFilterExploreAsset = createServerFn({ method: "GET" }).handler(
+  async ({ context }) => {
     const [categories, artists] = await Promise.all([
       db.select().from(category),
       db.select().from(user).where(eq(user.role, "artist")),
@@ -131,4 +131,5 @@ export const getFilterExploreAsset = createServerFn({ method: "GET" })
         artists,
       },
     };
-  });
+  },
+);

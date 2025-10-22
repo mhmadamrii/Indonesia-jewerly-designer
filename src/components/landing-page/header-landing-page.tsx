@@ -19,14 +19,10 @@ const menuItems = [
   },
   {
     label: "Designer",
-    to: "#",
+    to: "/designers",
   },
   {
     label: "Tentang Kami",
-    to: "#",
-  },
-  {
-    label: "Kontak",
     to: "#",
   },
 ];
@@ -61,8 +57,10 @@ export function HeaderLandingPage() {
           </ClientOnly>
 
           <div className="flex items-baseline space-x-8">
-            {menuItems.map((item) => (
-              <Link to={`${item.to}`}>{item.label}</Link>
+            {menuItems.map((item, idx) => (
+              <Link key={idx} to={`${item.to}`}>
+                {item.label}
+              </Link>
             ))}
           </div>
 

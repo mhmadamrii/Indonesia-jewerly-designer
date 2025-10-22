@@ -13,10 +13,8 @@ export function HeroSection() {
         <div className="from-background/90 to-background/40 absolute inset-0 bg-gradient-to-r"></div>
       </div>
 
-      {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center sm:px-6 lg:px-8 lg:text-left">
         <div className="mx-auto max-w-4xl lg:mx-0">
-          {/* Badge */}
           <div className="bg-gradient-card border-gold/20 mb-8 inline-flex items-center rounded-full border px-4 py-2">
             <Sparkles className="text-gold mr-2 h-4 w-4" />
             <span className="text-foreground text-sm font-medium">
@@ -24,7 +22,6 @@ export function HeroSection() {
             </span>
           </div>
 
-          {/* Headline */}
           <h1 className="text-foreground mb-6 text-4xl leading-tight font-bold sm:text-5xl lg:text-7xl">
             Temukan Perhiasan{" "}
             <span className="bg-gradient-to-r from-amber-200 via-amber-500 to-amber-700 bg-clip-text text-transparent">
@@ -33,13 +30,11 @@ export function HeroSection() {
             Karya Desainer Indonesia
           </h1>
 
-          {/* Subheadline */}
           <p className="text-muted-foreground mb-8 max-w-3xl text-xl leading-relaxed sm:text-2xl">
             Marketplace pertama yang mempertemukan Anda dengan karya otentik perancang
             perhiasan terbaik Nusantara.
           </p>
 
-          {/* CTA Buttons */}
           <div className="flex flex-col justify-center gap-4 sm:flex-row lg:justify-start">
             <Button
               size="lg"
@@ -58,7 +53,6 @@ export function HeroSection() {
             </Button>
           </div>
 
-          {/* Stats */}
           <div className="border-border/50 mt-12 flex flex-col items-center justify-center gap-8 border-t pt-8 sm:flex-row lg:justify-start">
             <div className="text-center">
               <div className="text-3xl font-bold text-amber-500">500+</div>
@@ -76,7 +70,6 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Decorative Elements */}
       <div className="bg-gold/10 absolute top-20 right-20 h-32 w-32 rounded-full blur-xl"></div>
       <div className="bg-emerald/10 absolute bottom-20 left-20 h-24 w-24 rounded-full blur-xl"></div>
     </section>

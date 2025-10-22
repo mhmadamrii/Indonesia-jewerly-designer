@@ -1,10 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { HeaderLandingPage } from "~/components/landing-page/header-landing-page";
 import { AboutDesigner } from "./-components/about-designer";
 import { AboutMarketplace } from "./-components/about-marketplace";
 import { FeaturedCollection } from "./-components/featured-collection";
 import { FinalCTA } from "./-components/final-cta";
-import { FooterLanding } from "./-components/footer-landing";
 import { HeroSection } from "./-components/hero-section";
 
 export const Route = createFileRoute("/(public)/")({
@@ -32,16 +30,12 @@ export const Route = createFileRoute("/(public)/")({
 
 function Home() {
   return (
-    <main className="relative min-h-screen overflow-hidden">
-      <HeaderLandingPage />
-      <main>
-        <HeroSection />
-        <FeaturedCollection />
-        <AboutDesigner />
-        <AboutMarketplace />
-        <FinalCTA />
-      </main>
-      <FooterLanding />
-    </main>
+    <div>
+      <HeroSection />
+      <FeaturedCollection />
+      <AboutDesigner />
+      <AboutMarketplace />
+      <FinalCTA />
+    </div>
   );
 }
