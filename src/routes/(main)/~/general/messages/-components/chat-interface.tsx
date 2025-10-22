@@ -1,17 +1,24 @@
 import { useMessages } from "@ably/chat/react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { Mic, Paperclip, Phone, Send, Smile, Video } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
+import { Loader, Mic, Paperclip, Send, Smile, Trash } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { createMessage, getMessagesByConversationId } from "~/actions/message.action";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { authClient } from "~/lib/auth/auth-client";
 import { cn } from "~/lib/utils";
+import { NoMessage } from "./no-message";
 import { SelectUserContext } from "./select-user-provider";
+
+import {
+  createMessage,
+  deleteConversation,
+  getMessagesByConversationId,
+} from "~/actions/message.action";
 
 type MessageType = {
   content: string;
@@ -21,13 +28,16 @@ type MessageType = {
 };
 
 export function ChatInterface({ convId }: { convId: string }) {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
   const { data: session } = authClient.useSession();
   const { selectedUser } = useContext(SelectUserContext);
 
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [newMessage, setNewMessage] = useState("");
 
-  const { data: conversationDataById } = useQuery({
+  const { data: conversationDataById, isLoading } = useQuery({
     queryKey: ["chat_interface_conversation", convId],
     queryFn: () => getMessagesByConversationId({ data: { conversationId: convId } }),
     enabled: !!convId,
@@ -54,6 +64,17 @@ export function ChatInterface({ convId }: { convId: string }) {
         createdAt: event.message.createdAt,
       };
       setMessages((prev) => [...prev, newMessages]);
+    },
+  });
+
+  const { mutate: handleDeleteConversation, isPending: isDeleting } = useMutation({
+    mutationFn: deleteConversation,
+    onSuccess: () => {
+      toast.success("Conversation deleted successfully");
+      queryClient.invalidateQueries();
+      navigate({
+        to: "/~/general/messages",
+      });
     },
   });
 
@@ -102,9 +123,14 @@ export function ChatInterface({ convId }: { convId: string }) {
   }, [convId, conversationDataById]);
 
   return (
-    <div className="bg-background text-foreground flex h-[calc(100vh-4.5rem)] flex-col">
-      <header className="border-b p-4">
-        <div className="flex items-center justify-between">
+    <div className="bg-background text-foreground h-[calc(100vh-4.5rem)] flex-col">
+      <header
+        className={cn("border-b p-4", {
+          hidden: !conversationDataById,
+          flex: conversationDataById,
+        })}
+      >
+        <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-4">
             <Avatar className="h-12 w-12">
               <AvatarImage
@@ -122,17 +148,29 @@ export function ChatInterface({ convId }: { convId: string }) {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon">
-              <Video className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <Phone className="h-5 w-5" />
+            <Button
+              disabled
+              onClick={() => handleDeleteConversation({ data: { convId: convId } })}
+              variant="ghost"
+              size="icon"
+            >
+              {isDeleting ? (
+                <Loader className="animate-spin" />
+              ) : (
+                <Trash className="h-5 w-5" />
+              )}
             </Button>
           </div>
         </div>
       </header>
 
       <ScrollArea className="h-[calc(100vh-230px)] p-4">
+        {!conversationDataById && !isLoading && <NoMessage />}
+        {isLoading && (
+          <div className="flex h-[80vh] items-center justify-center">
+            <Loader className="animate-spin" />
+          </div>
+        )}
         <div className="flex flex-col gap-4">
           <AnimatePresence initial={false}>
             {messages?.map((message, idx) => {
@@ -172,7 +210,11 @@ export function ChatInterface({ convId }: { convId: string }) {
         </div>
       </ScrollArea>
 
-      <footer className="border-t p-4">
+      <footer
+        className={cn("border-t p-4", {
+          hidden: !conversationDataById,
+        })}
+      >
         <div className="bg-muted flex items-center gap-2 rounded-lg px-3 py-2">
           <Button variant="ghost" size="icon">
             <Smile className="h-5 w-5" />

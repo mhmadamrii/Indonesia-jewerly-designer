@@ -130,3 +130,18 @@ export const createConversation = createServerFn({ method: "POST" })
       data: participants[0],
     };
   });
+
+export const deleteConversation = createServerFn({ method: "POST" })
+  .validator(
+    z.object({
+      convId: z.string(),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data, context }) => {
+    await db.delete(conversation).where(eq(conversation.id, data.convId));
+
+    return {
+      success: true,
+    };
+  });

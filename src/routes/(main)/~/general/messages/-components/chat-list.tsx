@@ -65,9 +65,9 @@ export function ChatList() {
               <Avatar className="h-12 w-12 border-2 border-transparent">
                 <AvatarImage
                   src={chat?.receiver?.image ?? "/placeholder-img.jpg"}
-                  alt={chat?.receiver?.name}
+                  alt={chat?.receiver?.name ?? ""}
                 />
-                <AvatarFallback>{chat.receiver.name.charAt(0)}</AvatarFallback>
+                <AvatarFallback>{chat.receiver?.name?.charAt(0)}</AvatarFallback>
               </Avatar>
               <div className="flex-1">
                 <div className="flex items-center justify-between">
