@@ -71,7 +71,7 @@ export function UserSettings() {
     // Display Settings
     theme: "system",
     language: "en",
-    currency: "USD",
+    currency: "IDR",
     timezone: "America/Los_Angeles",
   });
 
@@ -492,10 +492,19 @@ export function UserSettings() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="USD">USD ($)</SelectItem>
-                      <SelectItem value="EUR">EUR (€)</SelectItem>
-                      <SelectItem value="GBP">GBP (£)</SelectItem>
-                      <SelectItem value="JPY">JPY (¥)</SelectItem>
+                      <SelectItem value="IDR">IDR (Rp)</SelectItem>
+                      <SelectItem disabled value="USD">
+                        USD ($)
+                      </SelectItem>
+                      <SelectItem disabled value="EUR">
+                        EUR (€)
+                      </SelectItem>
+                      <SelectItem disabled value="GBP">
+                        GBP (£)
+                      </SelectItem>
+                      <SelectItem disabled value="JPY">
+                        JPY (¥)
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -510,10 +519,14 @@ export function UserSettings() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="America/Los_Angeles">{t("pacific_time")}</SelectItem>
+                      <SelectItem value="America/Los_Angeles">
+                        {t("pacific_time")}
+                      </SelectItem>
                       <SelectItem value="America/Denver">{t("mountain_time")}</SelectItem>
                       <SelectItem value="America/Chicago">{t("central_time")}</SelectItem>
-                      <SelectItem value="America/New_York">{t("eastern_time")}</SelectItem>
+                      <SelectItem value="America/New_York">
+                        {t("eastern_time")}
+                      </SelectItem>
                       <SelectItem value="Europe/London">{t("gmt")}</SelectItem>
                     </SelectContent>
                   </Select>
@@ -550,7 +563,7 @@ export function UserSettings() {
               },
             })
           }
-          className="flex w-full items-center gap-2 sm:w-[150px]"
+          className="flex w-full items-center gap-2 sm:w-[170px]"
         >
           {isPending ? (
             <Loader className="animate-spin" />

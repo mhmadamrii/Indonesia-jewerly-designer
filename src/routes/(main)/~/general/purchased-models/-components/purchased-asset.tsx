@@ -105,13 +105,6 @@ export function PurchasedAsset({
 
   return (
     <div className="space-y-6 p-6 pb-0">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">{t("my_purchase_asset")}</h1>
-          <p className="text-muted-foreground">{t("your_collection_desc")}</p>
-        </div>
-      </div>
-
       <Card>
         <CardHeader>
           <CardTitle>Asset Library ({assets.length} items)</CardTitle>

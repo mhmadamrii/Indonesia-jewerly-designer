@@ -5,6 +5,7 @@ import { getMyPaymentTransactions } from "~/actions/payment.action";
 import { Badge } from "~/components/ui/badge";
 import { Card, CardContent } from "~/components/ui/card";
 import { Skeleton } from "~/components/ui/skeleton";
+
 import {
   Table,
   TableBody,
@@ -42,7 +43,7 @@ function RouteComponent() {
       <Suspense
         fallback={
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="min-h-[calc(100vh-230px)] p-6">
               <div className="mb-4 flex items-center justify-between">
                 <Skeleton className="h-6 w-40" />
                 <Skeleton className="h-6 w-24" />
@@ -75,7 +76,7 @@ function RouteComponent() {
             }
             return (
               <Card>
-                <CardContent className="p-0">
+                <CardContent className="min-h-[calc(100vh-230px)] px-3">
                   <Table>
                     <TableHeader>
                       <TableRow>

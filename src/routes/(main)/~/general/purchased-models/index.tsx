@@ -35,7 +35,7 @@ function RouteComponent() {
           </CardHeader>
           <CardContent>
             <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-              {[...Array(6)].map((_, i) => (
+              {[...Array(9)].map((_, i) => (
                 <div key={i} className="space-y-3 rounded-md border p-4">
                   <Skeleton className="h-5 w-3/4" />
                   <Skeleton className="h-4 w-2/3" />

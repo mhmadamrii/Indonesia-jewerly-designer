@@ -95,7 +95,7 @@ export function PurchasedDataTable<TData, TValue>({
   });
 
   return (
-    <div className="w-full">
+    <div className="flex w-full flex-col gap-2">
       <div className="flex items-center gap-4 py-4">
         <div className="flex flex-col gap-4 sm:flex-row">
           <div className="relative max-w-sm flex-1">
@@ -146,7 +146,7 @@ export function PurchasedDataTable<TData, TValue>({
           )}
         </div>
       )}
-      <div className="rounded-md border">
+      <div className="min-h-[calc(100vh-360px)] rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

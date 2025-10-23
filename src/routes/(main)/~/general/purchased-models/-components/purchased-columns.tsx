@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Calendar, DollarSign, Download, MessageCircle } from "lucide-react";
+import { ArrowUpDown, Calendar, Download, MessageCircle } from "lucide-react";
 
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -77,9 +77,6 @@ export const createPurchasedColumns = ({
           <div className="text-muted-foreground line-clamp-2 text-sm">
             {asset?.description}
           </div>
-          <Badge variant="outline" className="text-xs">
-            {row?.original?.category}
-          </Badge>
         </div>
       );
     },
@@ -116,6 +113,7 @@ export const createPurchasedColumns = ({
       return (
         <Button
           variant="ghost"
+          className="flex justify-start text-start"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Price
@@ -125,15 +123,11 @@ export const createPurchasedColumns = ({
     },
     cell: ({ row }) => {
       const price = Number.parseFloat(row.original?.amount);
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(price);
+      console.log("price", price);
 
       return (
         <div className="flex items-center">
-          <DollarSign className="mr-1 h-4 w-4 text-green-600" />
-          <span className="font-medium">{formatted}</span>
+          Rp. <span className="font-medium"> {price.toLocaleString("id-ID")}</span>
         </div>
       );
     },
