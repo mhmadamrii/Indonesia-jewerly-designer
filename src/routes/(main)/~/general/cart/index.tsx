@@ -17,16 +17,12 @@ export const Route = createFileRoute("/(main)/~/general/cart/")({
 function RouteComponent() {
   const navigate = useNavigate();
 
-  const {
-    data: cartItemsData,
-    isLoading: isLoadingCart,
-    refetch,
-  } = useQuery({
+  const { data: cartItemsData, refetch } = useQuery({
     queryKey: ["cart_items"],
     queryFn: () => getCartItems(),
   });
 
-  const { mutate: deleteItem, isPending: isDeletingItem } = useMutation({
+  const { mutate: deleteItem } = useMutation({
     mutationFn: deleteCartItem,
     onSuccess: (res) => {
       toast.success("Successfully", {
@@ -107,6 +103,7 @@ function RouteComponent() {
                 thumbnailUrl: item?.jewelry_assets?.thumbnailUrl,
                 description: item?.jewelry_assets?.description,
                 previewUrl: item?.jewelry_assets?.previewUrl,
+                category: item?.category?.name,
               }))
               .map((item) => (
                 <Card
@@ -175,19 +172,15 @@ function RouteComponent() {
                           <div className="flex items-center gap-1">
                             <Zap className="h-4 w-4 text-yellow-500" />
                           </div>
-                          <div className="flex items-center gap-1">
-                            <HardDrive className="h-4 w-4 text-blue-500" />
-                            <span>Storage: 0MB</span>
-                          </div>
                           <Badge variant="outline" className="capitalize">
-                            Category
+                            {item.category}
                           </Badge>
                         </div>
 
                         <div className="flex items-center justify-end">
                           <div className="text-right">
                             <div className="text-2xl font-bold">
-                              ${item?.price?.toFixed(2)}
+                              Rp. {item?.price?.toLocaleString("id-ID")}
                             </div>
                           </div>
                         </div>
@@ -209,16 +202,16 @@ function RouteComponent() {
                 <div className="mb-6 space-y-4">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>Rp. {subtotal.toLocaleString("id-ID")}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Tax</span>
-                    <span>${tax.toFixed(2)}</span>
+                    <span>Rp. {tax.toFixed(2)}</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between text-xl font-bold">
                     <span>Total</span>
-                    <span>${total.toFixed(2)}</span>
+                    <span>Rp. {total.toLocaleString("id-ID")}</span>
                   </div>
                 </div>
 

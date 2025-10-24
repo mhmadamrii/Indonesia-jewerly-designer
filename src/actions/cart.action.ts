@@ -4,7 +4,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { and, eq } from "drizzle-orm";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { cartItem, jewelryAssets } from "~/lib/db/schema";
+import { cartItem, category, jewelryAssets } from "~/lib/db/schema";
 import { createAssetOwnerNotification } from "./notification.action";
 
 const CartSchema = z.object({
@@ -21,6 +21,7 @@ export const getCartItems = createServerFn({ method: "GET" })
       .select()
       .from(cartItem)
       .leftJoin(jewelryAssets, eq(cartItem.jewelryAssetId, jewelryAssets.id))
+      .leftJoin(category, eq(jewelryAssets.categoryId, category.id))
       .where(eq(cartItem.userId, context.user.id));
 
     return {
