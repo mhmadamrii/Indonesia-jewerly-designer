@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { HardDrive, ShoppingBag, Tag, Trash2, Zap } from "lucide-react";
+import { HardDrive, ShoppingBag, Trash2, Zap } from "lucide-react";
 import { toast } from "sonner";
 import { deleteCartItem, getCartItems } from "~/actions/cart.action";
 import { ModelViewer } from "~/components/3D/model-viewer";
@@ -21,6 +21,8 @@ function RouteComponent() {
     queryKey: ["cart_items"],
     queryFn: () => getCartItems(),
   });
+
+  console.log("cartItemsData", cartItemsData);
 
   const { mutate: deleteItem } = useMutation({
     mutationFn: deleteCartItem,
@@ -152,7 +154,7 @@ function RouteComponent() {
                           </Button>
                         </div>
 
-                        {item.tags && item.tags.length > 0 && (
+                        {/*{item.tags && item.tags.length > 0 && (
                           <div className="mb-3 flex flex-wrap gap-1">
                             {item.tags.slice(0, 3).map((tag) => (
                               <Badge key={tag} variant="secondary" className="text-xs">
@@ -166,7 +168,7 @@ function RouteComponent() {
                               </Badge>
                             )}
                           </div>
-                        )}
+                        )}*/}
 
                         <div className="mb-4 flex items-center gap-4 text-sm">
                           <div className="flex items-center gap-1">

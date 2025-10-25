@@ -4,7 +4,13 @@ import { createServerFn } from "@tanstack/react-start";
 import { and, eq } from "drizzle-orm";
 import { authMiddleware } from "~/lib/auth/middleware/auth-guard";
 import { db } from "~/lib/db";
-import { cartItem, category, jewelryAssets } from "~/lib/db/schema";
+import {
+  cartItem,
+  category,
+  jewelryAssets,
+  jewelryAssetTags,
+  tag,
+} from "~/lib/db/schema";
 import { createAssetOwnerNotification } from "./notification.action";
 
 const CartSchema = z.object({
