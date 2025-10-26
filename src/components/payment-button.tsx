@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { LoaderIcon } from "lucide-react";
-import { useEffect } from "react";
 import { toast } from "sonner";
 import { createPaymentTransaction, payWithMidtrans } from "~/actions/payment.action";
 import { cn } from "~/lib/utils";
@@ -76,22 +75,6 @@ export function PaymentButton({
       });
     },
   });
-
-  useEffect(() => {
-    const snapSrcUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
-    const myMidtransClientKey = process.env.MIDTRANS_CLIENT_KEY;
-    const script = document.createElement("script");
-
-    script.src = snapSrcUrl;
-    script.setAttribute("data-client-key", myMidtransClientKey!);
-    script.async = true;
-
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
 
   return (
     <Button

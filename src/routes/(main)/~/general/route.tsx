@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Header } from "~/components/header";
+import { PaymentWrapper } from "~/components/payment-wrapper";
 import { RoleRedirectProvider } from "~/components/role-redirect-provider";
 import { useTheme } from "~/components/theme-provider";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
@@ -328,7 +329,9 @@ function MainLayout() {
           {/* @ts-expect-error */}
           <RoleRedirectProvider sessionRole={session?.user?.role}>
             <Header />
-            <Outlet />
+            <PaymentWrapper>
+              <Outlet />
+            </PaymentWrapper>
           </RoleRedirectProvider>
         </SidebarInset>
       </SidebarProvider>

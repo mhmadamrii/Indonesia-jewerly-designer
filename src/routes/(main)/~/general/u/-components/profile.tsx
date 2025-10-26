@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { UserById } from "~/actions/user.action";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -30,9 +31,7 @@ import {
   XCircle,
   Zap,
 } from "lucide-react";
-import { UserById } from "~/actions/user.action";
 
-// Mock user data based on the schema
 const mockUser = {
   id: "user_123",
   name: "Elena Rodriguez",
@@ -79,7 +78,7 @@ export function UserProfile({ userById }: { userById: UserById | undefined }) {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold">Profile Settings</h1>
-            <p className="mt-1 text-slate-600">Manage your account and preferences</p>
+            <p className="mt-1">Manage your account and preferences</p>
           </div>
           <Button
             variant={isEditing ? "default" : "outline"}
@@ -198,7 +197,7 @@ export function UserProfile({ userById }: { userById: UserById | undefined }) {
                       <Zap className="h-5 w-5 text-purple-600" />
                     </div>
                     <div>
-                      <p className="text-sm text-slate-600">Boost Credits</p>
+                      <p className="text-sm">Boost Credits</p>
                       <p className="text-xl font-bold">{mockUser.boostCredit}</p>
                     </div>
                   </div>
@@ -212,7 +211,7 @@ export function UserProfile({ userById }: { userById: UserById | undefined }) {
                       <HardDrive className="h-5 w-5 text-blue-600" />
                     </div>
                     <div>
-                      <p className="text-sm text-slate-600">Storage Used</p>
+                      <p className="text-sm">Storage Used</p>
                       <p className="text-xl font-bold">{storagePercentage.toFixed(0)}%</p>
                     </div>
                   </div>
@@ -226,7 +225,7 @@ export function UserProfile({ userById }: { userById: UserById | undefined }) {
                       <Gem className="h-5 w-5 text-emerald-600" />
                     </div>
                     <div>
-                      <p className="text-sm text-slate-600">Products</p>
+                      <p className="text-sm">Products</p>
                       <p className="text-xl font-bold">{mockUser.totalProducts}</p>
                     </div>
                   </div>
@@ -240,7 +239,7 @@ export function UserProfile({ userById }: { userById: UserById | undefined }) {
                       <User className="h-5 w-5 text-amber-600" />
                     </div>
                     <div>
-                      <p className="text-sm text-slate-600">Followers</p>
+                      <p className="text-sm">Followers</p>
                       <p className="text-xl font-bold">{mockUser.followers}</p>
                     </div>
                   </div>
@@ -294,9 +293,7 @@ export function UserProfile({ userById }: { userById: UserById | undefined }) {
                   </div>
                   <div className="space-y-2">
                     <Label>Last Updated</Label>
-                    <p className="text-sm text-slate-600">
-                      {formatDate(mockUser.updatedAt)}
-                    </p>
+                    <p className="text-sm">{formatDate(mockUser.updatedAt)}</p>
                   </div>
                 </div>
 
@@ -306,7 +303,7 @@ export function UserProfile({ userById }: { userById: UserById | undefined }) {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <Label className="text-base">Storage Usage</Label>
-                    <span className="text-sm text-slate-600">
+                    <span className="text-sm">
                       {formatBytes(mockUser.userStorageUsage)} of{" "}
                       {formatBytes(mockUser.userStorageLimit)}
                     </span>
@@ -328,7 +325,7 @@ export function UserProfile({ userById }: { userById: UserById | undefined }) {
                       <span className="font-semibold">{mockUser.boostCredit}</span>
                     </div>
                   </div>
-                  <p className="text-sm text-slate-600">
+                  <p className="text-sm">
                     Use boost credits to promote your jewelry listings and increase
                     visibility
                   </p>
@@ -351,7 +348,7 @@ export function UserProfile({ userById }: { userById: UserById | undefined }) {
                   <div className="text-3xl font-bold text-purple-600">
                     {mockUser.totalProducts}
                   </div>
-                  <p className="mt-1 text-sm text-slate-600">Active jewelry listings</p>
+                  <p className="mt-1 text-sm">Active jewelry listings</p>
                 </CardContent>
               </Card>
 
@@ -363,7 +360,7 @@ export function UserProfile({ userById }: { userById: UserById | undefined }) {
                   <div className="text-3xl font-bold text-emerald-600">
                     {mockUser.totalSales}
                   </div>
-                  <p className="mt-1 text-sm text-slate-600">Completed transactions</p>
+                  <p className="mt-1 text-sm">Completed transactions</p>
                 </CardContent>
               </Card>
 
@@ -375,7 +372,7 @@ export function UserProfile({ userById }: { userById: UserById | undefined }) {
                   <div className="text-3xl font-bold text-blue-600">
                     ${mockUser.totalRevenue.toLocaleString()}
                   </div>
-                  <p className="mt-1 text-sm text-slate-600">Total earnings</p>
+                  <p className="mt-1 text-sm">Total earnings</p>
                 </CardContent>
               </Card>
             </div>
@@ -393,12 +390,12 @@ export function UserProfile({ userById }: { userById: UserById | undefined }) {
                   <div className="space-y-2">
                     <Label>Follower Count</Label>
                     <div className="text-2xl font-bold">{mockUser.followers}</div>
-                    <p className="text-sm text-slate-600">People following your work</p>
+                    <p className="text-sm">People following your work</p>
                   </div>
                   <div className="space-y-2">
                     <Label>Average Rating</Label>
                     <div className="text-2xl font-bold">4.8</div>
-                    <p className="text-sm text-slate-600">Based on customer reviews</p>
+                    <p className="text-sm">Based on customer reviews</p>
                   </div>
                 </div>
 
