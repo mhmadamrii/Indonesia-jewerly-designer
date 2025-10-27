@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { toast } from "sonner";
@@ -16,6 +16,7 @@ import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
 
+import { ScrollArea } from "~/components/ui/scroll-area";
 import {
   Table,
   TableBody,
@@ -30,12 +31,15 @@ export const Route = createFileRoute("/(admin)/admin")({
 });
 
 function RouteComponent() {
+  const queryClient = useQueryClient();
+
   const [categoryName, setCategoryName] = React.useState("");
   const { mutate, isPending } = useMutation({
     mutationFn: createCategory,
     onSuccess: () => {
       toast.success("Data saved successfully");
       setCategoryName("");
+      queryClient.invalidateQueries();
     },
   });
 
@@ -51,21 +55,25 @@ function RouteComponent() {
     queryFn: getAllUsers,
     staleTime: 20_000,
   });
+
   const { data: artistsRes, isLoading: artistsLoading } = useQuery({
     queryKey: ["admin_all_artists"],
     queryFn: getAllArtist,
     staleTime: 20_000,
   });
+
   const { data: summaryRes, isLoading: summaryLoading } = useQuery({
     queryKey: ["admin_feed_summary"],
     queryFn: getFeedSummary,
     staleTime: 20_000,
   });
+
   const { data: tagsCatsRes, isLoading: tagsCatsLoading } = useQuery({
     queryKey: ["admin_tags_categories"],
     queryFn: getjewelryTagsAndCategories,
     staleTime: 20_000,
   });
+
   const { data: feedbackRes, isLoading: feedbackLoading } = useQuery({
     queryKey: ["admin_all_feedbacks"],
     queryFn: getAllFeedbacks,
@@ -80,12 +88,29 @@ function RouteComponent() {
   const tags = tagsCatsRes?.data.tags ?? [];
   const feedbacks = feedbackRes?.data ?? [];
 
+  console.log("tagsCatsRes", tagsCatsRes);
+
   const chartData = [
-    { name: "Users", count: users.length },
-    { name: "Artists", count: totalArtists },
-    { name: "Assets", count: totalAssets },
-    { name: "Categories", count: categories.length },
-    { name: "Tags", count: tags.length },
+    {
+      name: "Users",
+      count: users.length,
+    },
+    {
+      name: "Artists",
+      count: totalArtists,
+    },
+    {
+      name: "Assets",
+      count: totalAssets,
+    },
+    {
+      name: "Categories",
+      count: categories.length,
+    },
+    {
+      name: "Tags",
+      count: tags.length,
+    },
   ];
 
   return (
@@ -96,6 +121,7 @@ function RouteComponent() {
           Manage your application settings and data from here.
         </p>
       </div>
+
       {/* Stats */}
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {[
@@ -171,24 +197,38 @@ function RouteComponent() {
             </p>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
-            <Input
-              value={categoryName}
-              disabled={isPending}
-              onChange={(e) => setCategoryName(e.target.value)}
-              placeholder="Category Name"
-            />
-            <Button
-              onClick={() =>
-                mutate({
-                  data: {
-                    name: categoryName,
-                  },
-                })
-              }
-              disabled={isPending || !categoryName.trim()}
-            >
-              {isPending ? "Creating..." : "Create Category"}
-            </Button>
+            <div className="flex flex-col gap-4">
+              <Input
+                value={categoryName}
+                disabled={isPending}
+                onChange={(e) => setCategoryName(e.target.value)}
+                placeholder="Category Name"
+              />
+              <Button
+                onClick={() =>
+                  mutate({
+                    data: {
+                      name: categoryName,
+                    },
+                  })
+                }
+                disabled={isPending || !categoryName.trim()}
+              >
+                {isPending ? "Creating..." : "Create Category"}
+              </Button>
+            </div>
+            <ScrollArea className="h-60 overflow-y-auto">
+              <div className="flex flex-col gap-4">
+                {tagsCatsRes?.data?.categories?.map((item) => (
+                  <div key={item.id} className="flex justify-between">
+                    <h1>{item.name}</h1>
+                    <Button variant="destructive" className="cursor-pointer">
+                      Delete
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
           </CardContent>
         </Card>
         <Card>
@@ -215,7 +255,7 @@ function RouteComponent() {
         <Card>
           <CardHeader>
             <h2 className="text-xl font-semibold">All Users</h2>
-            <p className="text-muted-foreground text-sm">Latest 10 users</p>
+            <p className="text-muted-foreground text-sm">All registered users</p>
           </CardHeader>
           <CardContent className="p-0">
             {usersLoading ? (
@@ -239,7 +279,6 @@ function RouteComponent() {
                   <TableRow>
                     <TableHead>User</TableHead>
                     <TableHead>Email</TableHead>
-                    <TableHead className="text-right">Role</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -257,7 +296,6 @@ function RouteComponent() {
                         </div>
                       </TableCell>
                       <TableCell>{u.email}</TableCell>
-                      <TableCell className="text-right">{u.role}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -269,7 +307,7 @@ function RouteComponent() {
         <Card>
           <CardHeader>
             <h2 className="text-xl font-semibold">All Artists</h2>
-            <p className="text-muted-foreground text-sm">Latest 10 artists</p>
+            <p className="text-muted-foreground text-sm">All registered artists</p>
           </CardHeader>
           <CardContent className="p-0">
             {artistsLoading ? (
@@ -293,7 +331,6 @@ function RouteComponent() {
                   <TableRow>
                     <TableHead>Artist</TableHead>
                     <TableHead>Email</TableHead>
-                    <TableHead className="text-right">Role</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -311,7 +348,6 @@ function RouteComponent() {
                         </div>
                       </TableCell>
                       <TableCell>{u.email}</TableCell>
-                      <TableCell className="text-right">{u.role}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -345,7 +381,6 @@ function RouteComponent() {
                     <TableHead>User</TableHead>
                     <TableHead>Message</TableHead>
                     <TableHead>Type</TableHead>
-                    <TableHead className="text-right">Payout</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

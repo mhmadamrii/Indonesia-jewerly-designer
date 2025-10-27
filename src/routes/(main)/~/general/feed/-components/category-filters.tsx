@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { ScrollArea, ScrollBar } from "~/components/ui/scroll-area";
 import { Category } from "~/lib/db/types";
 import { cn } from "~/lib/utils";
 
@@ -14,12 +15,15 @@ export function CategoryFilters({
   setSelectedCategory,
 }: CategoryFiltersProps) {
   return (
-    <div className="relative">
-      <div className="relative flex flex-wrap gap-2">
-        {[...categories, {
-          id: "",
-          name: "all"
-        }]?.map((item, index) => {
+    <ScrollArea className="relative w-[600px]">
+      <div className="relative flex w-full justify-end gap-2">
+        {[
+          {
+            id: "",
+            name: "all",
+          },
+          ...categories,
+        ].map((item, index) => {
           const isSelected = selectedCategory === item.id;
           return (
             <div key={item.id} className="relative">
@@ -42,7 +46,7 @@ export function CategoryFilters({
                 whileTap={{ scale: 0.95 }}
               >
                 <h1
-                  className={cn("font-[500]", {
+                  className={cn("font-[500] whitespace-nowrap", {
                     "text-[#5429FF]": isSelected,
                     "text-muted-foreground": !isSelected,
                   })}
@@ -54,6 +58,7 @@ export function CategoryFilters({
           );
         })}
       </div>
-    </div>
+      <ScrollBar orientation="horizontal" />
+    </ScrollArea>
   );
 }
