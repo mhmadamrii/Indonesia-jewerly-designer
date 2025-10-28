@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { NavigateOptions, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -18,6 +18,7 @@ import { Textarea } from "~/components/ui/textarea";
 import { CURRENCIES } from "~/constants";
 import { useFormStorage } from "~/lib/store";
 import { cn } from "~/lib/utils";
+import { CreateNewTag } from "./create-new-tag";
 import { FileUploadCenter } from "./file-upload-center";
 
 import {
@@ -93,12 +94,11 @@ const formSchema = z.object({
 export function AssetPublish() {
   const navigate = useNavigate();
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [pendingLocation, setPendingLocation] = useState<NavigateOptions | null>(null);
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
 
   const { addDraft } = useFormStorage();
 
-  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
-
+  const [newTagText, setNewValueText] = useState("");
   const [isUsingBoost, setIsUsingBoost] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [totalStorageLimitToUpdate, setTotalStorageLimitToUpdate] = useState(0);
@@ -323,16 +323,13 @@ export function AssetPublish() {
               <MultipleSelector
                 className="bg-accent flex h-10 items-center"
                 onChange={(e) => setTagsValue(e)}
+                onValueTextChange={setNewValueText}
                 options={tagsAndCategories?.data?.tags?.map((item) => ({
                   value: item.id,
                   label: item.name,
                 }))}
                 placeholder="Select tags you like..."
-                emptyIndicator={
-                  <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-                    no results found.
-                  </p>
-                }
+                emptyIndicator={<CreateNewTag tagName={newTagText} />}
               />
             </div>
 

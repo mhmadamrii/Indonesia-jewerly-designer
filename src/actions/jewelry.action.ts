@@ -186,6 +186,27 @@ export const seedjewelryTags = createServerFn({ method: "POST" })
     };
   });
 
+export const createNewTag = createServerFn({ method: "POST" })
+  .validator(
+    z.object({
+      name: z.string(),
+    }),
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data }) => {
+    const res = await db
+      .insert(tag)
+      .values({
+        name: data.name,
+      })
+      .returning({ id: tag.id });
+
+    return {
+      success: true,
+      data: res,
+    };
+  });
+
 export const deletejewelryAsset = createServerFn({ method: "POST" })
   .validator(
     z.object({

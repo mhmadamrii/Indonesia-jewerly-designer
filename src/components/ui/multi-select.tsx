@@ -74,6 +74,7 @@ interface MultipleSelectorProps {
   >;
   /** hide the clear all button. */
   hideClearAllButton?: boolean;
+  onValueTextChange?: (value: string) => void;
 }
 
 export interface MultipleSelectorRef {
@@ -189,6 +190,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
       commandProps,
       inputProps,
       hideClearAllButton = false,
+      onValueTextChange,
     }: MultipleSelectorProps,
     ref: React.Ref<MultipleSelectorRef>,
   ) => {
@@ -490,6 +492,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
               value={inputValue}
               disabled={disabled}
               onValueChange={(value) => {
+                onValueTextChange?.(value);
                 setInputValue(value);
                 inputProps?.onValueChange?.(value);
               }}
