@@ -55,7 +55,7 @@ export function AssetGrid({
           </div>
           <div className="absolute top-3 right-3">
             <span className="rounded-full bg-indigo-600 px-2 py-1 text-sm font-bold text-white">
-              ${jewelry_assets.price}
+              Rp. {jewelry_assets.price}
             </span>
           </div>
         </div>

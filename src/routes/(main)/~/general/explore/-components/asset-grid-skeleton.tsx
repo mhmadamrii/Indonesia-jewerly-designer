@@ -43,9 +43,9 @@ export function AssetGridSkeleton() {
 
             {/* Stats */}
             <div className="text-muted-foreground mb-4 grid grid-cols-3 gap-2 text-sm">
-              <Skeleton className="h-4 w-16" />
-              <Skeleton className="h-4 w-16" />
-              <Skeleton className="h-4 w-16" />
+              <Skeleton className="h-4" />
+              <Skeleton className="h-4" />
+              <Skeleton className="h-4" />
             </div>
           </div>
 
