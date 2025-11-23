@@ -39,7 +39,7 @@ export function HeaderLandingPage() {
   }, []);
 
   return (
-    <header className="fixed top-0 z-50 w-full border-b bg-[linear-gradient(145deg,hsl(25,15%,10%),hsl(25,10%,15%))] backdrop-blur-md dark:from-slate-900 dark:to-slate-800">
+    <header className="border-border/40 bg-background/80 supports-[backdrop-filter]:bg-background/60 fixed top-0 z-50 w-full border-b backdrop-blur-md">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <ClientOnly fallback={<div>Loading...</div>}>

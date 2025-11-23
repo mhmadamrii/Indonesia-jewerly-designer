@@ -8,10 +8,10 @@ export const Route = createFileRoute("/(public)")({
 
 function RouteComponent() {
   return (
-    <main className="relative min-h-screen overflow-hidden">
+    <>
       <HeaderLandingPage />
       <Outlet />
       <FooterLanding />
-    </main>
+    </>
   );
 }

@@ -30,12 +30,12 @@ export const Route = createFileRoute("/(public)/")({
 
 function Home() {
   return (
-    <div>
+    <main className="bg-background flex min-h-screen flex-col">
       <HeroSection />
       <FeaturedCollection />
       <AboutDesigner />
       <AboutMarketplace />
       <FinalCTA />
-    </div>
+    </main>
   );
 }
